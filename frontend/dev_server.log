@@ -1,0 +1,695 @@
+
+> virtual-lab@0.1.0 dev
+> vite
+
+
+  VITE v5.4.21  ready in 1077 ms
+
+  ➜  Local:   http://127.0.0.1:5173/
+  ➜  press h + enter to show help
+1:10:35 AM [vite] vite.config.js changed, restarting server...
+1:10:39 AM [vite] page reload index.html
+1:11:36 AM [vite] vite.config.js changed, restarting server...
+✘ [ERROR] The build was canceled
+
+1:14:15 AM [vite] server restarted.
+1:14:17 AM [vite] page reload index.html
+1:15:34 AM [vite] vite.config.js changed, restarting server...
+1:15:35 AM [vite] page reload index.html
+1:17:57 AM [vite] page reload index.html
+1:18:59 AM [vite] vite.config.js changed, restarting server...
+✘ [ERROR] The build was canceled
+
+1:24:31 AM [vite] server restarted.
+1:36:35 AM [vite] vite.config.js changed, restarting server...
+1:36:35 AM [vite] page reload index.html
+1:36:36 AM [vite] server restarted.
+1:40:04 AM [vite] vite.config.js changed, restarting server...
+1:40:05 AM [vite] page reload index.html
+failed to load config from /Users/akshatjain/Desktop/virtual/frontend/vite.config.js
+1:40:06 AM [vite] config must export or return an object.
+1:40:06 AM [vite] server restart failed
+2:46:40 AM [vite] vite.config.js changed, restarting server...
+2:46:47 AM [vite] page reload index.html
+2:46:51 AM [vite] vite.config.js changed, restarting server...
+2:47:11 AM [vite] vite.config.js changed, restarting server...
+2:47:35 AM [vite] server restarted.
+2:47:36 AM [vite] page reload index.html
+Error:   Failed to scan for dependencies from entries:
+  /Users/akshatjain/Desktop/virtual/frontend/index.html
+
+  [31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mENOENT: no such file or directory, open '/Users/akshatjain/Desktop/virtual/frontend/src/pages/AuthPage.jsx'[0m [1m[35m[plugin vite:dep-scan][0m
+
+    node_modules/esbuild/lib/main.js:1275:21:
+[37m      1275 │         let result = [32m[37mawait callback({
+           ╵                      [32m^[0m
+
+    at async open (node:internal/fs/promises:633:25)
+    at async Object.readFile (node:internal/fs/promises:1237:14)
+    at async file:///Users/akshatjain/Desktop/virtual/frontend/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:49871:24
+    at async requestCallbacks.on-load (/Users/akshatjain/Desktop/virtual/frontend/node_modules/esbuild/lib/main.js:1275:22)
+    at async handleRequest (/Users/akshatjain/Desktop/virtual/frontend/node_modules/esbuild/lib/main.js:647:11)
+
+  This error came from the "onLoad" callback registered here:
+
+    node_modules/esbuild/lib/main.js:1150:0:
+[37m      1150 │ [32m[37m
+           ╵ [32m^[0m
+
+    at setup (file:///Users/akshatjain/Desktop/virtual/frontend/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:49868:13)
+    at handlePlugins (/Users/akshatjain/Desktop/virtual/frontend/node_modules/esbuild/lib/main.js:1150:21)
+    at buildOrContextImpl (/Users/akshatjain/Desktop/virtual/frontend/node_modules/esbuild/lib/main.js:873:5)
+    at Object.buildOrContext (/Users/akshatjain/Desktop/virtual/frontend/node_modules/esbuild/lib/main.js:699:5)
+    at /Users/akshatjain/Desktop/virtual/frontend/node_modules/esbuild/lib/main.js:2032:68
+    at new Promise (<anonymous>)
+    at Object.context (/Users/akshatjain/Desktop/virtual/frontend/node_modules/esbuild/lib/main.js:2032:27)
+    at Object.context (/Users/akshatjain/Desktop/virtual/frontend/node_modules/esbuild/lib/main.js:1874:58)
+    at prepareEsbuildScanner (file:///Users/akshatjain/Desktop/virtual/frontend/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:49576:24)
+
+  The plugin "vite:dep-scan" was triggered by this import
+
+    src/App.jsx:8:27:
+[37m      8 │ import AuthPage       from [32m'@/pages/AuthPage'[37m
+        ╵                            [32m~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mENOENT: no such file or directory, open '/Users/akshatjain/Desktop/virtual/frontend/src/pages/RoomPage.jsx'[0m [1m[35m[plugin vite:dep-scan][0m
+
+    node_modules/esbuild/lib/main.js:1275:21:
+[37m      1275 │         let result = [32m[37mawait callback({
+           ╵                      [32m^[0m
+
+    at async open (node:internal/fs/promises:633:25)
+    at async Object.readFile (node:internal/fs/promises:1237:14)
+    at async file:///Users/akshatjain/Desktop/virtual/frontend/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:49871:24
+    at async requestCallbacks.on-load (/Users/akshatjain/Desktop/virtual/frontend/node_modules/esbuild/lib/main.js:1275:22)
+    at async handleRequest (/Users/akshatjain/Desktop/virtual/frontend/node_modules/esbuild/lib/main.js:647:11)
+
+  This error came from the "onLoad" callback registered here:
+
+    node_modules/esbuild/lib/main.js:1150:0:
+[37m      1150 │ [32m[37m
+           ╵ [32m^[0m
+
+    at setup (file:///Users/akshatjain/Desktop/virtual/frontend/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:49868:13)
+    at handlePlugins (/Users/akshatjain/Desktop/virtual/frontend/node_modules/esbuild/lib/main.js:1150:21)
+    at buildOrContextImpl (/Users/akshatjain/Desktop/virtual/frontend/node_modules/esbuild/lib/main.js:873:5)
+    at Object.buildOrContext (/Users/akshatjain/Desktop/virtual/frontend/node_modules/esbuild/lib/main.js:699:5)
+    at /Users/akshatjain/Desktop/virtual/frontend/node_modules/esbuild/lib/main.js:2032:68
+    at new Promise (<anonymous>)
+    at Object.context (/Users/akshatjain/Desktop/virtual/frontend/node_modules/esbuild/lib/main.js:2032:27)
+    at Object.context (/Users/akshatjain/Desktop/virtual/frontend/node_modules/esbuild/lib/main.js:1874:58)
+    at prepareEsbuildScanner (file:///Users/akshatjain/Desktop/virtual/frontend/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:49576:24)
+
+  The plugin "vite:dep-scan" was triggered by this import
+
+    src/App.jsx:10:27:
+[37m      10 │ import RoomPage       from [32m'@/pages/RoomPage'[37m
+         ╵                            [32m~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mETIMEDOUT: connection timed out, read[0m [1m[35m[plugin vite:dep-scan][0m
+
+    node_modules/esbuild/lib/main.js:1275:21:
+[37m      1275 │         let result = [32m[37mawait callback({
+           ╵                      [32m^[0m
+
+    at async readFileHandle (node:internal/fs/promises:549:24)
+    at async file:///Users/akshatjain/Desktop/virtual/frontend/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:49871:24
+    at async requestCallbacks.on-load (/Users/akshatjain/Desktop/virtual/frontend/node_modules/esbuild/lib/main.js:1275:22)
+    at async handleRequest (/Users/akshatjain/Desktop/virtual/frontend/node_modules/esbuild/lib/main.js:647:11)
+
+  This error came from the "onLoad" callback registered here:
+
+    node_modules/esbuild/lib/main.js:1150:0:
+[37m      1150 │ [32m[37m
+           ╵ [32m^[0m
+
+    at setup (file:///Users/akshatjain/Desktop/virtual/frontend/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:49868:13)
+    at handlePlugins (/Users/akshatjain/Desktop/virtual/frontend/node_modules/esbuild/lib/main.js:1150:21)
+    at buildOrContextImpl (/Users/akshatjain/Desktop/virtual/frontend/node_modules/esbuild/lib/main.js:873:5)
+    at Object.buildOrContext (/Users/akshatjain/Desktop/virtual/frontend/node_modules/esbuild/lib/main.js:699:5)
+    at /Users/akshatjain/Desktop/virtual/frontend/node_modules/esbuild/lib/main.js:2032:68
+    at new Promise (<anonymous>)
+    at Object.context (/Users/akshatjain/Desktop/virtual/frontend/node_modules/esbuild/lib/main.js:2032:27)
+    at Object.context (/Users/akshatjain/Desktop/virtual/frontend/node_modules/esbuild/lib/main.js:1874:58)
+    at prepareEsbuildScanner (file:///Users/akshatjain/Desktop/virtual/frontend/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:49576:24)
+
+  The plugin "vite:dep-scan" was triggered by this import
+
+    src/App.jsx:9:27:
+[37m      9 │ import DashboardPage  from [32m'@/pages/DashboardPage'[37m
+        ╵                            [32m~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mETIMEDOUT: connection timed out, read[0m [1m[35m[plugin vite:dep-scan][0m
+
+    node_modules/esbuild/lib/main.js:1275:21:
+[37m      1275 │         let result = [32m[37mawait callback({
+           ╵                      [32m^[0m
+
+    at async readFileHandle (node:internal/fs/promises:549:24)
+    at async file:///Users/akshatjain/Desktop/virtual/frontend/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:49871:24
+    at async requestCallbacks.on-load (/Users/akshatjain/Desktop/virtual/frontend/node_modules/esbuild/lib/main.js:1275:22)
+    at async handleRequest (/Users/akshatjain/Desktop/virtual/frontend/node_modules/esbuild/lib/main.js:647:11)
+
+  This error came from the "onLoad" callback registered here:
+
+    node_modules/esbuild/lib/main.js:1150:0:
+[37m      1150 │ [32m[37m
+           ╵ [32m^[0m
+
+    at setup (file:///Users/akshatjain/Desktop/virtual/frontend/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:49868:13)
+    at handlePlugins (/Users/akshatjain/Desktop/virtual/frontend/node_modules/esbuild/lib/main.js:1150:21)
+    at buildOrContextImpl (/Users/akshatjain/Desktop/virtual/frontend/node_modules/esbuild/lib/main.js:873:5)
+    at Object.buildOrContext (/Users/akshatjain/Desktop/virtual/frontend/node_modules/esbuild/lib/main.js:699:5)
+    at /Users/akshatjain/Desktop/virtual/frontend/node_modules/esbuild/lib/main.js:2032:68
+    at new Promise (<anonymous>)
+    at Object.context (/Users/akshatjain/Desktop/virtual/frontend/node_modules/esbuild/lib/main.js:2032:27)
+    at Object.context (/Users/akshatjain/Desktop/virtual/frontend/node_modules/esbuild/lib/main.js:1874:58)
+    at prepareEsbuildScanner (file:///Users/akshatjain/Desktop/virtual/frontend/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:49576:24)
+
+  The plugin "vite:dep-scan" was triggered by this import
+
+    src/App.jsx:12:27:
+[37m      12 │ import LibraryPage    from [32m'@/pages/LibraryPage'[37m
+         ╵                            [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+    at failureErrorWithLog (/Users/akshatjain/Desktop/virtual/frontend/node_modules/esbuild/lib/main.js:1472:15)
+    at /Users/akshatjain/Desktop/virtual/frontend/node_modules/esbuild/lib/main.js:945:25
+    at runOnEndCallbacks (/Users/akshatjain/Desktop/virtual/frontend/node_modules/esbuild/lib/main.js:1315:45)
+    at buildResponseToResult (/Users/akshatjain/Desktop/virtual/frontend/node_modules/esbuild/lib/main.js:943:7)
+    at /Users/akshatjain/Desktop/virtual/frontend/node_modules/esbuild/lib/main.js:955:9
+    at new Promise (<anonymous>)
+    at requestCallbacks.on-end (/Users/akshatjain/Desktop/virtual/frontend/node_modules/esbuild/lib/main.js:954:54)
+    at handleRequest (/Users/akshatjain/Desktop/virtual/frontend/node_modules/esbuild/lib/main.js:647:17)
+    at handleIncomingPacket (/Users/akshatjain/Desktop/virtual/frontend/node_modules/esbuild/lib/main.js:672:7)
+    at Socket.readFromStdout (/Users/akshatjain/Desktop/virtual/frontend/node_modules/esbuild/lib/main.js:600:7)
+2:53:41 AM [vite] vite.config.js changed, restarting server...
+2:53:41 AM [vite] page reload index.html
+✘ [ERROR] Unexpected end of file in JSON
+
+    package.json:1:0:
+      1 │ 
+        ╵ ^
+
+2:53:43 AM [vite] vite.config.js changed, restarting server...
+failed to load config from /Users/akshatjain/Desktop/virtual/frontend/vite.config.js
+2:53:49 AM [vite] Build failed with 1 error:
+package.json:1:0: ERROR: Unexpected end of file in JSON
+2:53:49 AM [vite] server restart failed
+2:55:58 AM [vite] vite.config.js changed, restarting server...
+✘ [ERROR] Unexpected end of file in JSON
+
+    package.json:1:0:
+      1 │ 
+        ╵ ^
+
+failed to load config from /Users/akshatjain/Desktop/virtual/frontend/vite.config.js
+2:55:58 AM [vite] Build failed with 1 error:
+package.json:1:0: ERROR: Unexpected end of file in JSON
+2:55:58 AM [vite] server restart failed
+3:12:15 AM [vite] vite.config.js changed, restarting server...
+3:12:27 AM [vite] server restarted.
+3:12:31 AM [vite] page reload index.html
+✘ [ERROR] Could not resolve "./cjs/react-jsx-runtime.development.js"
+
+    node_modules/react/jsx-runtime.js:6:27:
+      6 │   module.exports = require('./cjs/react-jsx-runtime.development.js');
+        ╵                            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+✘ [ERROR] Could not read from file: /Users/akshatjain/Desktop/virtual/frontend/node_modules/lucide-react/dist/esm/icons/calendar-check-2.js
+
+    node_modules/lucide-react/dist/esm/lucide-react.js:234:106:
+      234 │ ...ult as LucideCalendarCheck2 } from './icons/calendar-check-2.js';
+          ╵                                       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+✘ [ERROR] Could not read from file: /Users/akshatjain/Desktop/virtual/frontend/node_modules/lucide-react/dist/esm/icons/calendar-range.js
+
+    node_modules/lucide-react/dist/esm/lucide-react.js:246:103:
+      246 │ ...efault as LucideCalendarRange } from './icons/calendar-range.js';
+          ╵                                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+✘ [ERROR] Could not read from file: /Users/akshatjain/Desktop/virtual/frontend/node_modules/lucide-react/dist/esm/icons/calendar-fold.js
+
+    node_modules/lucide-react/dist/esm/lucide-react.js:239:100:
+      239 │ ... default as LucideCalendarFold } from './icons/calendar-fold.js';
+          ╵                                          ~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+✘ [ERROR] Could not read from file: /Users/akshatjain/Desktop/virtual/frontend/node_modules/lucide-react/dist/esm/icons/citrus.js
+
+    node_modules/lucide-react/dist/esm/lucide-react.js:305:82:
+      305 │ ...s CitrusIcon, default as LucideCitrus } from './icons/citrus.js';
+          ╵                                                 ~~~~~~~~~~~~~~~~~~~
+
+✘ [ERROR] Unexpected end of file in source map
+
+    node_modules/lucide-react/dist/esm/icons/a-arrow-down.js.map:1:0:
+      1 │ 
+        ╵ ^
+
+  The source map "node_modules/lucide-react/dist/esm/icons/a-arrow-down.js.map" was referenced by the file "node_modules/lucide-react/dist/esm/icons/a-arrow-down.js" here:
+
+    node_modules/lucide-react/dist/esm/icons/a-arrow-down.js:18:21:
+      18 │ //# sourceMappingURL=a-arrow-down.js.map
+         ╵                      ~~~~~~~~~~~~~~~~~~~
+
+✘ [ERROR] Unexpected end of file in source map
+
+    node_modules/lucide-react/dist/esm/icons/align-vertical-justify-center.js.map:1:0:
+      1 │ 
+        ╵ ^
+
+  The source map "node_modules/lucide-react/dist/esm/icons/align-vertical-justify-center.js.map" was referenced by the file "node_modules/lucide-react/dist/esm/icons/align-vertical-justify-center.js" here:
+
+    node_modules/lucide-react/dist/esm/icons/align-vertical-justify-center.js:17:21:
+      17 │ //# sourceMappingURL=align-vertical-justify-center.js.map
+         ╵                      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+✘ [ERROR] Unexpected end of file in source map
+
+    node_modules/lucide-react/dist/esm/icons/align-center-horizontal.js.map:1:0:
+      1 │ 
+        ╵ ^
+
+  The source map "node_modules/lucide-react/dist/esm/icons/align-center-horizontal.js.map" was referenced by the file "node_modules/lucide-react/dist/esm/icons/align-center-horizontal.js" here:
+
+    node_modules/lucide-react/dist/esm/icons/align-center-horizontal.js:19:21:
+      19 │ //# sourceMappingURL=align-center-horizontal.js.map
+         ╵                      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+✘ [ERROR] Could not read from file: /Users/akshatjain/Desktop/virtual/frontend/node_modules/lucide-react/dist/esm/icons/cross.js
+
+    node_modules/lucide-react/dist/esm/lucide-react.js:387:79:
+      387 │ ...t as CrossIcon, default as LucideCross } from './icons/cross.js';
+          ╵                                                  ~~~~~~~~~~~~~~~~~~
+
+✘ [ERROR] Could not read from file: /Users/akshatjain/Desktop/virtual/frontend/node_modules/lucide-react/dist/esm/icons/dribbble.js
+
+    node_modules/lucide-react/dist/esm/lucide-react.js:428:88:
+      428 │ ...bbleIcon, default as LucideDribbble } from './icons/dribbble.js';
+          ╵                                               ~~~~~~~~~~~~~~~~~~~~~
+
+✘ [ERROR] Could not read from file: /Users/akshatjain/Desktop/virtual/frontend/node_modules/lucide-react/dist/esm/icons/dice-3.js
+
+    node_modules/lucide-react/dist/esm/lucide-react.js:405:79:
+      405 │ ... as Dice3Icon, default as LucideDice3 } from './icons/dice-3.js';
+          ╵                                                 ~~~~~~~~~~~~~~~~~~~
+
+✘ [ERROR] Could not read from file: /Users/akshatjain/Desktop/virtual/frontend/node_modules/lucide-react/dist/esm/icons/dice-6.js
+
+    node_modules/lucide-react/dist/esm/lucide-react.js:408:79:
+      408 │ ... as Dice6Icon, default as LucideDice6 } from './icons/dice-6.js';
+          ╵                                                 ~~~~~~~~~~~~~~~~~~~
+
+✘ [ERROR] Could not read from file: /Users/akshatjain/Desktop/virtual/frontend/node_modules/lucide-react/dist/esm/icons/diff.js
+
+    node_modules/lucide-react/dist/esm/lucide-react.js:410:76:
+      410 │ ...ault as DiffIcon, default as LucideDiff } from './icons/diff.js';
+          ╵                                                   ~~~~~~~~~~~~~~~~~
+
+✘ [ERROR] Could not read from file: /Users/akshatjain/Desktop/virtual/frontend/node_modules/lucide-react/dist/esm/icons/clipboard-paste.js
+
+    node_modules/lucide-react/dist/esm/lucide-react.js:311:106:
+      311 │ ...ault as LucideClipboardPaste } from './icons/clipboard-paste.js';
+          ╵                                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+✘ [ERROR] Could not read from file: /Users/akshatjain/Desktop/virtual/frontend/node_modules/lucide-react/dist/esm/icons/droplet.js
+
+    node_modules/lucide-react/dist/esm/lucide-react.js:430:85:
+      430 │ ...ropletIcon, default as LucideDroplet } from './icons/droplet.js';
+          ╵                                                ~~~~~~~~~~~~~~~~~~~~
+
+✘ [ERROR] Could not read from file: /Users/akshatjain/Desktop/virtual/frontend/node_modules/lucide-react/dist/esm/icons/file-badge-2.js
+
+    node_modules/lucide-react/dist/esm/lucide-react.js:461:94:
+      461 │ ...on, default as LucideFileBadge2 } from './icons/file-badge-2.js';
+          ╵                                           ~~~~~~~~~~~~~~~~~~~~~~~~~
+
+✘ [ERROR] Could not read from file: /Users/akshatjain/Desktop/virtual/frontend/node_modules/lucide-react/dist/esm/icons/eye.js
+
+    node_modules/lucide-react/dist/esm/lucide-react.js:449:73:
+      449 │ ...default as EyeIcon, default as LucideEye } from './icons/eye.js';
+          ╵                                                    ~~~~~~~~~~~~~~~~
+
+✘ [ERROR] Could not read from file: /Users/akshatjain/Desktop/virtual/frontend/node_modules/lucide-react/dist/esm/icons/factory.js
+
+    node_modules/lucide-react/dist/esm/lucide-react.js:451:85:
+      451 │ ...actoryIcon, default as LucideFactory } from './icons/factory.js';
+          ╵                                                ~~~~~~~~~~~~~~~~~~~~
+
+✘ [ERROR] Could not read from file: /Users/akshatjain/Desktop/virtual/frontend/node_modules/lucide-react/dist/esm/icons/file-video.js
+
+    node_modules/lucide-react/dist/esm/lucide-react.js:505:91:
+      505 │ ...oIcon, default as LucideFileVideo } from './icons/file-video.js';
+          ╵                                             ~~~~~~~~~~~~~~~~~~~~~~~
+
+✘ [ERROR] Could not read from file: /Users/akshatjain/Desktop/virtual/frontend/node_modules/lucide-react/dist/esm/icons/file-question.js
+
+    node_modules/lucide-react/dist/esm/lucide-react.js:491:100:
+      491 │ ... default as LucideFileQuestion } from './icons/file-question.js';
+          ╵                                          ~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+✘ [ERROR] Could not read from file: /Users/akshatjain/Desktop/virtual/frontend/node_modules/lucide-react/dist/esm/icons/clock-8.js
+
+    node_modules/lucide-react/dist/esm/lucide-react.js:326:82:
+      326 │ ... Clock8Icon, default as LucideClock8 } from './icons/clock-8.js';
+          ╵                                                ~~~~~~~~~~~~~~~~~~~~
+
+✘ [ERROR] Could not read from file: /Users/akshatjain/Desktop/virtual/frontend/node_modules/lucide-react/dist/esm/icons/file-code-2.js
+
+    node_modules/lucide-react/dist/esm/lucide-react.js:469:91:
+      469 │ ...Icon, default as LucideFileCode2 } from './icons/file-code-2.js';
+          ╵                                            ~~~~~~~~~~~~~~~~~~~~~~~~
+
+✘ [ERROR] Could not read from file: /Users/akshatjain/Desktop/virtual/frontend/node_modules/lucide-react/dist/esm/icons/file-key-2.js
+
+    node_modules/lucide-react/dist/esm/lucide-react.js:479:88:
+      479 │ ...y2Icon, default as LucideFileKey2 } from './icons/file-key-2.js';
+          ╵                                             ~~~~~~~~~~~~~~~~~~~~~~~
+
+✘ [ERROR] Could not read from file: /Users/akshatjain/Desktop/virtual/frontend/node_modules/lucide-react/dist/esm/icons/folder-kanban.js
+
+    node_modules/lucide-react/dist/esm/lucide-react.js:551:100:
+      551 │ ... default as LucideFolderKanban } from './icons/folder-kanban.js';
+          ╵                                          ~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+✘ [ERROR] Could not read from file: /Users/akshatjain/Desktop/virtual/frontend/node_modules/lucide-react/dist/esm/icons/folder-open.js
+
+    node_modules/lucide-react/dist/esm/lucide-react.js:556:94:
+      556 │ ...con, default as LucideFolderOpen } from './icons/folder-open.js';
+          ╵                                            ~~~~~~~~~~~~~~~~~~~~~~~~
+
+✘ [ERROR] Could not read from file: /Users/akshatjain/Desktop/virtual/frontend/node_modules/lucide-react/dist/esm/icons/fuel.js
+
+    node_modules/lucide-react/dist/esm/lucide-react.js:575:76:
+      575 │ ...ault as FuelIcon, default as LucideFuel } from './icons/fuel.js';
+          ╵                                                   ~~~~~~~~~~~~~~~~~
+
+✘ [ERROR] Could not read from file: /Users/akshatjain/Desktop/virtual/frontend/node_modules/lucide-react/dist/esm/icons/git-branch-plus.js
+
+    node_modules/lucide-react/dist/esm/lucide-react.js:590:103:
+      590 │ ...fault as LucideGitBranchPlus } from './icons/git-branch-plus.js';
+          ╵                                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+✘ [ERROR] Could not read from file: /Users/akshatjain/Desktop/virtual/frontend/node_modules/lucide-react/dist/esm/icons/git-compare.js
+
+    node_modules/lucide-react/dist/esm/lucide-react.js:594:94:
+      594 │ ...con, default as LucideGitCompare } from './icons/git-compare.js';
+          ╵                                            ~~~~~~~~~~~~~~~~~~~~~~~~
+
+✘ [ERROR] Could not read from file: /Users/akshatjain/Desktop/virtual/frontend/node_modules/lucide-react/dist/esm/icons/filter.js
+
+    node_modules/lucide-react/dist/esm/lucide-react.js:515:82:
+      515 │ ...s FilterIcon, default as LucideFilter } from './icons/filter.js';
+          ╵                                                 ~~~~~~~~~~~~~~~~~~~
+
+✘ [ERROR] Could not read from file: /Users/akshatjain/Desktop/virtual/frontend/node_modules/lucide-react/dist/esm/icons/fingerprint.js
+
+    node_modules/lucide-react/dist/esm/lucide-react.js:516:97:
+      516 │ ...on, default as LucideFingerprint } from './icons/fingerprint.js';
+          ╵                                            ~~~~~~~~~~~~~~~~~~~~~~~~
+
+✘ [ERROR] Could not read from file: /Users/akshatjain/Desktop/virtual/frontend/node_modules/lucide-react/dist/esm/icons/fish-symbol.js
+
+    node_modules/lucide-react/dist/esm/lucide-react.js:519:94:
+      519 │ ...con, default as LucideFishSymbol } from './icons/fish-symbol.js';
+          ╵                                            ~~~~~~~~~~~~~~~~~~~~~~~~
+
+✘ [ERROR] Could not read from file: /Users/akshatjain/Desktop/virtual/frontend/node_modules/lucide-react/dist/esm/icons/flashlight.js
+
+    node_modules/lucide-react/dist/esm/lucide-react.js:528:94:
+      528 │ ...Icon, default as LucideFlashlight } from './icons/flashlight.js';
+          ╵                                             ~~~~~~~~~~~~~~~~~~~~~~~
+
+✘ [ERROR] Could not read from file: /Users/akshatjain/Desktop/virtual/frontend/node_modules/lucide-react/dist/esm/icons/flask-conical.js
+
+    node_modules/lucide-react/dist/esm/lucide-react.js:530:100:
+      530 │ ... default as LucideFlaskConical } from './icons/flask-conical.js';
+          ╵                                          ~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+✘ [ERROR] Could not read from file: /Users/akshatjain/Desktop/virtual/frontend/node_modules/lucide-react/dist/esm/icons/flip-horizontal-2.js
+
+    node_modules/lucide-react/dist/esm/lucide-react.js:532:109:
+      532 │ ...t as LucideFlipHorizontal2 } from './icons/flip-horizontal-2.js';
+          ╵                                      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+✘ [ERROR] Could not read from file: /Users/akshatjain/Desktop/virtual/frontend/node_modules/lucide-react/dist/esm/icons/gitlab.js
+
+    node_modules/lucide-react/dist/esm/lucide-react.js:605:82:
+      605 │ ...s GitlabIcon, default as LucideGitlab } from './icons/gitlab.js';
+          ╵                                                 ~~~~~~~~~~~~~~~~~~~
+
+✘ [ERROR] Could not read from file: /Users/akshatjain/Desktop/virtual/frontend/node_modules/lucide-react/dist/esm/icons/grab.js
+
+    node_modules/lucide-react/dist/esm/lucide-react.js:611:76:
+      611 │ ...ault as GrabIcon, default as LucideGrab } from './icons/grab.js';
+          ╵                                                   ~~~~~~~~~~~~~~~~~
+
+✘ [ERROR] Could not read from file: /Users/akshatjain/Desktop/virtual/frontend/node_modules/lucide-react/dist/esm/icons/hard-drive-download.js
+
+    node_modules/lucide-react/dist/esm/lucide-react.js:629:115:
+      629 │ ... LucideHardDriveDownload } from './icons/hard-drive-download.js';
+          ╵                                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+✘ [ERROR] Could not read from file: /Users/akshatjain/Desktop/virtual/frontend/node_modules/lucide-react/dist/esm/icons/heading-3.js
+
+    node_modules/lucide-react/dist/esm/lucide-react.js:638:88:
+      638 │ ...ng3Icon, default as LucideHeading3 } from './icons/heading-3.js';
+          ╵                                              ~~~~~~~~~~~~~~~~~~~~~~
+
+✘ [ERROR] Could not read from file: /Users/akshatjain/Desktop/virtual/frontend/node_modules/lucide-react/dist/esm/icons/handshake.js
+
+    node_modules/lucide-react/dist/esm/lucide-react.js:628:91:
+      628 │ ...keIcon, default as LucideHandshake } from './icons/handshake.js';
+          ╵                                              ~~~~~~~~~~~~~~~~~~~~~~
+
+✘ [ERROR] Could not read from file: /Users/akshatjain/Desktop/virtual/frontend/node_modules/lucide-react/dist/esm/icons/heading-6.js
+
+    node_modules/lucide-react/dist/esm/lucide-react.js:641:88:
+      641 │ ...ng6Icon, default as LucideHeading6 } from './icons/heading-6.js';
+          ╵                                              ~~~~~~~~~~~~~~~~~~~~~~
+
+✘ [ERROR] Could not read from file: /Users/akshatjain/Desktop/virtual/frontend/node_modules/lucide-react/dist/esm/icons/heading.js
+
+    node_modules/lucide-react/dist/esm/lucide-react.js:642:85:
+      642 │ ...eadingIcon, default as LucideHeading } from './icons/heading.js';
+          ╵                                                ~~~~~~~~~~~~~~~~~~~~
+
+✘ [ERROR] Could not read from file: /Users/akshatjain/Desktop/virtual/frontend/node_modules/lucide-react/dist/esm/icons/heart-off.js
+
+    node_modules/lucide-react/dist/esm/lucide-react.js:647:88:
+      647 │ ...OffIcon, default as LucideHeartOff } from './icons/heart-off.js';
+          ╵                                              ~~~~~~~~~~~~~~~~~~~~~~
+
+✘ [ERROR] Could not read from file: /Users/akshatjain/Desktop/virtual/frontend/node_modules/lucide-react/dist/esm/icons/indian-rupee.js
+
+    node_modules/lucide-react/dist/esm/lucide-react.js:671:97:
+      671 │ ...n, default as LucideIndianRupee } from './icons/indian-rupee.js';
+          ╵                                           ~~~~~~~~~~~~~~~~~~~~~~~~~
+
+✘ [ERROR] Could not read from file: /Users/akshatjain/Desktop/virtual/frontend/node_modules/lucide-react/dist/esm/icons/iteration-ccw.js
+
+    node_modules/lucide-react/dist/esm/lucide-react.js:677:100:
+      677 │ ... default as LucideIterationCcw } from './icons/iteration-ccw.js';
+          ╵                                          ~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+✘ [ERROR] Could not read from file: /Users/akshatjain/Desktop/virtual/frontend/node_modules/lucide-react/dist/esm/icons/japanese-yen.js
+
+    node_modules/lucide-react/dist/esm/lucide-react.js:679:97:
+      679 │ ...n, default as LucideJapaneseYen } from './icons/japanese-yen.js';
+          ╵                                           ~~~~~~~~~~~~~~~~~~~~~~~~~
+
+✘ [ERROR] Could not read from file: /Users/akshatjain/Desktop/virtual/frontend/node_modules/lucide-react/dist/esm/icons/message-square-off.js
+
+    node_modules/lucide-react/dist/esm/lucide-react.js:794:112:
+      794 │ ...t as MessageSquareOffIcon } from './icons/message-square-off.js';
+          ╵                                     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+✘ [ERROR] Could not read from file: /Users/akshatjain/Desktop/virtual/frontend/node_modules/lucide-react/dist/esm/icons/lamp-wall-up.js
+
+    node_modules/lucide-react/dist/esm/lucide-react.js:692:94:
+      692 │ ...on, default as LucideLampWallUp } from './icons/lamp-wall-up.js';
+          ╵                                           ~~~~~~~~~~~~~~~~~~~~~~~~~
+
+✘ [ERROR] Could not read from file: /Users/akshatjain/Desktop/virtual/frontend/node_modules/lucide-react/dist/esm/icons/laugh.js
+
+    node_modules/lucide-react/dist/esm/lucide-react.js:700:79:
+      700 │ ...t as LaughIcon, default as LucideLaugh } from './icons/laugh.js';
+          ╵                                                  ~~~~~~~~~~~~~~~~~~
+
+✘ [ERROR] Could not read from file: /Users/akshatjain/Desktop/virtual/frontend/node_modules/lucide-react/dist/esm/icons/microwave.js
+
+    node_modules/lucide-react/dist/esm/lucide-react.js:807:91:
+      807 │ ...icrowave, default as MicrowaveIcon } from './icons/microwave.js';
+          ╵                                              ~~~~~~~~~~~~~~~~~~~~~~
+
+✘ [ERROR] Could not read from file: /Users/akshatjain/Desktop/virtual/frontend/node_modules/lucide-react/dist/esm/icons/leaf.js
+
+    node_modules/lucide-react/dist/esm/lucide-react.js:710:76:
+      710 │ ...ault as LeafIcon, default as LucideLeaf } from './icons/leaf.js';
+          ╵                                                   ~~~~~~~~~~~~~~~~~
+
+✘ [ERROR] Could not read from file: /Users/akshatjain/Desktop/virtual/frontend/node_modules/lucide-react/dist/esm/icons/monitor-check.js
+
+    node_modules/lucide-react/dist/esm/lucide-react.js:814:100:
+      814 │ ...k, default as MonitorCheckIcon } from './icons/monitor-check.js';
+          ╵                                          ~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+✘ [ERROR] Could not read from file: /Users/akshatjain/Desktop/virtual/frontend/node_modules/lucide-react/dist/esm/icons/moon-star.js
+
+    node_modules/lucide-react/dist/esm/lucide-react.js:826:88:
+      826 │ ... MoonStar, default as MoonStarIcon } from './icons/moon-star.js';
+          ╵                                              ~~~~~~~~~~~~~~~~~~~~~~
+
+✘ [ERROR] Could not read from file: /Users/akshatjain/Desktop/virtual/frontend/node_modules/lucide-react/dist/esm/icons/mountain.js
+
+    node_modules/lucide-react/dist/esm/lucide-react.js:829:88:
+      829 │ ...s Mountain, default as MountainIcon } from './icons/mountain.js';
+          ╵                                               ~~~~~~~~~~~~~~~~~~~~~
+
+✘ [ERROR] Could not read from file: /Users/akshatjain/Desktop/virtual/frontend/node_modules/lucide-react/dist/esm/icons/list-restart.js
+
+    node_modules/lucide-react/dist/esm/lucide-react.js:732:97:
+      732 │ ...n, default as LucideListRestart } from './icons/list-restart.js';
+          ╵                                           ~~~~~~~~~~~~~~~~~~~~~~~~~
+
+✘ [ERROR] Could not read from file: /Users/akshatjain/Desktop/virtual/frontend/node_modules/lucide-react/dist/esm/icons/mouse-pointer-ban.js
+
+    node_modules/lucide-react/dist/esm/lucide-react.js:832:109:
+      832 │ ...ult as MousePointerBanIcon } from './icons/mouse-pointer-ban.js';
+          ╵                                      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+✘ [ERROR] Could not read from file: /Users/akshatjain/Desktop/virtual/frontend/node_modules/lucide-react/dist/esm/icons/list-video.js
+
+    node_modules/lucide-react/dist/esm/lucide-react.js:736:91:
+      736 │ ...oIcon, default as LucideListVideo } from './icons/list-video.js';
+          ╵                                             ~~~~~~~~~~~~~~~~~~~~~~~
+
+✘ [ERROR] Could not read from file: /Users/akshatjain/Desktop/virtual/frontend/node_modules/lucide-react/dist/esm/icons/locate-off.js
+
+    node_modules/lucide-react/dist/esm/lucide-react.js:742:91:
+      742 │ ...fIcon, default as LucideLocateOff } from './icons/locate-off.js';
+          ╵                                             ~~~~~~~~~~~~~~~~~~~~~~~
+
+✘ [ERROR] Could not read from file: /Users/akshatjain/Desktop/virtual/frontend/node_modules/lucide-react/dist/esm/icons/locate.js
+
+    node_modules/lucide-react/dist/esm/lucide-react.js:743:82:
+      743 │ ...s LocateIcon, default as LucideLocate } from './icons/locate.js';
+          ╵                                                 ~~~~~~~~~~~~~~~~~~~
+
+✘ [ERROR] Could not read from file: /Users/akshatjain/Desktop/virtual/frontend/node_modules/lucide-react/dist/esm/icons/move-up-right.js
+
+    node_modules/lucide-react/dist/esm/lucide-react.js:845:97:
+      845 │ ...ht, default as MoveUpRightIcon } from './icons/move-up-right.js';
+          ╵                                          ~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+✘ [ERROR] Could not read from file: /Users/akshatjain/Desktop/virtual/frontend/node_modules/lucide-react/dist/esm/icons/magnet.js
+
+    node_modules/lucide-react/dist/esm/lucide-react.js:751:82:
+      751 │ ...ault as Magnet, default as MagnetIcon } from './icons/magnet.js';
+          ╵                                                 ~~~~~~~~~~~~~~~~~~~
+
+✘ [ERROR] Could not read from file: /Users/akshatjain/Desktop/virtual/frontend/node_modules/lucide-react/dist/esm/icons/mail-open.js
+
+    node_modules/lucide-react/dist/esm/lucide-react.js:754:88:
+      754 │ ... MailOpen, default as MailOpenIcon } from './icons/mail-open.js';
+          ╵                                              ~~~~~~~~~~~~~~~~~~~~~~
+
+✘ [ERROR] Could not read from file: /Users/akshatjain/Desktop/virtual/frontend/node_modules/lucide-react/dist/esm/icons/navigation-2-off.js
+
+    node_modules/lucide-react/dist/esm/lucide-react.js:853:106:
+      853 │ ...fault as Navigation2OffIcon } from './icons/navigation-2-off.js';
+          ╵                                       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+✘ [ERROR] Could not read from file: /Users/akshatjain/Desktop/virtual/frontend/node_modules/lucide-react/dist/esm/icons/map.js
+
+    node_modules/lucide-react/dist/esm/lucide-react.js:766:73:
+      766 │ ...eMap, default as Map, default as MapIcon } from './icons/map.js';
+          ╵                                                    ~~~~~~~~~~~~~~~~
+
+✘ [ERROR] Could not read from file: /Users/akshatjain/Desktop/virtual/frontend/node_modules/lucide-react/dist/esm/icons/option.js
+
+    node_modules/lucide-react/dist/esm/lucide-react.js:869:82:
+      869 │ ...ault as Option, default as OptionIcon } from './icons/option.js';
+          ╵                                                 ~~~~~~~~~~~~~~~~~~~
+
+✘ [ERROR] Could not read from file: /Users/akshatjain/Desktop/virtual/frontend/node_modules/lucide-react/dist/esm/icons/maximize.js
+
+    node_modules/lucide-react/dist/esm/lucide-react.js:769:88:
+      769 │ ...s Maximize, default as MaximizeIcon } from './icons/maximize.js';
+          ╵                                               ~~~~~~~~~~~~~~~~~~~~~
+
+✘ [ERROR] Could not read from file: /Users/akshatjain/Desktop/virtual/frontend/node_modules/lucide-react/dist/esm/icons/package-x.js
+
+    node_modules/lucide-react/dist/esm/lucide-react.js:878:88:
+      878 │ ... PackageX, default as PackageXIcon } from './icons/package-x.js';
+          ╵                                              ~~~~~~~~~~~~~~~~~~~~~~
+
+✘ [ERROR] Could not read from file: /Users/akshatjain/Desktop/virtual/frontend/node_modules/lucide-react/dist/esm/icons/paint-roller.js
+
+    node_modules/lucide-react/dist/esm/lucide-react.js:881:97:
+      881 │ ...ler, default as PaintRollerIcon } from './icons/paint-roller.js';
+          ╵                                           ~~~~~~~~~~~~~~~~~~~~~~~~~
+
+✘ [ERROR] Could not read from file: /Users/akshatjain/Desktop/virtual/frontend/node_modules/lucide-react/dist/esm/icons/pie-chart.js
+
+    node_modules/lucide-react/dist/esm/lucide-react.js:923:88:
+      923 │ ... PieChart, default as PieChartIcon } from './icons/pie-chart.js';
+          ╵                                              ~~~~~~~~~~~~~~~~~~~~~~
+
+✘ [ERROR] Could not read from file: /Users/akshatjain/Desktop/virtual/frontend/node_modules/lucide-react/dist/esm/icons/search-code.js
+
+    node_modules/lucide-react/dist/esm/lucide-react.js:1044:94:
+      1044 │ ...Code, default as SearchCodeIcon } from './icons/search-code.js';
+           ╵                                           ~~~~~~~~~~~~~~~~~~~~~~~~
+
+✘ [ERROR] Could not read from file: /Users/akshatjain/Desktop/virtual/frontend/node_modules/lucide-react/dist/esm/icons/settings.js
+
+    node_modules/lucide-react/dist/esm/lucide-react.js:1058:88:
+      1058 │ ... Settings, default as SettingsIcon } from './icons/settings.js';
+           ╵                                              ~~~~~~~~~~~~~~~~~~~~~
+
+✘ [ERROR] Could not read from file: /Users/akshatjain/Desktop/virtual/frontend/node_modules/lucide-react/dist/esm/icons/plug-zap-2.js
+
+    node_modules/lucide-react/dist/esm/lucide-react.js:939:88:
+      939 │ ...PlugZap2, default as PlugZap2Icon } from './icons/plug-zap-2.js';
+          ╵                                             ~~~~~~~~~~~~~~~~~~~~~~~
+
+✘ [ERROR] Could not read from file: /Users/akshatjain/Desktop/virtual/frontend/node_modules/lucide-react/dist/esm/icons/podcast.js
+
+    node_modules/lucide-react/dist/esm/lucide-react.js:945:85:
+      945 │ ...t as Podcast, default as PodcastIcon } from './icons/podcast.js';
+          ╵                                                ~~~~~~~~~~~~~~~~~~~~
+
+✘ [ERROR] Could not read from file: /Users/akshatjain/Desktop/virtual/frontend/node_modules/lucide-react/dist/esm/icons/popcorn.js
+
+    node_modules/lucide-react/dist/esm/lucide-react.js:948:85:
+      948 │ ...t as Popcorn, default as PopcornIcon } from './icons/popcorn.js';
+          ╵                                                ~~~~~~~~~~~~~~~~~~~~
+
+✘ [ERROR] Could not read from file: /Users/akshatjain/Desktop/virtual/frontend/node_modules/lucide-react/dist/esm/icons/pencil.js
+
+    node_modules/lucide-react/dist/esm/lucide-react.js:907:82:
+      907 │ ...ault as Pencil, default as PencilIcon } from './icons/pencil.js';
+          ╵                                                 ~~~~~~~~~~~~~~~~~~~
+
+✘ [ERROR] Could not read from file: /Users/akshatjain/Desktop/virtual/frontend/node_modules/lucide-react/dist/esm/icons/refresh-cw-off.js
+
+    node_modules/lucide-react/dist/esm/lucide-react.js:990:100:
+      990 │ ..., default as RefreshCwOffIcon } from './icons/refresh-cw-off.js';
+          ╵                                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+✘ [ERROR] Could not read from file: /Users/akshatjain/Desktop/virtual/frontend/node_modules/lucide-react/dist/esm/icons/receipt-cent.js
+
+    node_modules/lucide-react/dist/esm/lucide-react.js:973:97:
+      973 │ ...ent, default as ReceiptCentIcon } from './icons/receipt-cent.js';
+          ╵                                           ~~~~~~~~~~~~~~~~~~~~~~~~~
+
+✘ [ERROR] Could not read from file: /Users/akshatjain/Desktop/virtual/frontend/node_modules/lucide-react/dist/esm/icons/circle-plus.js
+
+    node_modules/lucide-react/dist/esm/lucide-react.js:1351:173:
+      1351 │ ...rcle, default as PlusCircleIcon } from './icons/circle-plus.js';
+           ╵                                           ~~~~~~~~~~~~~~~~~~~~~~~~
+
