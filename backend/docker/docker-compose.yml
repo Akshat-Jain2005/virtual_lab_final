@@ -1,0 +1,150 @@
+version: '3.8'
+
+services:
+  # Node.js Application
+  app:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    container_name: virtual-lab-app
+    ports:
+      - "3000:5000"
+      - "9090:9090"
+    environment:
+      - NODE_ENV=production
+      - PORT=5000
+      - MONGO_URI=mongodb://mongodb:27017/virtual-lab
+      - REDIS_URL=redis://redis:6379
+      - SECRET_KEY=${SECRET_KEY:-your-secret-key}
+      - CORS_ORIGIN=http://localhost:3000
+      - METRICS_ENABLED=true
+      - METRICS_PORT=9090
+      - LOG_LEVEL=info
+    depends_on:
+      - mongodb
+      - redis
+    networks:
+      - virtual-lab-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    volumes:
+      - ../logs:/app/logs
+
+  # MongoDB
+  mongodb:
+    image: mongo:6.0
+    container_name: virtual-lab-mongodb
+    ports:
+      - "27017:27017"
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=password
+      - MONGO_INITDB_DATABASE=virtual-lab
+    volumes:
+      - mongodb-data:/data/db
+    networks:
+      - virtual-lab-network
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongosh localhost:27017/test --quiet
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Redis
+  redis:
+    image: redis:7-alpine
+    container_name: virtual-lab-redis
+    ports:
+      - "6379:6379"
+    command: redis-server --appendonly yes
+    volumes:
+      - redis-data:/data
+    networks:
+      - virtual-lab-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Prometheus
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: virtual-lab-prometheus
+    ports:
+      - "9091:9090"
+    volumes:
+      - ../monitoring/prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus-data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+    networks:
+      - virtual-lab-network
+    depends_on:
+      - app
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:9090/-/healthy"]
+      interval: 15s
+      timeout: 10s
+      retries: 3
+
+  # Grafana
+  grafana:
+    image: grafana/grafana:latest
+    container_name: virtual-lab-grafana
+    ports:
+      - "3050:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_INSTALL_PLUGINS=
+    volumes:
+      - grafana-data:/var/lib/grafana
+      - ../monitoring/grafana-dashboards:/etc/grafana/provisioning/dashboards
+      - ../monitoring/grafana-datasources.yml:/etc/grafana/provisioning/datasources/datasources.yml
+    networks:
+      - virtual-lab-network
+    depends_on:
+      - prometheus
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+
+  # Nginx Reverse Proxy
+  nginx:
+    image: nginx:alpine
+    container_name: virtual-lab-nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ../certs:/etc/nginx/certs:ro
+    networks:
+      - virtual-lab-network
+    depends_on:
+      - app
+      - grafana
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:80/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+networks:
+  virtual-lab-network:
+    driver: bridge
+
+volumes:
+  mongodb-data:
+  redis-data:
+  prometheus-data:
+  grafana-data:

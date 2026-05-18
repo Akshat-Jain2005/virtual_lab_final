@@ -1,0 +1,33 @@
+syntax = "proto3";
+
+package physics;
+
+message Vector2 {
+  float x = 1;
+  float y = 2;
+}
+
+message BodyState {
+  string id = 1;
+  Vector2 position = 2;
+  Vector2 velocity = 3;
+  float angle = 4;
+  float angularVelocity = 5;
+}
+
+message PhysicsState {
+  double timestamp = 1;
+  uint32 seqId = 2;
+  repeated BodyState bodies = 3;
+}
+
+message AnalyticsFrame {
+  string roomId = 1;
+  double timestamp = 2;
+  message BodyAnalytics {
+    string id = 1;
+    float smoothedVelocity = 2;
+    float smoothedKE = 3;
+  }
+  repeated BodyAnalytics bodies = 3;
+}
