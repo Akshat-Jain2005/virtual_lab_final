@@ -128,10 +128,29 @@ process.on("unhandledRejection", (reason) => {
 // ── Start Server ──────────────────────────────────────────────────────────────
 async function startServer() {
   try {
-    await mongoose.connect(config.mongoUri);
-    logger.info("Connected to MongoDB");
-
-    auditLogWriter.start();
+    // Attempt MongoDB connection in background to prevent startup crash if database is temporarily down
+    mongoose.connect(config.mongoUri)
+      .then(() => {
+        logger.info("Connected to MongoDB");
+        auditLogWriter.start();
+      })
+      .catch((err) => {
+        logger.error(`[MongoDB] Initial connection failed: ${err.message}. Reconnecting in background...`);
+        const retryConnection = () => {
+          setTimeout(async () => {
+            logger.info("[MongoDB] Retrying MongoDB connection...");
+            try {
+              await mongoose.connect(config.mongoUri);
+              logger.info("Connected to MongoDB successfully");
+              auditLogWriter.start();
+            } catch (retryErr) {
+              logger.error(`[MongoDB] Reconnection failed: ${retryErr.message}. Retrying again in 5s...`);
+              retryConnection();
+            }
+          }, 5000);
+        };
+        retryConnection();
+      });
 
     // Redis metrics client (optional — errors are silently ignored)
     const metricsRedis = new Redis(config.redisUrl, { lazyConnect: true });
