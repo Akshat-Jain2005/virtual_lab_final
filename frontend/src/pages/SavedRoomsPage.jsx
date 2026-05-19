@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { Users, Lock, Unlock, Trash2, ArrowLeft } from 'lucide-react'
+import { Users, Lock, Unlock, Trash2, ArrowLeft, BarChart2, Database } from 'lucide-react'
 import AppShell from '@/components/layout/AppShell'
 import { MOCK_ROOMS } from '@/services/api'
 
@@ -19,6 +19,8 @@ export default function SavedRoomsPage() {
     setSavedRooms(updated)
     localStorage.setItem('vlab_rooms', JSON.stringify(updated))
   }
+
+  const hasSnapshot = (id) => !!localStorage.getItem(`vlab-snapshot-${id}`)
 
   const statusColors = { active: '#39ff14', idle: '#fbbf24', offline: '#475569' }
 
@@ -50,12 +52,32 @@ export default function SavedRoomsPage() {
                 <span className="status-dot" style={{ background: statusColors[room.status], boxShadow: `0 0 8px ${statusColors[room.status]}80` }} />
                 <h3 className="font-semibold text-slate-100 text-sm truncate">{room.name}</h3>
               </div>
+
+              {/* Snapshot badge */}
+              {hasSnapshot(room.id) && (
+                <div className="flex items-center gap-1 mb-2">
+                  <Database className="w-3 h-3 text-emerald-400" />
+                  <span className="text-[10px] font-mono text-emerald-400 uppercase tracking-wider">State saved — will restore on open</span>
+                </div>
+              )}
+
               <div className="flex items-center justify-between text-xs">
                 <div className="flex items-center gap-1 text-slate-500">
                   <Users className="w-3.5 h-3.5" />
                   <span>{room.users} online</span>
                 </div>
-                {room.isLocked ? <Lock className="w-3.5 h-3.5 text-warning" /> : <Unlock className="w-3.5 h-3.5 text-slate-500" />}
+                <div className="flex items-center gap-2">
+                  {hasSnapshot(room.id) && (
+                    <button
+                      onClick={(e) => { e.stopPropagation(); navigate(`/room/${room.id}/analytics`) }}
+                      className="flex items-center gap-1 text-cyan-400 hover:text-cyan-300 transition-colors"
+                      title="View Analytics"
+                    >
+                      <BarChart2 className="w-3.5 h-3.5" />
+                    </button>
+                  )}
+                  {room.isLocked ? <Lock className="w-3.5 h-3.5 text-warning" /> : <Unlock className="w-3.5 h-3.5 text-slate-500" />}
+                </div>
               </div>
             </motion.div>
           ))}
