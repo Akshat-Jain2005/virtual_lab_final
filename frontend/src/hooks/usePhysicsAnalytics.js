@@ -101,6 +101,15 @@ export default function usePhysicsAnalytics(engine) {
     const interval = setInterval(() => {
       const { ke, pe } = computeEnergies(engine)
 
+      // Only plot data when the engine has active (non-static) bodies
+      const hasActiveBodies = engine?.world?.bodies?.some(b => !b.isStatic) ?? false
+      if (!hasActiveBodies) {
+        // Canvas is empty — show zeroes and clear chart history
+        setDataPoints([])
+        setStats({ ke: 0, pe: 0, fps: Math.min(fpsRef.current, 60) })
+        return
+      }
+
       const t = tCounterRef.current++
 
       const displayKE = ke
