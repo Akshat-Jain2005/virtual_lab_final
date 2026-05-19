@@ -8,15 +8,15 @@ import PhysicsCanvas, {
   spawnBody, spawnRope, spawnSpring, spawnPivot, spawnMotor, spawnPulley, clearBodies
 } from '../components/canvas/PhysicsCanvas'
 
-import CanvasToolbar   from '../components/canvas/CanvasToolbar'
-import CollabSidebar   from '../components/canvas/CollabSidebar'
+import CanvasToolbar from '../components/canvas/CanvasToolbar'
+import CollabSidebar from '../components/canvas/CollabSidebar'
 import PropertiesPanel from '../components/canvas/PropertiesPanel'
-import AnalyticsPanel  from '../components/canvas/AnalyticsPanel'
-import LiveCursors     from '../components/canvas/LiveCursors'
-import AIChatBubble    from '../components/canvas/AIChatBubble'
+import AnalyticsPanel from '../components/canvas/AnalyticsPanel'
+import LiveCursors from '../components/canvas/LiveCursors'
+import AIChatBubble from '../components/canvas/AIChatBubble'
 import ExperimentRecorder from '../components/canvas/ExperimentRecorder'
 import BodyOwnershipOverlay from '../components/canvas/BodyOwnershipOverlay'
-import { saveExperiment, serializeWorld } from '../services/experimentLibrary'
+import { saveExperiment, serializeWorld, deserializeWorld } from '../services/experimentLibrary'
 
 import {
   connectSocket, emitRoomJoin, offAll,
@@ -76,24 +76,44 @@ function StatusBar({ roomId, bodyCount, isConnected, mousePos }) {
 // ── RoomPage ──────────────────────────────────────────────────────────────────
 export default function RoomPage() {
   const { id: roomId } = useParams()
-  const navigate       = useNavigate()
-  const engineRef      = useRef(null)
+  const navigate = useNavigate()
+  const engineRef = useRef(null)
 
-  const [activeTool,   setActiveTool]   = useState('select')
+  const [activeTool, setActiveTool] = useState('select')
   const [selectedBody, setSelectedBody] = useState(null)
-  const [bodyCount,    setBodyCount]    = useState(3)
-  const [isLocked,     setIsLocked]     = useState(false)
-  const [socketReady,  setSocketReady]  = useState(false)
-  const [mousePos,     setMousePos]     = useState({ x: 0, y: 0 })
+  const [bodyCount, setBodyCount] = useState(3)
+  const [isLocked, setIsLocked] = useState(false)
+  const [socketReady, setSocketReady] = useState(false)
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 })
   // Tracks when the physics engine is mounted so analytics panel gets a valid ref
-  const [engineObj,    setEngineObj]    = useState(null)
-  const [showLibrary,  setShowLibrary]  = useState(false)
-  const [isZeroG,      setIsZeroG]      = useState(false)
+  const [engineObj, setEngineObj] = useState(null)
+  const [showLibrary, setShowLibrary] = useState(false)
+  const [isZeroG, setIsZeroG] = useState(false)
+
+  // ── Restore saved snapshot when engine first becomes ready ─────────────────
+  const handleEngineReady = useCallback((eng) => {
+    setEngineObj(eng)
+    if (!eng) return
+    // Look for a snapshot saved for this exact room id
+    const snapshotKey = `vlab-snapshot-${roomId}`
+    const raw = localStorage.getItem(snapshotKey)
+    if (raw) {
+      try {
+        const snap = JSON.parse(raw)
+        const { bodyCount: restored } = deserializeWorld(eng, snap)
+        setBodyCount(restored)
+        if (snap.gravity?.y === 0) setIsZeroG(true)
+        toast('Sandbox restored ✓', { icon: '♻️', duration: 2000 })
+      } catch (e) {
+        console.warn('[RoomPage] Could not restore snapshot:', e)
+      }
+    }
+  }, [roomId])
 
   // Save Sandbox state
   const [showSaveModal, setShowSaveModal] = useState(false)
-  const [saveName,      setSaveName]      = useState('')
-  const [saving,        setSaving]        = useState(false)
+  const [saveName, setSaveName] = useState('')
+  const [saving, setSaving] = useState(false)
 
   const handleSaveExperiment = useCallback(async () => {
     if (!saveName.trim()) {
@@ -108,7 +128,7 @@ export default function RoomPage() {
     setSaving(true)
     try {
       const result = await saveExperiment(engineObj, saveName.trim(), ['mechanics'], false)
-      
+
       // Cache raw snapshot for baseline analytics computations
       try {
         const snap = serializeWorld(engineObj)
@@ -207,16 +227,16 @@ export default function RoomPage() {
   useEffect(() => {
     const onKey = (e) => {
       if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return
-      const cx = window.innerWidth  / 2 + (Math.random() - 0.5) * 200
+      const cx = window.innerWidth / 2 + (Math.random() - 0.5) * 200
       const cy = window.innerHeight * 0.2
       switch (e.key.toLowerCase()) {
         case 'r': handleDropSpawn('rectangle', cx, cy); setActiveTool('rectangle'); break
-        case 'c': handleDropSpawn('circle',    cx, cy); setActiveTool('circle');    break
-        case 'p': handleDropSpawn('polygon',   cx, cy); setActiveTool('polygon');   break
-        case 't': handleDropSpawn('rope',   cx, window.innerHeight * 0.08); setActiveTool('rope');   break
+        case 'c': handleDropSpawn('circle', cx, cy); setActiveTool('circle'); break
+        case 'p': handleDropSpawn('polygon', cx, cy); setActiveTool('polygon'); break
+        case 't': handleDropSpawn('rope', cx, window.innerHeight * 0.08); setActiveTool('rope'); break
         case 's': handleDropSpawn('spring', cx, window.innerHeight * 0.12); setActiveTool('spring'); break
-        case 'j': handleDropSpawn('pivot',  cx, window.innerHeight * 0.3);  setActiveTool('pivot');  break
-        case 'm': handleDropSpawn('motor',  cx, window.innerHeight * 0.4);  setActiveTool('motor');  break
+        case 'j': handleDropSpawn('pivot', cx, window.innerHeight * 0.3); setActiveTool('pivot'); break
+        case 'm': handleDropSpawn('motor', cx, window.innerHeight * 0.4); setActiveTool('motor'); break
         case 'v': setActiveTool('select'); break
       }
     }
@@ -358,11 +378,11 @@ export default function RoomPage() {
     const body = selectedBody
     if (!body || !window.Matter) return
     const { Body: MatterBody } = window.Matter
-    if (key === 'mass')        MatterBody.setMass(body, val)
-    if (key === 'friction')    { body.friction = val }
+    if (key === 'mass') MatterBody.setMass(body, val)
+    if (key === 'friction') { body.friction = val }
     if (key === 'restitution') { body.restitution = val }
     if (key === 'frictionAir') { body.frictionAir = val }
-    if (key === 'isStatic')    { MatterBody.setStatic(body, val) }
+    if (key === 'isStatic') { MatterBody.setStatic(body, val) }
   }, [selectedBody])
 
   const handleDeleteBody = useCallback((body) => {
@@ -377,12 +397,12 @@ export default function RoomPage() {
     const label = body.label || ''
 
     if (label.startsWith('rope') && group) {
-      const ropeBodies = Composite.allBodies(engine.world).filter(b => 
+      const ropeBodies = Composite.allBodies(engine.world).filter(b =>
         b.collisionFilter?.group === group
       )
       bodiesToRemove.push(...ropeBodies)
     } else if (label.startsWith('spring') && group) {
-      const springBodies = Composite.allBodies(engine.world).filter(b => 
+      const springBodies = Composite.allBodies(engine.world).filter(b =>
         b.collisionFilter?.group === group
       )
       bodiesToRemove.push(...springBodies)
@@ -434,10 +454,10 @@ export default function RoomPage() {
           handleDeleteBody(selectedBody)
         } else if (engineRef.current && window.Matter) {
           const { Composite } = window.Matter
-          const bodies = Composite.allBodies(engineRef.current.world).filter(b => 
-            b.label !== 'boundary' && 
-            b.label !== 'floor' && 
-            b.label !== 'pulley-axis' && 
+          const bodies = Composite.allBodies(engineRef.current.world).filter(b =>
+            b.label !== 'boundary' &&
+            b.label !== 'floor' &&
+            b.label !== 'pulley-axis' &&
             b.label !== 'motor-hub'
           )
           if (bodies.length > 0) {
@@ -480,10 +500,10 @@ export default function RoomPage() {
       }} />
 
       {/* Physics canvas */}
-      <PhysicsCanvas 
-        engineRef={engineRef} 
-        onBodyClick={handleBodyClick} 
-        onEngineReady={setEngineObj} 
+      <PhysicsCanvas
+        engineRef={engineRef}
+        onBodyClick={handleBodyClick}
+        onEngineReady={handleEngineReady}
         onBodyGrab={handleBodyGrab}
         onBodyRelease={handleBodyRelease}
       />
@@ -507,7 +527,7 @@ export default function RoomPage() {
               <span className="text-[11px] font-mono text-cyan-neon uppercase tracking-wider font-semibold">Zero-G Assembly Mode</span>
               <span className="text-[10px] text-slate-400">Ropes & springs snap on touch. Click when done!</span>
             </div>
-            
+
             <motion.button
               onClick={handleApplyGravity}
               whileHover={{ scale: 1.05 }}
@@ -533,7 +553,7 @@ export default function RoomPage() {
         transition={{ duration: 0.5, delay: 0.3, ease: [0.23, 1, 0.32, 1] }}
       >
         <ExperimentRecorder engineRef={engineRef} />
-        
+
         {/* Save Sandbox button below recorder */}
         <motion.button
           onClick={() => {
