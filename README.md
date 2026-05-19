@@ -2,6 +2,17 @@
 
 Built for the Even Semester Projects (2026), Coding Club, IIT Guwahati.
 
+## 🚀 Live Demo
+
+| Service | URL |
+|---|---|
+| **Frontend** | https://frontend-rbag.onrender.com |
+| **Backend API** | https://virtual-lab-backend-clg8.onrender.com |
+
+> ⚠️ Both services are hosted on Render's free tier. The backend may take **~50 seconds** to wake up on the first request after a period of inactivity.
+
+---
+
 ## Overview
 
 Teaching complex physics and engineering concepts online is often limited to static videos and non-interactive text, failing to build intuition for dynamic physical systems. Virtual Lab addresses this by providing a "Digital Twin" environment: a collaborative 2D physics sandbox designed for university-level learning.
