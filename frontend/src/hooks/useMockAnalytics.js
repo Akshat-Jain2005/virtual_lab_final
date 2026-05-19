@@ -1,23 +1,9 @@
 import { useState, useEffect, useRef } from 'react'
 
 export default function useMockAnalytics(engine, isLive = true) {
-  const [dataPoints, setDataPoints] = useState(() => {
-    // Generate initial beautiful historic data
-    const pts = []
-    for (let i = 0; i < 30; i++) {
-      const t = i
-      const ke = 4000 + Math.sin(i * 0.4) * 1500 + Math.random() * 400
-      const pe = 6000 + Math.cos(i * 0.4) * 1500 + Math.random() * 400
-      pts.push({ t, ke, pe })
-    }
-    return pts
-  })
+  const [dataPoints, setDataPoints] = useState([])
 
-  const [stats, setStats] = useState({
-    ke: 5000,
-    pe: 6000,
-    fps: 60
-  })
+  const [stats, setStats] = useState({ ke: 0, pe: 0, fps: 60 })
 
   const lastTimeRef = useRef(Date.now())
   const frameCountRef = useRef(0)
@@ -46,11 +32,10 @@ export default function useMockAnalytics(engine, isLive = true) {
         })
       }
 
-      // If no active moving bodies, fallback to high fidelity animation curves
-      if (calculatedKE === 0) {
-        const i = Date.now() / 1000
-        calculatedKE = 4500 + Math.sin(i * 1.5) * 2000 + Math.random() * 200
-        calculatedPE = 5500 + Math.cos(i * 1.5) * 1500 + Math.random() * 200
+      // If no active moving bodies, stay at zero — don't fabricate data
+      if (calculatedKE === 0 && calculatedPE === 0) {
+        setStats(prev => ({ ...prev, fps: Math.min(60, Math.max(45, currentFps)) }))
+        return
       }
 
       // Calculate smooth FPS
