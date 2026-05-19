@@ -8,23 +8,92 @@ Teaching complex physics and engineering concepts online is often limited to sta
 
 The platform allows multiple users to build machines, test structural integrity, and observe real-time forces in a shared, high-fidelity workspace, effectively bridging the gap between theoretical equations and physical reality through hands-on experimentation.
 
+---
+
 ## Key Features
 
-- **Interactive Physics Canvas**: A web-based workspace allowing users to drag, drop, and configure physical bodies, shapes, and materials.
-- **Multi-User Room Engine**: A backend system managing synchronized states across users to ensure a seamless, shared physical experience in real time.
-- **Physics Accuracy & Constraint System**: Integration of a 2D physics engine (Matter.js) with a functional UI toolset for creating mechanical connections like ropes, springs, pivots, and motorized components.
-- **Real-Time Analytics Dashboard**: An integrated panel that generates live line charts and vector arrows to visualize velocity, kinetic energy, and forces acting on specific components.
-- **Experiment Library**: A gallery view where users can browse, save, share, and load pre-configured physics scenarios or "lab templates" for classroom assignments.
-- **Agent Middleware**: A high-frequency synchronization layer that broadcasts physics engine deltas to minimize network lag and resolve state conflicts between collaborators.
+### 🤖 AI Experiment Assistant (Claude-Powered)
 
+A floating chat bubble powered by the Anthropic Claude API (`claude-sonnet-4-20250514`). Students type natural-language prompts like *"set up a pendulum collision"* or *"build a Newton's cradle"* and the assistant:
+
+- Responds with a plain-English explanation of the scene.
+- Automatically calls spawn functions (`spawnBody`, `spawnRope`, `spawnSpring`, `spawnPivot`, `spawnMotor`, `clearBodies`) to materialize the described setup directly on the live physics canvas.
+- Returns structured JSON `{ message, actions[] }` so every action is mapped to a precise Matter.js operation.
+- Supports complex multi-body presets including **Newton's Cradle** (5 suspended balls with constraints) and **Pendulum Collision** setups out of the box.
+
+### 🎬 Experiment Recorder & Replay
+
+A full recording and replay system for physics simulations:
+
+- **Record** — Captures every non-static body's position (`x`, `y`), angle, and velocity (`vx`, `vy`) at ~60 fps (every 16 ms) directly from the Matter.js engine with zero React re-render overhead.
+- **Stop & Save** — Trims the recording to a 10-second cap and persists it to component state.
+- **Replay** — Re-applies each saved snapshot to the engine via `Body.setPosition`, `setAngle`, and `setVelocity`, advancing frame-by-frame through the timeline.
+- **Scrub** — A slider maps 0–1 across the full frame index so users can jump to any moment in the recording.
+- **Playback Controls** — Play, Pause, Skip to Start, and Delete recording, displayed in an animated floating panel.
+
+### 📊 Real-Time Analytics & Graphing
+
+A floating analytics panel reads live data straight from the Matter.js engine and renders it as interactive charts:
+
+- **Kinetic Energy (KE) Chart** — Area chart (via Recharts) showing KE over the last N ticks in real time.
+- **Potential Energy (PE) Chart** — Complementary area chart tracking PE, letting students observe energy conservation visually.
+- **Stat Badges** — Instant readouts for total KE, PE, body count, and simulation FPS.
+- **Force Vector Overlay** — A full-screen SVG layer (pointer-events: none) that draws directional arrows on each body scaled to force magnitude; toggled independently of the chart panel.
+- **EMA & Kalman Smoothing** — Backend `EMAProcessor` and `KalmanFilter` smooth noisy sensor streams before they reach the frontend analytics pipeline.
+- **Prometheus Metrics** — `prom-client` exposes a `/metrics` endpoint for Grafana dashboards included in `backend/monitoring/`.
+
+### 🧱 Interactive Physics Canvas
+
+A web-based workspace for building, running, and interacting with 2D physics scenes:
+
+- Drag-and-drop spawn of **rectangles**, **circles**, and **polygons** (hexagons and custom sided shapes).
+- Constraint tools: **Rope**, **Spring**, **Pivot joint**, **Motor** (continuous rotation), and **Pulley**.
+- **Static Wall** placement for boundaries and fixtures.
+- Click-to-select with a **Properties Panel** for editing mass, restitution, friction, and angular velocity on any body.
+- **Body Ownership Overlay** — highlights which user in the session is currently dragging each body.
+- **Live Cursors** — real-time cursor positions of every collaborator rendered on the canvas.
+- Gravity toggle, global reset, and per-body delete.
+
+### 👥 Multi-User Collaboration
+
+- **Room Engine** — Each simulation runs in a named room; users join via a shareable room ID.
+- **WebSocket Sync** — Physics deltas are broadcast at high frequency via Socket.io so every collaborator sees the same world state.
+- **Redis Pub/Sub & Adapter** — Horizontal scaling across multiple Node processes; `@socket.io/redis-adapter` + `ioredis` route events correctly across instances.
+- **Lock / Unlock Room** — The room owner can lock the canvas to prevent others from spawning or moving bodies.
+- **Collab Sidebar** — Shows live peer list (online/offline indicators, roles), in-room chat, and a share link.
+- **Rollback Worker** — Detects and corrects state divergence between clients using a sequence tracker and rollback snapshots.
+
+### 📚 Experiment Library & Templates
+
+- **Gallery view** — Browse, search, filter, and preview all saved physics scenarios.
+- **Save / Load** — Serialize the full Matter.js world (bodies + constraints + metadata) to JSON and restore it later.
+- **Share** — Make an experiment public or keep it private; other users can fork and remix.
+- **Preset Templates** — Built-in starters (inclined plane, spring oscillator, projectile motion, etc.) accessible from `templates.js`.
+- **Classroom Assignments** — Instructors can push a template to an entire room for guided lab sessions.
+
+### 🔐 Auth & Permissions
+
+- JWT-based authentication (`jsonwebtoken` + `bcryptjs`).
+- Role system: **owner**, **editor**, **viewer** enforced on the backend via `permissions.js`.
+- Audit log (`AuditLog` model + `AuditLogWriter`) for every state-mutating action in a room.
+- Rate-limiting, CORS, and request validation middleware (`joi`).
+
+### 📦 Worker & Queue System
+
+- **Physics Worker** — Runs the Matter.js engine in a separate thread via `WorkerPool` to keep the main event loop free.
+- **Analytics Worker** — Processes and aggregates frame data asynchronously.
+- **Rollback Worker** — Monitors sequence gaps and triggers world reconciliation.
+- **Bull Queues** — Durable job queues (backed by Redis) for analytics and rollback tasks.
+
+---
 
 ## Technology Stack
 
 ### Frontend
 
-- **Core**: React.js, Vite
-- **Physics & Visualization**: Matter.js, Recharts
-- **Styling & UI**: Tailwind CSS, Framer Motion, Lucide React
+- **Core**: React 18, Vite
+- **Physics & Visualization**: Matter.js, Recharts (area/line charts)
+- **Styling & UI**: Tailwind CSS, Framer Motion, Lucide React, Sonner (toasts)
 - **State Management**: Zustand
 - **Networking**: Socket.io-client, Axios
 
@@ -34,16 +103,41 @@ The platform allows multiple users to build machines, test structural integrity,
 - **Database**: MongoDB (via Mongoose)
 - **Real-Time Engine**: WebSockets (Socket.io)
 - **Scaling & Queues**: Redis (ioredis, @socket.io/redis-adapter), Bull
-- **Security & Auth**: JSON Web Tokens (jsonwebtoken), bcryptjs, CORS
-- **Monitoring**: prom-client
+- **Security & Auth**: JSON Web Tokens, bcryptjs, CORS, Joi validation
+- **AI Integration**: Anthropic Claude API (`claude-sonnet-4-20250514`)
+- **Monitoring**: prom-client, Prometheus, Grafana
+
+---
 
 ## Getting Started
 
 ### Prerequisites
 
 - Node.js (v18+)
-- MongoDB instance (local or Atlas)
-- Redis server (local or cloud)
+- MongoDB (local install or Atlas)
+- Redis (local or cloud)
+
+---
+
+### ⚠️ MongoDB Not Running? (macOS)
+
+If the backend fails to connect to MongoDB, install and start it with Homebrew:
+
+```bash
+brew tap mongodb/brew
+brew install mongodb-community
+brew services start mongodb-community
+```
+
+Verify it is running:
+
+```bash
+brew services list | grep mongodb
+```
+
+You should see `mongodb-community started`. MongoDB will then be available at `mongodb://localhost:27017`.
+
+---
 
 ### Installation
 
@@ -61,7 +155,15 @@ cd backend
 npm install
 ```
 
-Create a `.env` file in the `backend` directory and add your environment variables (MongoDB URI, Redis connection URL, JWT secret).
+Create a `.env` file in the `backend` directory:
+
+```env
+MONGO_URI=mongodb://localhost:27017/virtuallab
+REDIS_URL=redis://localhost:6379
+JWT_SECRET=your_jwt_secret_here
+PORT=5000
+ANTHROPIC_API_KEY=your_anthropic_api_key_here
+```
 
 3. Set up the frontend:
 
@@ -70,39 +172,123 @@ cd ../frontend
 npm install
 ```
 
+---
+
 ### Running the Application
 
-1. Start the backend server:
+1. Make sure MongoDB and Redis are running (see MongoDB note above for macOS).
+
+2. Start the backend server:
 
 ```bash
 cd backend
 npm run dev
 ```
 
-The backend runs with nodemon for local development at http://localhost:5000 (or your configured port).
+The backend runs with nodemon at `http://localhost:5000`.
 
-2. Start the frontend client:
+3. Start the frontend client:
 
 ```bash
 cd frontend
 npm run dev
 ```
 
-The Vite development server is typically available at http://localhost:5173.
+The Vite dev server is available at `http://localhost:5173`.
+
+---
 
 ## Project Structure
 
 ```text
 virtual-lab/
-|-- frontend/             # React + Vite client application
-|   |-- public/           # Static assets
-|   |-- src/              # UI components, Zustand stores, canvas logic, routing
-|   `-- package.json
-`-- backend/              # Node.js + Express + Socket.io server
-    |-- src/              # Routes, controllers, physics workers, Redis pub/sub
-    |-- docker/           # Dockerization and Nginx configs
-    `-- package.json
+├── frontend/                        # React + Vite client
+│   └── src/
+│       ├── components/
+│       │   ├── canvas/
+│       │   │   ├── AIChatBubble.jsx         # AI Experiment Assistant (Claude API)
+│       │   │   ├── AnalyticsPanel.jsx       # Live KE/PE charts + force vectors
+│       │   │   ├── ExperimentRecorder.jsx   # Record, replay & scrub simulations
+│       │   │   ├── PhysicsCanvas.jsx        # Matter.js canvas + spawn functions
+│       │   │   ├── CanvasToolbar.jsx        # Shape & constraint tool palette
+│       │   │   ├── CollabSidebar.jsx        # Peer list, chat, room sharing
+│       │   │   ├── PropertiesPanel.jsx      # Per-body physics property editor
+│       │   │   ├── LiveCursors.jsx          # Real-time collaborator cursors
+│       │   │   ├── BodyOwnershipOverlay.jsx # Highlights who is dragging what
+│       │   │   └── templates.js             # Built-in experiment presets
+│       │   └── layout/
+│       │       ├── AppShell.jsx
+│       │       └── RouteGuards.jsx
+│       ├── hooks/
+│       │   ├── usePhysicsAnalytics.js       # Live KE/PE data hook
+│       │   └── useMockAnalytics.js
+│       ├── pages/
+│       │   ├── RoomPage.jsx                 # Main simulation room
+│       │   ├── DashboardPage.jsx
+│       │   ├── AnalyticsPage.jsx
+│       │   ├── LibraryPage.jsx
+│       │   ├── SavedRoomsPage.jsx
+│       │   └── AuthPage.jsx
+│       ├── services/
+│       │   ├── socket.js                    # Socket.io client + delta reconciliation
+│       │   ├── api.js
+│       │   └── experimentLibrary.js         # Save/load/serialize world state
+│       └── stores/
+│           ├── useAuthStore.js
+│           ├── useRoomStore.js
+│           └── useUIStore.js
+│
+└── backend/                         # Node.js + Express + Socket.io server
+    └── src/
+        ├── analytics/
+        │   ├── AnalyticsPipeline.js
+        │   ├── EMAProcessor.js              # Exponential moving average smoother
+        │   └── KalmanFilter.js              # Kalman filter for noisy data
+        ├── api/
+        │   ├── controllers/                 # User, project, analytics controllers
+        │   ├── middlewares/                 # Auth, rate-limit, validation
+        │   └── routes/
+        ├── auth/
+        │   ├── jwtService.js
+        │   └── permissions.js
+        ├── models/                          # Mongoose schemas
+        │   ├── User.js
+        │   ├── Project.js
+        │   ├── CollaborationSession.js
+        │   ├── SimulationRoom.js
+        │   ├── PhysicsObject.js
+        │   ├── Constraint.js
+        │   ├── EnvironmentPreset.js
+        │   ├── ExperimentTemplate.js
+        │   ├── AnalyticsFrame.js
+        │   └── AuditLog.js
+        ├── physics/
+        │   ├── engine/
+        │   │   ├── PhysicsEngine.js
+        │   │   ├── FixedLoop.js
+        │   │   └── Rollback.js
+        │   └── plugins/
+        │       ├── FluidDragPlugin.js
+        │       ├── SpringDegradationPlugin.js
+        │       └── ViscosityPlugin.js
+        ├── queues/                          # Bull job queues (Redis-backed)
+        ├── redis/                           # Cache, pub/sub, lock manager
+        ├── sockets/
+        │   ├── RoomManager.js
+        │   └── handlers/index.js            # All socket event handlers
+        ├── workers/
+        │   ├── PhysicsWorker.js
+        │   ├── AnalyticsWorker.js
+        │   ├── RollbackWorker.js
+        │   └── WorkerPool.js
+        └── utils/
+            ├── AuditLogWriter.js
+            ├── SequenceTracker.js
+            ├── logger.js
+            └── metrics.js
 ```
+
+---
 
 ## Contributing
 
@@ -128,6 +314,8 @@ git push origin feature/AmazingFeature
 ```
 
 5. Open a pull request.
+
+---
 
 ## Mentors & Acknowledgements
 
