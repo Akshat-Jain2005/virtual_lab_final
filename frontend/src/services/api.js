@@ -42,18 +42,18 @@ export const MOCK_PROJECTS = [
     updatedAt: new Date(Date.now() - 172800000).toISOString(),
   },
   {
-    id: 'proj_003', name: 'Collision Workshop',
-    description: 'Elastic and inelastic collisions with real-time momentum tracking.',
+    id: 'proj_003', name: 'Ramp and Collision',
+    description: 'Explore collisions on an inclined plane with real-time momentum tracking.',
     tags: ['momentum', 'collisions'], thumbnail: '💥',
     forksCount: 22, starsCount: 67, isPublic: true,
     owner: { id: 'usr_ext_001', username: 'prof_chen' },
     updatedAt: new Date(Date.now() - 259200000).toISOString(),
   },
   {
-    id: 'proj_004', name: 'Fluid Dynamics Intro',
-    description: 'Buoyancy, drag forces, and viscosity in a simulated fluid medium.',
-    tags: ['fluids', 'drag'], thumbnail: '🌊',
-    forksCount: 5, starsCount: 18, isPublic: false,
+    id: 'proj_004', name: "Newton's Cradle",
+    description: '5 suspended balls with constraints demonstrating conservation of momentum.',
+    tags: ['momentum', 'collisions'], thumbnail: '⚙️',
+    forksCount: 15, starsCount: 48, isPublic: true,
     owner: { id: 'usr_demo001', username: 'dr_maxwell' },
     updatedAt: new Date(Date.now() - 345600000).toISOString(),
   },
@@ -76,10 +76,10 @@ export const MOCK_PROJECTS = [
 ]
 
 export const MOCK_ROOMS = [
-  { id: 'room-alpha-01', name: 'PHY 201 Lab Session',    users: 7,  isLocked: false, status: 'active',  projectId: 'proj_001' },
-  { id: 'room-beta-02',  name: 'Collision Research',      users: 3,  isLocked: true,  status: 'active',  projectId: 'proj_003' },
-  { id: 'room-gamma-03', name: 'Office Hours Sandbox',    users: 1,  isLocked: false, status: 'idle',    projectId: null },
-  { id: 'room-delta-04', name: 'Spring Systems Study',    users: 0,  isLocked: false, status: 'offline', projectId: 'proj_005' },
+  { id: 'room-alpha-01', name: 'Pendulum Lab Session',    users: 7,  isLocked: false, status: 'active',  projectId: 'proj_001' },
+  { id: 'room-beta-02',  name: 'Ramp & Collision Research',users: 3,  isLocked: true,  status: 'active',  projectId: 'proj_003' },
+  { id: 'room-gamma-03', name: 'Projectile Motion Sandbox',users: 1,  isLocked: false, status: 'idle',    projectId: 'proj_002' },
+  { id: 'room-delta-04', name: "Newton's Cradle Study",    users: 0,  isLocked: false, status: 'offline', projectId: 'proj_004' },
 ]
 
 // ─── Auth API ───────────────────────────────────────────────

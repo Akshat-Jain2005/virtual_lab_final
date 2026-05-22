@@ -169,7 +169,7 @@ export function LibraryDetailPage() {
           </div>
 
           <div className="flex gap-3">
-            <button onClick={() => navigate('/room/room-alpha-01')} className="btn-primary">
+            <button onClick={() => navigate(`/room/room-alpha-01?load=${project?.id}`)} className="btn-primary">
               <Play className="w-4 h-4" /> Open in Canvas
             </button>
             <button onClick={async () => { await pApi.fork(project?.id); toast.success('Forked!') }} className="btn-ghost">

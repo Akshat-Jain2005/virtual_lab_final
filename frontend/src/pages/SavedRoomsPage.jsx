@@ -4,6 +4,7 @@ import { motion } from 'framer-motion'
 import { Users, Lock, Unlock, Trash2, ArrowLeft, BarChart2, Database } from 'lucide-react'
 import AppShell from '@/components/layout/AppShell'
 import { MOCK_ROOMS } from '@/services/api'
+import { toast } from 'sonner'
 
 export default function SavedRoomsPage() {
   const navigate = useNavigate()
@@ -16,6 +17,21 @@ export default function SavedRoomsPage() {
   const handleDelete = (id, e) => {
     e.stopPropagation()
     const updated = savedRooms.filter(r => r.id !== id)
+    setSavedRooms(updated)
+    localStorage.setItem('vlab_rooms', JSON.stringify(updated))
+    toast.success('Room deleted', { icon: '🗑️' })
+  }
+
+  const handleToggleLock = (id, e) => {
+    e.stopPropagation()
+    const updated = savedRooms.map(r => {
+      if (r.id === id) {
+        const isNowLocked = !r.isLocked
+        toast.success(`Room ${isNowLocked ? 'locked' : 'unlocked'}`, { icon: isNowLocked ? '🔒' : '🔓' })
+        return { ...r, isLocked: isNowLocked }
+      }
+      return r
+    })
     setSavedRooms(updated)
     localStorage.setItem('vlab_rooms', JSON.stringify(updated))
   }
@@ -76,7 +92,13 @@ export default function SavedRoomsPage() {
                       <BarChart2 className="w-3.5 h-3.5" />
                     </button>
                   )}
-                  {room.isLocked ? <Lock className="w-3.5 h-3.5 text-warning" /> : <Unlock className="w-3.5 h-3.5 text-slate-500" />}
+                  <button
+                    onClick={(e) => handleToggleLock(room.id, e)}
+                    className="hover:scale-110 transition-transform"
+                    title={room.isLocked ? 'Unlock Room' : 'Lock Room'}
+                  >
+                    {room.isLocked ? <Lock className="w-3.5 h-3.5 text-warning drop-shadow-md" /> : <Unlock className="w-3.5 h-3.5 text-slate-500 hover:text-slate-300" />}
+                  </button>
                 </div>
               </div>
             </motion.div>
