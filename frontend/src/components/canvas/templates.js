@@ -68,19 +68,25 @@ export function spawnInclinedPlane(engine, cx, cy) {
     render: { fillStyle: 'rgba(57,255,20,0.12)', strokeStyle: 'rgba(57,255,20,0.6)', lineWidth: 1.5 },
   })
   
-  // Calculate start position for block
-  const blockX = cx - (w / 2 - 50) * Math.cos(angle)
-  const blockY = cy + 100 - (w / 2 - 50) * Math.sin(angle) - 30
+  // Calculate start position for circle
+  const startX = cx - (w / 2 - 50) * Math.cos(angle)
+  const startY = cy + 100 - (w / 2 - 50) * Math.sin(angle) - 30
   
-  const block = Bodies.rectangle(blockX, blockY - 20, 50, 50, {
-    restitution: 0.2, friction: 0.05,
-    angle: angle,
-    label: 'rectangle',
-    render: { fillStyle: 'rgba(57,255,20,0.2)', strokeStyle: 'rgba(57,255,20,0.85)', lineWidth: 2 },
+  const rollingCircle = Bodies.circle(startX, startY - 20, 25, {
+    restitution: 0.9, friction: 0.05,
+    label: 'circle',
+    render: { fillStyle: 'rgba(191,0,255,0.2)', strokeStyle: 'rgba(191,0,255,0.85)', lineWidth: 2 },
   })
   
-  World.add(engine.world, [plane, block])
-  return 2
+  // Block below the ramp to collide with
+  const targetBlock = Bodies.rectangle(cx + 300, window.innerHeight - 60, 80, 60, {
+    restitution: 0.9, friction: 0.1,
+    label: 'rectangle',
+    render: { fillStyle: 'rgba(255,105,180,0.2)', strokeStyle: 'rgba(255,105,180,0.85)', lineWidth: 2 },
+  })
+  
+  World.add(engine.world, [plane, rollingCircle, targetBlock])
+  return 3
 }
 
 export function spawnProjectileMotion(engine, cx, cy) {

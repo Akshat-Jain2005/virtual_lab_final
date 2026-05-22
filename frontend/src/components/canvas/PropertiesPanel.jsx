@@ -27,14 +27,14 @@ const PROPERTIES = [
   },
   {
     key: 'restitution',
-    label: 'Bounciness',
+    label: 'Bounciness (e value)',
     unit: '',
     min: 0,
     max: 1,
     step: 0.01,
     default: 0.72,
     color: '#39ff14',
-    description: 'Energy retained after collision',
+    description: 'Coefficient of restitution for collisions',
   },
   {
     key: 'frictionAir',

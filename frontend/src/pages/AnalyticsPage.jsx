@@ -6,6 +6,7 @@ import { ChevronLeft, Activity, Zap, TrendingUp } from 'lucide-react'
 import AppShell from '@/components/layout/AppShell'
 import { connectSocket, emitRoomJoin, emitRoomLeave } from '@/services/socket'
 import useAuthStore from '@/stores/useAuthStore'
+import { MOCK_ROOMS } from '@/services/api'
 
 function calculateSnapshotTelemetry(roomId) {
   try {
@@ -206,7 +207,7 @@ export default function AnalyticsPage() {
 
   const [savedRooms] = useState(() => {
     const local = localStorage.getItem('vlab_rooms')
-    return local ? JSON.parse(local) : []
+    return local ? JSON.parse(local) : MOCK_ROOMS
   })
 
   // Ensure current room is present in dropdown for reference

@@ -220,6 +220,10 @@ export async function loadExperiment(engine, projectId) {
   }
   if (projectId === 'proj_003') {
     clearBodies(engine)
+    return { bodyCount: spawnInclinedPlane(engine, cx, cy) }
+  }
+  if (projectId === 'proj_004') {
+    clearBodies(engine)
     return { bodyCount: spawnNewtonCradle(engine, cx, cy) }
   }
   if (projectId === 'proj_005') {

@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, useCallback } from 'react'
-import { useParams, useNavigate } from 'react-router-dom'
+import { useParams, useNavigate, useSearchParams } from 'react-router-dom'
 import { toast } from 'sonner'
 import { BookOpen, Play, Save, X, Globe, Lock } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
@@ -16,7 +16,7 @@ import LiveCursors from '../components/canvas/LiveCursors'
 import AIChatBubble from '../components/canvas/AIChatBubble'
 import ExperimentRecorder from '../components/canvas/ExperimentRecorder'
 import BodyOwnershipOverlay from '../components/canvas/BodyOwnershipOverlay'
-import { saveExperiment, serializeWorld, deserializeWorld } from '../services/experimentLibrary'
+import { saveExperiment, serializeWorld, deserializeWorld, loadExperiment } from '../services/experimentLibrary'
 
 import {
   connectSocket, emitRoomJoin, offAll,
@@ -77,6 +77,7 @@ function StatusBar({ roomId, bodyCount, isConnected, mousePos }) {
 export default function RoomPage() {
   const { id: roomId } = useParams()
   const navigate = useNavigate()
+  const [searchParams] = useSearchParams()
   const engineRef = useRef(null)
 
   const [activeTool, setActiveTool] = useState('select')
@@ -94,6 +95,16 @@ export default function RoomPage() {
   const handleEngineReady = useCallback((eng) => {
     setEngineObj(eng)
     if (!eng) return
+    const loadId = searchParams.get('load')
+    if (loadId) {
+      loadExperiment(eng, loadId).then(({ bodyCount: restored }) => {
+        setBodyCount(restored)
+        toast('Experiment loaded ✓', { icon: '⚗️', duration: 2000 })
+      }).catch(e => {
+        console.warn('[RoomPage] Could not load param experiment:', e)
+      })
+      return
+    }
     // Look for a snapshot saved for this exact room id
     const snapshotKey = `vlab-snapshot-${roomId}`
     const raw = localStorage.getItem(snapshotKey)
@@ -108,7 +119,7 @@ export default function RoomPage() {
         console.warn('[RoomPage] Could not restore snapshot:', e)
       }
     }
-  }, [roomId])
+  }, [roomId, searchParams])
 
   // Save Sandbox state
   const [showSaveModal, setShowSaveModal] = useState(false)

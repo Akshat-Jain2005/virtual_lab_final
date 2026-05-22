@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
   Plus, Users, Beaker, TrendingUp, Clock, Lock, Unlock,
-  ArrowRight, Zap, BarChart3, BookOpen, Activity, X
+  ArrowRight, Zap, BarChart3, BookOpen, Activity, X, Trash2
 } from 'lucide-react'
 import { toast } from 'sonner'
 import useAuthStore from '@/stores/useAuthStore'
@@ -42,23 +42,40 @@ function StatCard({ label, value, icon: Icon, color, delay }) {
   )
 }
 
-function RoomCard({ room, onJoin, delay }) {
+function RoomCard({ room, onJoin, onDelete, onToggleLock, delay }) {
   const statusColors = { active: '#39ff14', idle: '#fbbf24', offline: '#475569' }
   return (
-    <motion.div className="card-dark group cursor-pointer shine"
+    <motion.div className="card-dark group cursor-pointer shine relative"
       initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }}
       transition={{ delay, duration: 0.35 }}
       onClick={() => onJoin(room.id)}
     >
-      <div className="flex items-center justify-between mb-3">
+      {onDelete && (
+        <button 
+          onClick={(e) => { e.stopPropagation(); onDelete(room.id) }}
+          className="absolute top-3 right-3 p-1.5 rounded-lg bg-red-500/10 text-red-400 opacity-0 group-hover:opacity-100 hover:bg-red-500/20 transition-all z-10"
+        >
+          <Trash2 className="w-3.5 h-3.5" />
+        </button>
+      )}
+      <div className="flex items-center justify-between mb-3 pr-8">
         <div className="flex items-center gap-2.5">
           <span className="status-dot" style={{ background: statusColors[room.status], boxShadow: `0 0 8px ${statusColors[room.status]}80` }} />
-          <h3 className="font-semibold text-slate-100 text-sm">{room.name}</h3>
+          <h3 className="font-semibold text-slate-100 text-sm truncate">{room.name}</h3>
         </div>
-        {room.isLocked
-          ? <Lock className="w-3.5 h-3.5 text-warning" />
-          : <Unlock className="w-3.5 h-3.5 text-slate-500" />
-        }
+        <button 
+          onClick={(e) => { 
+            e.stopPropagation()
+            if (onToggleLock) onToggleLock(room.id)
+          }}
+          className="hover:scale-110 transition-transform"
+          title={room.isLocked ? 'Unlock Room' : 'Lock Room'}
+        >
+          {room.isLocked
+            ? <Lock className="w-3.5 h-3.5 text-warning drop-shadow-md" />
+            : <Unlock className="w-3.5 h-3.5 text-slate-500 hover:text-slate-300" />
+          }
+        </button>
       </div>
       <div className="flex items-center justify-between text-xs">
         <div className="flex items-center gap-1 text-slate-500">
@@ -110,6 +127,26 @@ export default function DashboardPage() {
 
   const handleJoinRoom = (roomId) => {
     navigate(`/room/${roomId}`)
+  }
+
+  const handleDeleteRoom = (roomId) => {
+    const updated = savedRooms.filter(r => r.id !== roomId)
+    setSavedRooms(updated)
+    localStorage.setItem('vlab_rooms', JSON.stringify(updated))
+    toast.success('Room deleted successfully', { icon: '🗑️' })
+  }
+
+  const handleToggleLock = (roomId) => {
+    const updated = savedRooms.map(r => {
+      if (r.id === roomId) {
+        const isNowLocked = !r.isLocked
+        toast.success(`Room ${isNowLocked ? 'locked' : 'unlocked'}`, { icon: isNowLocked ? '🔒' : '🔓' })
+        return { ...r, isLocked: isNowLocked }
+      }
+      return r
+    })
+    setSavedRooms(updated)
+    localStorage.setItem('vlab_rooms', JSON.stringify(updated))
   }
 
   const handleCreateRoomSubmit = (e) => {
@@ -193,7 +230,7 @@ export default function DashboardPage() {
               </div>
             </div>
             {savedRooms.slice(0, 4).map((r, i) =>
-              <RoomCard key={r.id} room={r} onJoin={handleJoinRoom} delay={0.1 + i * 0.07} />
+              <RoomCard key={r.id} room={r} onJoin={handleJoinRoom} onDelete={handleDeleteRoom} onToggleLock={handleToggleLock} delay={0.1 + i * 0.07} />
             )}
           </div>
 
