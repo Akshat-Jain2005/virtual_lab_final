@@ -56,6 +56,37 @@ app.get("/metrics", async (req, res) => {
   res.send(await metrics.getMetrics());
 });
 
+app.get("/api/admin/active-users", async (req, res) => {
+  try {
+    const sockets = await io.fetchSockets();
+    const userIds = [...new Set(sockets.map(s => s.userId).filter(Boolean))];
+    
+    // Add demo user handling specifically for our fallback demo tokens
+    const dbUserIds = userIds.filter(id => !id.startsWith('usr_demo'));
+    
+    const User = require("./src/models/User");
+    const activeUsers = await User.find({ _id: { $in: dbUserIds } }, "username email role");
+    
+    // If demo users exist, manually append a mock user object for them
+    if (userIds.some(id => id.startsWith('usr_demo'))) {
+      activeUsers.push({
+        _id: 'usr_demo001',
+        username: 'Demo User (Anonymous)',
+        email: 'demo@virtual-lab.local',
+        role: 'instructor'
+      });
+    }
+
+    res.json({ 
+      activeConnections: sockets.length,
+      uniqueUsers: activeUsers.length,
+      users: activeUsers 
+    });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 app.get("/health", (req, res) => {
   const workerPool = getWorkerPool();
   const poolMetrics = workerPool.getMetrics();
