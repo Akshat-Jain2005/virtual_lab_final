@@ -51,9 +51,9 @@ app.get("/", (req, res) => {
   res.send("Backend API + WebSocket + Physics Engine Running");
 });
 
-app.get("/metrics", (req, res) => {
+app.get("/metrics", async (req, res) => {
   res.set("Content-Type", "text/plain");
-  res.send(metrics.getMetrics());
+  res.send(await metrics.getMetrics());
 });
 
 app.get("/health", (req, res) => {
