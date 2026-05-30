@@ -2,14 +2,14 @@
 
 Built for the Even Semester Projects (2026), Coding Club, IIT Guwahati.
 
-## 🚀 Live Demo
+##  Live Demo
 
 | Service | URL |
 |---|---|
 | **Frontend** | https://frontend-rbag.onrender.com |
 | **Backend API** | https://virtual-lab-backend-clg8.onrender.com |
 
-> ⚠️ Both services are hosted on Render's free tier. The backend may take **~50 seconds** to wake up on the first request after a period of inactivity.
+>  Both services are hosted on Render's free tier. The backend may take **~50 seconds** to wake up on the first request after a period of inactivity.
 
 ---
 
@@ -65,7 +65,7 @@ A web-based workspace for building, running, and interacting with 2D physics sce
 - **Live Cursors** — real-time cursor positions of every collaborator rendered on the canvas.
 - Gravity toggle, global reset, and per-body delete.
 
-### 👥 Multi-User Collaboration
+###  Multi-User Collaboration
 
 - **Room Engine** — Each simulation runs in a named room; users join via a shareable room ID.
 - **WebSocket Sync** — Physics deltas are broadcast at high frequency via Socket.io so every collaborator sees the same world state.
@@ -74,7 +74,7 @@ A web-based workspace for building, running, and interacting with 2D physics sce
 - **Collab Sidebar** — Shows live peer list (online/offline indicators, roles), in-room chat, and a share link.
 - **Rollback Worker** — Detects and corrects state divergence between clients using a sequence tracker and rollback snapshots.
 
-### 📚 Experiment Library & Templates
+###  Experiment Library & Templates
 
 - **Gallery view** — Browse, search, filter, and preview all saved physics scenarios.
 - **Save / Load** — Serialize the full Matter.js world (bodies + constraints + metadata) to JSON and restore it later.
@@ -82,14 +82,14 @@ A web-based workspace for building, running, and interacting with 2D physics sce
 - **Preset Templates** — Built-in starters (inclined plane, spring oscillator, projectile motion, etc.) accessible from `templates.js`.
 - **Classroom Assignments** — Instructors can push a template to an entire room for guided lab sessions.
 
-### 🔐 Auth & Permissions
+###  Auth & Permissions
 
 - JWT-based authentication (`jsonwebtoken` + `bcryptjs`).
 - Role system: **owner**, **editor**, **viewer** enforced on the backend via `permissions.js`.
 - Audit log (`AuditLog` model + `AuditLogWriter`) for every state-mutating action in a room.
 - Rate-limiting, CORS, and request validation middleware (`joi`).
 
-### 📦 Worker & Queue System
+### Worker & Queue System
 
 - **Physics Worker** — Runs the Matter.js engine in a separate thread via `WorkerPool` to keep the main event loop free.
 - **Analytics Worker** — Processes and aggregates frame data asynchronously.
@@ -130,7 +130,7 @@ A web-based workspace for building, running, and interacting with 2D physics sce
 
 ---
 
-### ⚠️ MongoDB Not Running? (macOS)
+###  MongoDB Not Running? (macOS)
 
 If the backend fails to connect to MongoDB, install and start it with Homebrew:
 
