@@ -23,7 +23,7 @@ The platform allows multiple users to build machines, test structural integrity,
 
 ## Key Features
 
-### 🤖 AI Experiment Assistant (Claude-Powered)
+### AI Experiment Assistant (Claude-Powered)
 
 A floating chat bubble powered by the Anthropic Claude API (`claude-sonnet-4-20250514`). Students type natural-language prompts like *"set up a pendulum collision"* or *"build a Newton's cradle"* and the assistant:
 
@@ -32,7 +32,7 @@ A floating chat bubble powered by the Anthropic Claude API (`claude-sonnet-4-202
 - Returns structured JSON `{ message, actions[] }` so every action is mapped to a precise Matter.js operation.
 - Supports complex multi-body presets including **Newton's Cradle** (5 suspended balls with constraints) and **Pendulum Collision** setups out of the box.
 
-### 🎬 Experiment Recorder & Replay
+###  Experiment Recorder & Replay
 
 A full recording and replay system for physics simulations:
 
@@ -42,7 +42,7 @@ A full recording and replay system for physics simulations:
 - **Scrub** — A slider maps 0–1 across the full frame index so users can jump to any moment in the recording.
 - **Playback Controls** — Play, Pause, Skip to Start, and Delete recording, displayed in an animated floating panel.
 
-### 📊 Real-Time Analytics & Graphing
+### Real-Time Analytics & Graphing
 
 A floating analytics panel reads live data straight from the Matter.js engine and renders it as interactive charts:
 
@@ -53,7 +53,7 @@ A floating analytics panel reads live data straight from the Matter.js engine an
 - **EMA & Kalman Smoothing** — Backend `EMAProcessor` and `KalmanFilter` smooth noisy sensor streams before they reach the frontend analytics pipeline.
 - **Prometheus Metrics** — `prom-client` exposes a `/metrics` endpoint for Grafana dashboards included in `backend/monitoring/`.
 
-### 🧱 Interactive Physics Canvas
+### Interactive Physics Canvas
 
 A web-based workspace for building, running, and interacting with 2D physics scenes:
 
