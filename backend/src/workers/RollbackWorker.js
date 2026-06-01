@@ -1,12 +1,9 @@
-/**
- * workers/RollbackWorker.js - Background thread for snapshot management
- */
 
 const { parentPort } = require('worker_threads');
 
 class RollbackWorker {
   constructor() {
-    this.snapshots = new Map(); // Map<roomId, Array<Snapshot>>
+    this.snapshots = new Map(); 
     this.maxSnapshots = 500;
   }
 
@@ -40,7 +37,7 @@ class RollbackWorker {
       return;
     }
 
-    // Send the snapshot back to the main thread to be routed to PhysicsWorker
+    
     parentPort.postMessage({
       type: 'rollback:snapshot_found',
       roomId,

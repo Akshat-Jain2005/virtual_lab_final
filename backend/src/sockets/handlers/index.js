@@ -1,7 +1,3 @@
-/**
- * api/handlers.js - Socket.io event handlers
- */
-
 const { getInstance: getWorkerPool } = require("../../workers/WorkerPool");
 const RoomManager = require("../RoomManager");
 const {
@@ -15,20 +11,16 @@ const lockManager = require("../../redis/lockManager");
 
 const roomManager = new RoomManager();
 
-// Room-to-Socket.io namespace mapping
-// In production, use Socket.io rooms directly
-const roomSockets = new Map(); // Map<roomId, Set<socketId>>
+const roomSockets = new Map();
 
-// Physics tick timer
+// Safety wrapper — prevents crash when client emits without a callback
+const safeCallback = (cb) => typeof cb === "function" ? cb : () => {};
+
 let physicsTickInterval = null;
-const PHYSICS_TICK_MS = 1000 / 60; // 60 Hz
+const PHYSICS_TICK_MS = 1000 / 60;
 
 function initializeHandlers(io) {
   const workerPool = getWorkerPool()
-
-  // ── CRITICAL: give the worker pool a socket.io reference so it can
-  // broadcast physics:delta events to room members as they arrive from
-  // the physics worker threads.
   workerPool.setIo(io)
 
   io.on("connection", (socket) => {
@@ -36,14 +28,9 @@ function initializeHandlers(io) {
       `[CONNECT] User ${socket.userId} connected (socket: ${socket.id})`,
     );
 
-    // ============ Room Lifecycle ============
-
-    /**
-     * Create a new room
-     */
     socket.on("room:create", (data, callback) => {
+      const cb = safeCallback(callback);
       try {
-        // Validate sequence ID (anti-replay)
         if (
           data.seqId &&
           !sequenceTracker.validateAndUpdate(socket.userId, data.seqId)
@@ -55,10 +42,7 @@ function initializeHandlers(io) {
             reason: "sequence_replay_detected",
             ipAddress: socket.handshake.address,
           });
-          return callback({
-            success: false,
-            error: "Sequence validation failed",
-          });
+          return cb({ success: false, error: "Sequence validation failed" });
         }
 
         const roomId =
@@ -70,7 +54,6 @@ function initializeHandlers(io) {
           data.settings || {},
         );
 
-        // Spawn physics worker
         getWorkerPool()
           .spawn(roomId)
           .then((result) => {
@@ -89,7 +72,6 @@ function initializeHandlers(io) {
               creatorId: socket.userId,
             });
 
-            // Log successful room creation
             auditLogWriter.log({
               userId: socket.userId,
               action: "room:create",
@@ -99,7 +81,7 @@ function initializeHandlers(io) {
               ipAddress: socket.handshake.address,
             });
 
-            callback({ success: true, roomId });
+            cb({ success: true, roomId });
           })
           .catch((err) => {
             console.error(
@@ -107,7 +89,6 @@ function initializeHandlers(io) {
               err,
             );
 
-            // Log error
             auditLogWriter.log({
               userId: socket.userId,
               action: "room:create",
@@ -117,20 +98,17 @@ function initializeHandlers(io) {
               ipAddress: socket.handshake.address,
             });
 
-            callback({ success: false, error: err.message });
+            cb({ success: false, error: err.message });
           });
       } catch (err) {
         console.error("[ROOM_CREATE_ERROR]", err);
-        callback({ success: false, error: err.message });
+        cb({ success: false, error: err.message });
       }
     });
 
-    /**
-     * Join an existing room
-     */
     socket.on("room:join", (data, callback) => {
+      const cb = safeCallback(callback);
       try {
-        // Validate sequence ID
         if (
           data.seqId &&
           !sequenceTracker.validateAndUpdate(socket.userId, data.seqId)
@@ -143,10 +121,7 @@ function initializeHandlers(io) {
             reason: "sequence_replay_detected",
             ipAddress: socket.handshake.address,
           });
-          return callback({
-            success: false,
-            error: "Sequence validation failed",
-          });
+          return cb({ success: false, error: "Sequence validation failed" });
         }
 
         const roomId = data.roomId;
@@ -154,13 +129,7 @@ function initializeHandlers(io) {
 
         if (!room) {
           console.log(`[ROOM_AUTO_PROVISION] Room ${roomId} not active. Dynamic auto-provisioning initiated.`);
-          room = roomManager.createRoom(
-            roomId,
-            socket.userId,
-            data.settings || {},
-          );
-          
-          // Spawn background physics loop worker for this room on the fly
+          room = roomManager.createRoom(roomId, socket.userId, data.settings || {});
           getWorkerPool().spawn(roomId).then(() => {
             console.log(`[ROOM_AUTO_PROVISION_SUCCESS] Physics worker spawned successfully for room: ${roomId}`);
           }).catch(err => {
@@ -168,14 +137,8 @@ function initializeHandlers(io) {
           });
         }
 
-        // Check access
-        if (
-          !roomManager.canUserAccessRoom(roomId, socket.userId, socket.userRole)
-        ) {
-          console.warn(
-            `[SECURITY] User ${socket.userId} denied access to room ${roomId}`,
-          );
-
+        if (!roomManager.canUserAccessRoom(roomId, socket.userId, socket.userRole)) {
+          console.warn(`[SECURITY] User ${socket.userId} denied access to room ${roomId}`);
           auditLogWriter.log({
             userId: socket.userId,
             action: "user:join",
@@ -184,8 +147,7 @@ function initializeHandlers(io) {
             reason: "access_denied",
             ipAddress: socket.handshake.address,
           });
-
-          return callback({ success: false, error: "Access denied" });
+          return cb({ success: false, error: "Access denied" });
         }
 
         roomManager.joinRoom(roomId, socket.userId);
@@ -198,7 +160,6 @@ function initializeHandlers(io) {
 
         console.log(`[ROOM_JOIN] User ${socket.userId} joined room ${roomId}`);
 
-        // Log successful join
         auditLogWriter.log({
           userId: socket.userId,
           action: "user:join",
@@ -213,17 +174,15 @@ function initializeHandlers(io) {
           userCount: room.users.length,
         });
 
-        callback({ success: true, roomId, room });
+        cb({ success: true, roomId, room });
       } catch (err) {
         console.error("[ROOM_JOIN_ERROR]", err);
-        callback({ success: false, error: err.message });
+        cb({ success: false, error: err.message });
       }
     });
 
-    /**
-     * Leave a room
-     */
     socket.on("room:leave", (data, callback) => {
+      const cb = safeCallback(callback);
       try {
         const roomId = data.roomId;
         const isEmpty = roomManager.leaveRoom(roomId, socket.userId);
@@ -236,7 +195,6 @@ function initializeHandlers(io) {
 
         console.log(`[ROOM_LEAVE] User ${socket.userId} left room ${roomId}`);
 
-        // Log leave event
         auditLogWriter.log({
           userId: socket.userId,
           action: "user:leave",
@@ -251,7 +209,6 @@ function initializeHandlers(io) {
           userCount: roomManager.getRoom(roomId)?.users.length || 0,
         });
 
-        // Clean up empty room
         if (isEmpty) {
           roomManager.deleteRoom(roomId);
           const pool = getWorkerPool();
@@ -260,42 +217,37 @@ function initializeHandlers(io) {
           console.log(`[ROOM_CLEANUP] Room ${roomId} cleaned up (no users)`);
         }
 
-        callback({ success: true });
+        cb({ success: true });
       } catch (err) {
         console.error("[ROOM_LEAVE_ERROR]", err);
-        callback({ success: false, error: err.message });
+        cb({ success: false, error: err.message });
       }
     });
 
-    // ============ Physics Events ============
-
     socket.on("physics:grab", async (data, callback) => {
+      const cb = safeCallback(callback);
       try {
         const { roomId, bodyId, position, velocity, seqId } = data;
 
-        // Validate sequence ID
         if (seqId && !sequenceTracker.validateAndUpdate(socket.userId, seqId)) {
-          return callback({ success: false, error: "Sequence validation failed" });
+          return cb({ success: false, error: "Sequence validation failed" });
         }
 
         if (!roomManager.canUserAccessRoom(roomId, socket.userId, socket.userRole)) {
-          return callback({ success: false, error: "Access denied" });
+          return cb({ success: false, error: "Access denied" });
         }
 
-        // Acquire distributed lock
         const locked = await lockManager.acquireLock(roomId, bodyId, socket.userId);
         if (!locked) {
-          return callback({ success: false, error: "Object is currently locked by another user" });
+          return cb({ success: false, error: "Object is currently locked by another user" });
         }
 
-        // Update authoritative worker
         getWorkerPool().sendToWorker(roomId, {
           type: "body:update",
           bodyId,
           updates: { position, velocity }
         });
 
-        // Broadcast to all users in room
         io.to(roomId).emit("physics:body-grabbed", {
           bodyId,
           userId: socket.userId,
@@ -304,27 +256,26 @@ function initializeHandlers(io) {
           timestamp: Date.now(),
         });
 
-        callback({ success: true });
+        cb({ success: true });
       } catch (err) {
         console.error("[PHYSICS_GRAB_ERROR]", err);
-        callback({ success: false, error: err.message });
+        cb({ success: false, error: err.message });
       }
     });
 
     socket.on("physics:release", async (data, callback) => {
+      const cb = safeCallback(callback);
       try {
         const { roomId, bodyId, seqId } = data;
 
-        // Validate sequence ID
         if (seqId && !sequenceTracker.validateAndUpdate(socket.userId, seqId)) {
-          return callback({ success: false, error: "Sequence validation failed" });
+          return cb({ success: false, error: "Sequence validation failed" });
         }
 
         if (!roomManager.canUserAccessRoom(roomId, socket.userId, socket.userRole)) {
-          return callback({ success: false, error: "Access denied" });
+          return cb({ success: false, error: "Access denied" });
         }
 
-        // Release distributed lock
         await lockManager.releaseLock(roomId, bodyId, socket.userId);
 
         io.to(roomId).emit("physics:body-released", {
@@ -333,22 +284,15 @@ function initializeHandlers(io) {
           timestamp: Date.now(),
         });
 
-        callback({ success: true });
+        cb({ success: true });
       } catch (err) {
         console.error("[PHYSICS_RELEASE_ERROR]", err);
-        callback({ success: false, error: err.message });
+        cb({ success: false, error: err.message });
       }
     });
 
-    // ============ Collaboration Events ============
-
-    /**
-     * Update user cursor (30Hz throttled broadcast)
-     */
     socket.on("cursor:move", (data) => {
       const { roomId, position } = data;
-      // Throttling is usually handled by the client, 
-      // but we broadcast to others in the room
       socket.to(roomId).emit("cursor:moved", {
         userId: socket.userId,
         position,
@@ -356,9 +300,6 @@ function initializeHandlers(io) {
       });
     });
 
-    /**
-     * Chat message broadcast
-     */
     socket.on("chat:message", (data) => {
       const { roomId, text, username, color } = data;
       io.to(roomId).emit("chat:message-received", {
@@ -371,20 +312,15 @@ function initializeHandlers(io) {
       });
     });
 
-    // ============ Experiment Events (Instructor Only) ============
-
-    /**
-     * Rollback experiment (instructor only)
-     */
     socket.on(
       "experiment:rollback",
       requireRole("instructor", "admin")((socket, data, callback) => {
+        const cb = safeCallback(callback);
         try {
           const { roomId, checkpointId, seqId } = data;
 
-          // Validate sequence ID
           if (seqId && !sequenceTracker.validateAndUpdate(socket.userId, seqId)) {
-            return callback({ success: false, error: "Sequence validation failed" });
+            return cb({ success: false, error: "Sequence validation failed" });
           }
 
           io.to(roomId).emit("experiment:rolled-back", {
@@ -393,30 +329,25 @@ function initializeHandlers(io) {
             timestamp: Date.now(),
           });
 
-          callback({ success: true });
+          cb({ success: true });
         } catch (err) {
           console.error("[EXPERIMENT_ROLLBACK_ERROR]", err);
-          callback({ success: false, error: err.message });
+          cb({ success: false, error: err.message });
         }
       })
     );
 
-    /**
-     * Save experiment state
-     */
     socket.on("experiment:save", (data, callback) => {
+      const cb = safeCallback(callback);
       try {
         const { roomId, name, state, seqId } = data;
 
-        // Validate sequence ID
         if (seqId && !sequenceTracker.validateAndUpdate(socket.userId, seqId)) {
-          return callback({ success: false, error: "Sequence validation failed" });
+          return cb({ success: false, error: "Sequence validation failed" });
         }
 
-        if (
-          !roomManager.canUserAccessRoom(roomId, socket.userId, socket.userRole)
-        ) {
-          return callback({ success: false, error: "Access denied" });
+        if (!roomManager.canUserAccessRoom(roomId, socket.userId, socket.userRole)) {
+          return cb({ success: false, error: "Access denied" });
         }
 
         io.to(roomId).emit("experiment:saved", {
@@ -426,19 +357,16 @@ function initializeHandlers(io) {
           timestamp: Date.now(),
         });
 
-        callback({ success: true });
+        cb({ success: true });
       } catch (err) {
         console.error("[EXPERIMENT_SAVE_ERROR]", err);
-        callback({ success: false, error: err.message });
+        cb({ success: false, error: err.message });
       }
     });
-
-    // ============ Cleanup ============
 
     socket.on("disconnect", () => {
       console.log(`[DISCONNECT] User ${socket.userId} disconnected`);
 
-      // Leave all rooms
       const userRooms = roomManager.getUserRooms(socket.userId);
       for (const roomId of userRooms) {
         const isEmpty = roomManager.leaveRoom(roomId, socket.userId);
@@ -456,7 +384,6 @@ function initializeHandlers(io) {
     });
   });
 
-  // Start physics tick timer
   if (!physicsTickInterval) {
     physicsTickInterval = setInterval(() => {
       getWorkerPool().broadcastTick();
@@ -464,9 +391,6 @@ function initializeHandlers(io) {
   }
 }
 
-/**
- * Get room manager (for tests and external use)
- */
 function getRoomManager() {
   return roomManager;
 }

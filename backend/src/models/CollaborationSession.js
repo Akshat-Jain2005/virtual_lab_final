@@ -1,6 +1,3 @@
-/**
- * models/CollaborationSession.js - MongoDB Collaboration Session Schema
- */
 
 const mongoose = require("mongoose");
 
@@ -28,7 +25,7 @@ const collaborationSessionSchema = new mongoose.Schema(
       type: Date,
       index: true,
     },
-    duration: Number, // milliseconds
+    duration: Number, 
     users: [
       {
         userId: String,
@@ -53,7 +50,7 @@ const collaborationSessionSchema = new mongoose.Schema(
       averageFrameTime: Number,
       droppedFrames: Number,
       physicsUpdates: Number,
-      successRate: Number, // 0-100
+      successRate: Number, 
     },
     settings: mongoose.Schema.Types.Mixed,
     status: {
@@ -65,7 +62,7 @@ const collaborationSessionSchema = new mongoose.Schema(
   { collection: "collaboration_sessions" },
 );
 
-// Indexes for common queries
+
 collaborationSessionSchema.index({ creatorId: 1, startTime: -1 });
 collaborationSessionSchema.index({ startTime: -1 });
 collaborationSessionSchema.index({ endTime: -1 });

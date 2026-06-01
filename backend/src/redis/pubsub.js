@@ -1,6 +1,3 @@
-/**
- * redis/pubsub.js - Redis Pub/Sub and Socket.io Adapter configuration
- */
 
 const { getRedisClient } = require('./client');
 const logger = require('../utils/logger');
@@ -12,9 +9,6 @@ const CHANNELS = {
   ROOM_EVENTS: 'room:events'
 };
 
-/**
- * Publish a message to a channel
- */
 async function publish(channel, message) {
   const client = getRedisClient();
   const payload = typeof message === 'string' ? message : JSON.stringify(message);
@@ -25,9 +19,6 @@ async function publish(channel, message) {
   }
 }
 
-/**
- * Subscribe to a channel
- */
 async function subscribe(channel, callback) {
   const client = getRedisClient().duplicate();
   
@@ -43,7 +34,7 @@ async function subscribe(channel, callback) {
     }
   });
 
-  return client; // Return for manual unsubscription
+  return client; 
 }
 
 module.exports = {

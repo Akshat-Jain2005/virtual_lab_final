@@ -1,9 +1,3 @@
-/**
- * WorkerPool.js - Centralized Worker Thread Pool Manager
- *
- * Manages a fixed-size pool of worker threads based on CPU cores.
- * Implements queuing when pool is full. Tracks worker health and metrics.
- */
 
 const os = require("os");
 const { Worker } = require("worker_threads");
@@ -19,20 +13,20 @@ class WorkerPool extends EventEmitter {
     this.workerScript =
       options.workerScript || path.join(__dirname, "PhysicsWorker.js");
 
-    // Active workers: Map<workerId, {worker, assignedRooms[], health, createdAt, stats}>
+    
     this.workers = new Map();
 
-    // Room queue: waiting for available worker
+    
     this.roomQueue = [];
 
-    // Room assignment: Map<roomId, workerId>
+    
     this.roomToWorker = new Map();
 
-    // Counter for unique IDs
+    
     this.workerCounter = 0;
     this.roomCounter = 0;
 
-    // Health check interval
+    
     this.healthCheckInterval = options.healthCheckInterval || 5000;
     this.healthCheckTimer = null;
 
@@ -47,36 +41,28 @@ class WorkerPool extends EventEmitter {
     
     this.io = null;
 
-    // Start health monitoring
+    
     this.startHealthCheck();
   }
 
-  /**
-   * Set Socket.io instance
-   */
-  setIo(io) {
+    setIo(io) {
     this.io = io;
   }
 
-  /**
-   * Spawn a new worker for a room
-   * @param {string} roomId - Unique room identifier
-   * @returns {Promise<{workerId, roomId}>}
-   */
-  async spawn(roomId) {
-    // Check if worker available
+    async spawn(roomId) {
+    
     const availableWorker = this.getAvailableWorker();
 
     if (availableWorker) {
       return this.assignRoomToWorker(availableWorker, roomId);
     }
 
-    // No worker available, queue the room
+    
     this.roomQueue.push(roomId);
     this.metrics.queueDepth = this.roomQueue.length;
 
     return new Promise((resolve, reject) => {
-      // Store handler temporarily
+      
       const timeoutId = setTimeout(() => {
         const idx = this.roomQueue.indexOf(roomId);
         if (idx !== -1) {
@@ -86,21 +72,17 @@ class WorkerPool extends EventEmitter {
         reject(new Error(`Room ${roomId} queue timeout (60s)`));
       }, 60000);
 
-      // Store promise handler on queue entry
+      
       const queueEntry = { roomId, resolve, reject, timeoutId };
       this.roomQueue[this.roomQueue.length - 1] = queueEntry;
     });
   }
 
-  /**
-   * Retire a room (free up worker slot)
-   * @param {string} roomId
-   */
-  retire(roomId) {
+    retire(roomId) {
     const workerId = this.roomToWorker.get(roomId);
 
     if (!workerId) {
-      return; // Room not found
+      return; 
     }
 
     const worker = this.workers.get(workerId);
@@ -110,7 +92,7 @@ class WorkerPool extends EventEmitter {
         worker.assignedRooms.splice(idx, 1);
       }
 
-      // Clean up terminated workers
+      
       if (worker.assignedRooms.length === 0 && worker.terminated) {
         this.workers.delete(workerId);
       }
@@ -119,31 +101,22 @@ class WorkerPool extends EventEmitter {
     this.roomToWorker.delete(roomId);
     this.metrics.roomsRetired++;
 
-    // Try to assign queued rooms
+    
     this.processQueue();
     this.updatePrometheusMetrics();
   }
 
-  /**
-   * Get room to worker mapping
-   * @param {string} roomId
-   * @returns {string|null} workerId or null
-   */
-  getWorkerForRoom(roomId) {
+    getWorkerForRoom(roomId) {
     return this.roomToWorker.get(roomId) || null;
   }
 
-  /**
-   * Find a worker with available capacity
-   * @returns {Object|null}
-   */
-  getAvailableWorker() {
-    // Create new worker if under limit
+    getAvailableWorker() {
+    
     if (this.workers.size < this.maxWorkers) {
       return this.createWorker();
     }
 
-    // Find least-loaded worker
+    
     let leastLoaded = null;
     let minRooms = Infinity;
 
@@ -157,11 +130,7 @@ class WorkerPool extends EventEmitter {
     return leastLoaded;
   }
 
-  /**
-   * Create a new worker thread
-   * @returns {Object}
-   */
-  createWorker() {
+    createWorker() {
     const workerId = `worker-${this.workerCounter++}`;
 
     const worker = new Worker(this.workerScript);
@@ -181,14 +150,14 @@ class WorkerPool extends EventEmitter {
       terminated: false,
     };
 
-    // Handle worker errors
+    
     worker.on("error", (err) => {
       console.error(`Worker ${workerId} error:`, err);
       workerEntry.health = "error";
       this.emit("worker:error", { workerId, error: err });
     });
 
-    // Handle worker exit
+    
     worker.on("exit", (code) => {
       if (code !== 0) {
         console.warn(`Worker ${workerId} exited with code ${code}`);
@@ -199,18 +168,18 @@ class WorkerPool extends EventEmitter {
       this.emit("worker:exit", { workerId, code });
     });
 
-    // Handle messages from worker
+    
     worker.on("message", (msg) => {
       if (msg.type === "stats") {
         workerEntry.stats = msg.data;
         metrics.updatePhysicsFrameTime(msg.data.averageFrameTime);
       } else if (msg.type === "physics:delta") {
-        // Authoritative broadcast to room
+        
         if (this.io && msg.roomId) {
           this.io.to(msg.roomId).emit("physics:delta", msg.data);
         }
       } else if (msg.type === "analytics:frame") {
-        // Broadcast analytics to room
+        
         if (this.io && msg.data && msg.data.roomId) {
           this.io.to(msg.data.roomId).emit("analytics:frame", msg.data);
         }
@@ -224,13 +193,7 @@ class WorkerPool extends EventEmitter {
     return workerEntry;
   }
 
-  /**
-   * Assign a room to a worker
-   * @param {Object} workerEntry
-   * @param {string} roomId
-   * @returns {Object}
-   */
-  assignRoomToWorker(workerEntry, roomId) {
+    assignRoomToWorker(workerEntry, roomId) {
     workerEntry.assignedRooms.push(roomId);
     this.roomToWorker.set(roomId, workerEntry.id);
     this.metrics.roomsAssigned++;
@@ -242,17 +205,14 @@ class WorkerPool extends EventEmitter {
     };
   }
 
-  /**
-   * Process queued rooms when workers become available
-   */
-  processQueue() {
+    processQueue() {
     while (this.roomQueue.length > 0) {
       const queueEntry = this.roomQueue[0];
       const roomId = queueEntry.roomId || queueEntry;
 
       const availableWorker = this.getAvailableWorker();
       if (!availableWorker) {
-        break; // No worker available
+        break; 
       }
 
       this.roomQueue.shift();
@@ -260,7 +220,7 @@ class WorkerPool extends EventEmitter {
 
       const result = this.assignRoomToWorker(availableWorker, roomId);
 
-      // Resolve promise if queued as promise
+      
       if (queueEntry.resolve) {
         clearTimeout(queueEntry.timeoutId);
         queueEntry.resolve(result);
@@ -268,17 +228,14 @@ class WorkerPool extends EventEmitter {
     }
   }
 
-  /**
-   * Health check for workers
-   */
-  startHealthCheck() {
+    startHealthCheck() {
     this.healthCheckTimer = setInterval(() => {
       for (const [workerId, workerEntry] of this.workers) {
         if (workerEntry.terminated) {
           continue;
         }
 
-        // Check if worker is responsive
+        
         const timeSinceCheck = Date.now() - workerEntry.lastHealthCheck;
         if (timeSinceCheck > 30000) {
           console.warn(`Worker ${workerId} appears unresponsive, restarting`);
@@ -288,24 +245,20 @@ class WorkerPool extends EventEmitter {
     }, this.healthCheckInterval);
   }
 
-  /**
-   * Restart a dead or unresponsive worker
-   * @param {string} workerId
-   */
-  restartWorker(workerId) {
+    restartWorker(workerId) {
     const workerEntry = this.workers.get(workerId);
     if (!workerEntry) return;
 
-    // Terminate old worker
+    
     if (!workerEntry.terminated) {
       try {
         workerEntry.worker.terminate();
       } catch (e) {
-        // Already dead
+        
       }
     }
 
-    // Reassign rooms to new workers
+    
     const roomsToReassign = [...workerEntry.assignedRooms];
     this.workers.delete(workerId);
 
@@ -319,10 +272,7 @@ class WorkerPool extends EventEmitter {
     this.emit("worker:restarted", { workerId });
   }
 
-  /**
-   * Gracefully shutdown all workers
-   */
-  async shutdown() {
+    async shutdown() {
     if (this.healthCheckTimer) {
       clearInterval(this.healthCheckTimer);
     }
@@ -351,10 +301,7 @@ class WorkerPool extends EventEmitter {
     console.log("WorkerPool shut down gracefully");
   }
 
-  /**
-   * Get current metrics
-   */
-  getMetrics() {
+    getMetrics() {
     return {
       ...this.metrics,
       activeWorkers: this.workers.size,
@@ -369,12 +316,7 @@ class WorkerPool extends EventEmitter {
     };
   }
 
-  /**
-   * Send a message to a specific room's worker
-   * @param {string} roomId 
-   * @param {Object} message 
-   */
-  sendToWorker(roomId, message) {
+    sendToWorker(roomId, message) {
     const workerId = this.getWorkerForRoom(roomId);
     if (!workerId) return false;
 
@@ -386,10 +328,7 @@ class WorkerPool extends EventEmitter {
     return false;
   }
 
-  /**
-   * Broadcast tick message to all active workers
-   */
-  broadcastTick() {
+    broadcastTick() {
     for (const [, workerEntry] of this.workers) {
       if (!workerEntry.terminated && workerEntry.health === "healthy") {
         workerEntry.worker.postMessage({ type: "tick" });
@@ -397,10 +336,7 @@ class WorkerPool extends EventEmitter {
     }
   }
 
-  /**
-   * Update average rooms per worker metric
-   */
-  updateAverageRoomsPerWorker() {
+    updateAverageRoomsPerWorker() {
     const activeWorkers = Array.from(this.workers.values()).filter(
       (w) => !w.terminated,
     );
@@ -418,10 +354,7 @@ class WorkerPool extends EventEmitter {
     this.updatePrometheusMetrics();
   }
 
-  /**
-   * Update Prometheus custom metrics
-   */
-  updatePrometheusMetrics() {
+    updatePrometheusMetrics() {
     metrics.updateWorkerPoolMetrics({
       activeWorkers: Array.from(this.workers.values()).filter(w => !w.terminated).length,
       maxWorkers: this.maxWorkers,
@@ -430,7 +363,7 @@ class WorkerPool extends EventEmitter {
   }
 }
 
-// Singleton instance
+
 let poolInstance = null;
 
 function getInstance(options) {

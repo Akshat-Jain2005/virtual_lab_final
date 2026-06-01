@@ -1,6 +1,3 @@
-/**
- * models/AuditLog.js - MongoDB Audit Log Schema
- */
 
 const mongoose = require("mongoose");
 
@@ -37,8 +34,8 @@ const auditLogSchema = new mongoose.Schema(
       enum: ["success", "denied", "error"],
       default: "success",
     },
-    reason: String, // For denied/error actions
-    metadata: mongoose.Schema.Types.Mixed, // Flexible metadata storage
+    reason: String, 
+    metadata: mongoose.Schema.Types.Mixed, 
     ipAddress: String,
     userAgent: String,
     timestamp: {
@@ -49,13 +46,13 @@ const auditLogSchema = new mongoose.Schema(
   { collection: "audit_logs" },
 );
 
-// TTL Index: auto-delete documents after 90 days
+
 auditLogSchema.index(
   { timestamp: 1 },
   { expireAfterSeconds: 90 * 24 * 60 * 60 },
 );
 
-// Compound indexes for common queries
+
 auditLogSchema.index({ userId: 1, timestamp: -1 });
 auditLogSchema.index({ roomId: 1, timestamp: -1 });
 auditLogSchema.index({ action: 1, timestamp: -1 });

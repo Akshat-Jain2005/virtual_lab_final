@@ -1,6 +1,3 @@
-/**
- * config/physics.js - Physics Engine Constants and Presets
- */
 
 module.exports = {
   TIMESTEP: 1 / 60,

@@ -1,6 +1,3 @@
-/**
- * events/index.js - Centralized Domain Event Bus
- */
 
 const EventEmitter = require('events');
 
@@ -19,7 +16,7 @@ class DomainEventBus extends EventEmitter {
   }
 }
 
-// Singleton instance
+
 const eventBus = new DomainEventBus();
 
 module.exports = eventBus;

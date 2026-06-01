@@ -1,6 +1,3 @@
-/**
- * utils/logger.js - Structured logging utility
- */
 
 const config = require("../config");
 

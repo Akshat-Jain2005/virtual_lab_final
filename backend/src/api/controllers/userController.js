@@ -1,14 +1,8 @@
-/**
- * api/controllers/userController.js - User Authentication and Management
- */
 
 const User = require('../../models/User');
 const { signAccessToken, signRefreshToken, verifyToken } = require('../../auth/jwtService');
 const logger = require('../../utils/logger');
 
-/**
- * Register a new user
- */
 exports.register = async (req, res) => {
   try {
     const { email, password, username, role } = req.body;
@@ -29,9 +23,6 @@ exports.register = async (req, res) => {
   }
 };
 
-/**
- * Login user
- */
 exports.login = async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -58,9 +49,6 @@ exports.login = async (req, res) => {
   }
 };
 
-/**
- * Refresh tokens
- */
 exports.refresh = async (req, res) => {
   try {
     const { refreshToken } = req.body;
@@ -80,9 +68,6 @@ exports.refresh = async (req, res) => {
   }
 };
 
-/**
- * Get user profile
- */
 exports.getProfile = async (req, res) => {
   try {
     const user = await User.findById(req.user.userId).select('-password');

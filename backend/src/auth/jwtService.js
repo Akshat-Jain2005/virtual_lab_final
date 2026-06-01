@@ -1,17 +1,14 @@
-/**
- * auth/jwtService.js - Centralized JWT Management
- */
 
-// Ensure environment variables are loaded (especially useful in tests or script executions)
+
 require('dotenv').config();
 
 const jwt = require('jsonwebtoken');
 
-// Security Hardening: Ensure secrets are present and strong, with safe development fallbacks of 32+ characters
+
 const ACCESS_SECRET = process.env.SECRET_KEY || 'default_super_secure_plasma_violet_32_chars_long_key';
 const REFRESH_SECRET = process.env.REFRESH_SECRET || 'default_super_secure_cosmic_refresh_32_chars_long_key';
 
-// Only enforce strict production check in production environment
+
 const isProduction = process.env.NODE_ENV === 'production';
 
 if (isProduction) {
@@ -26,9 +23,6 @@ if (isProduction) {
 const ACCESS_TOKEN_EXPIRY = '15m';
 const REFRESH_TOKEN_EXPIRY = '7d';
 
-/**
- * Sign an access token
- */
 function signAccessToken(user) {
   return jwt.sign(
     { userId: user._id.toString(), role: user.role, email: user.email },
@@ -37,9 +31,6 @@ function signAccessToken(user) {
   );
 }
 
-/**
- * Sign a refresh token
- */
 function signRefreshToken(user) {
   return jwt.sign(
     { userId: user.id },
@@ -48,9 +39,6 @@ function signRefreshToken(user) {
   );
 }
 
-/**
- * Verify a token
- */
 function verifyToken(token, isRefresh = false) {
   const secret = isRefresh ? REFRESH_SECRET : ACCESS_SECRET;
   return jwt.verify(token, secret);

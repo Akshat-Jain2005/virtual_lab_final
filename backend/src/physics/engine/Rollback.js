@@ -1,12 +1,9 @@
-/**
- * physics/engine/Rollback.js - Rewind and Replay logic for network reconciliation
- */
 
 class RollbackManager {
   constructor(maxSnapshots = 300) {
-    this.snapshots = []; // Circular buffer of snapshots
+    this.snapshots = []; 
     this.maxSnapshots = maxSnapshots;
-    this.events = []; // Pending events to replay
+    this.events = []; 
   }
 
   saveSnapshot(sequenceId, state) {
@@ -40,10 +37,7 @@ class RollbackManager {
     this.events.sort((a, b) => a.seqId - b.seqId);
   }
 
-  /**
-   * Replay events from a starting sequence using a generic dispatcher
-   */
-  replayEvents(engine, startSeq) {
+    replayEvents(engine, startSeq) {
     const eventsToReplay = this.events.filter(e => e.seqId > startSeq);
     
     eventsToReplay.forEach(event => {
@@ -53,10 +47,7 @@ class RollbackManager {
     this.events = this.events.filter(e => e.seqId > startSeq);
   }
 
-  /**
-   * Authoritative event dispatcher
-   */
-  applyEvent(engine, event) {
+    applyEvent(engine, event) {
     switch (event.type) {
       case 'physics:grab':
         engine.updateBody(event.bodyId, {
@@ -78,7 +69,7 @@ class RollbackManager {
         break;
       
       case 'constraint:change':
-        // Implementation for constraint property updates
+        
         break;
         
       default:

@@ -1,18 +1,9 @@
-/**
- * protobuf/serializer.js - High-performance binary serialization for physics state
- * 
- * Uses TypedArrays (Float32Array) for efficient packing of position, velocity and rotation.
- */
 
-/**
- * Encode physics state into a binary Buffer
- * Format: [timestamp:8][seqId:4][bodyCount:4][...[bodyIdLen:1][bodyId:N][x:4][y:4][vx:4][vy:4][angle:4][av:4]]
- */
 function encodePhysicsState(state) {
   const { timestamp, seqId, bodies } = state;
   
-  // Calculate buffer size
-  let size = 8 + 4 + 4; // Header
+  
+  let size = 8 + 4 + 4; 
   bodies.forEach(b => {
     size += 1 + b.id.length + (4 * 6);
   });
@@ -20,12 +11,12 @@ function encodePhysicsState(state) {
   const buffer = Buffer.allocUnsafe(size);
   let offset = 0;
 
-  // Header
+  
   buffer.writeDoubleLE(timestamp, offset); offset += 8;
   buffer.writeUInt32LE(seqId, offset); offset += 4;
   buffer.writeUInt32LE(bodies.length, offset); offset += 4;
 
-  // Bodies
+  
   bodies.forEach(b => {
     buffer.writeUInt8(b.id.length, offset); offset += 1;
     buffer.write(b.id, offset); offset += b.id.length;
@@ -41,9 +32,6 @@ function encodePhysicsState(state) {
   return buffer;
 }
 
-/**
- * Decode binary physics state
- */
 function decodePhysicsState(buffer) {
   let offset = 0;
   

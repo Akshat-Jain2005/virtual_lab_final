@@ -21,7 +21,7 @@ const app = express();
 const server = http.createServer(app);
 const io = socketIo(server, config.socketIo);
 
-// ── Redis Adapter (optional — falls back to in-memory if Redis is down) ──────
+
 const { createAdapter } = require("@socket.io/redis-adapter");
 const pubClient = new Redis(config.redisUrl, { lazyConnect: true });
 const subClient = pubClient.duplicate();
@@ -38,11 +38,11 @@ Promise.all([pubClient.connect(), subClient.connect()])
     logger.warn("[Redis] Adapter skipped, using in-memory fallback:", err.message);
   });
 
-// ── Middleware ────────────────────────────────────────────────────────────────
+
 app.use(cors());
 app.use(express.json());
 
-// ── Routes ────────────────────────────────────────────────────────────────────
+
 app.use("/api/users", userRoutes);
 app.use("/api/projects", require("./src/api/routes/projectRoutes"));
 app.use("/api/analytics", require("./src/api/routes/analyticsRoutes"));
@@ -61,13 +61,13 @@ app.get("/api/admin/active-users", async (req, res) => {
     const sockets = await io.fetchSockets();
     const userIds = [...new Set(sockets.map(s => s.userId).filter(Boolean))];
     
-    // Add demo user handling specifically for our fallback demo tokens
+    
     const dbUserIds = userIds.filter(id => !id.startsWith('usr_demo'));
     
     const User = require("./src/models/User");
     const activeUsers = await User.find({ _id: { $in: dbUserIds } }, "username email role");
     
-    // If demo users exist, manually append a mock user object for them
+    
     if (userIds.some(id => id.startsWith('usr_demo'))) {
       activeUsers.push({
         _id: 'usr_demo001',
@@ -98,7 +98,7 @@ app.get("/health", (req, res) => {
   });
 });
 
-// ── Socket.io ─────────────────────────────────────────────────────────────────
+
 io.use(authMiddleware);
 io.use(rateLimitMiddleware());
 
@@ -112,7 +112,7 @@ io.on("connection", (socket) => {
   });
 });
 
-// ── Graceful Shutdown ─────────────────────────────────────────────────────────
+
 let isShuttingDown = false;
 
 async function gracefulShutdown(signal) {
@@ -150,16 +150,16 @@ process.on("uncaughtException", (err) => {
 
 process.on("unhandledRejection", (reason) => {
   logger.error("Unhandled Rejection:", reason);
-  // Don't shutdown for Redis connection failures — they are non-fatal
+  
   if (reason?.message?.includes("Stream isn't writeable") ||
       reason?.message?.includes("ECONNREFUSED")) return;
   gracefulShutdown("unhandledRejection");
 });
 
-// ── Start Server ──────────────────────────────────────────────────────────────
+
 async function startServer() {
   try {
-    // Attempt MongoDB connection in background to prevent startup crash if database is temporarily down
+    
     mongoose.connect(config.mongoUri)
       .then(() => {
         logger.info("Connected to MongoDB");
@@ -183,9 +183,9 @@ async function startServer() {
         retryConnection();
       });
 
-    // Redis metrics client (optional — errors are silently ignored)
+    
     const metricsRedis = new Redis(config.redisUrl, { lazyConnect: true });
-    metricsRedis.on("error", () => {}); // suppress noise
+    metricsRedis.on("error", () => {}); 
     metricsRedis.connect().catch(() => {});
 
     setInterval(async () => {
@@ -198,7 +198,7 @@ async function startServer() {
         const roomMetrics = roomManager.getMetrics();
         metrics.updateRoomMetrics(roomMetrics.totalRooms, roomMetrics.totalUsers);
       } catch {
-        // Redis not available — skip metrics update silently
+        
       }
     }, 15000);
 

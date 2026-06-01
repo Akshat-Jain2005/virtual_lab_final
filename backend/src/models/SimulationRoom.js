@@ -7,7 +7,7 @@ const simulationRoomSchema = new mongoose.Schema({
   status: { type: String, enum: ['active', 'hibernated', 'closed'], default: 'active' },
   workerId: String,
   lastActivity: { type: Date, default: Date.now },
-  expiresAt: { type: Date, index: { expireAfterSeconds: 0 } } // TTL for ephemeral rooms
+  expiresAt: { type: Date, index: { expireAfterSeconds: 0 } } 
 }, { timestamps: true });
 
 module.exports = mongoose.model('SimulationRoom', simulationRoomSchema);

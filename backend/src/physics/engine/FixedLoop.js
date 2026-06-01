@@ -1,6 +1,3 @@
-/**
- * physics/engine/FixedLoop.js - Reusable Fixed-Timestep Physics Loop
- */
 
 const { FIXED_DELTA_MS, MAX_SUBSTEPS } = require('../../config/physics');
 
@@ -11,12 +8,7 @@ class FixedLoop {
     this.lastTime = 0;
   }
 
-  /**
-   * Run a loop step
-   * @param {number} currentTime - performance.now()
-   * @returns {Object} Statistics about the step
-   */
-  step(currentTime) {
+    step(currentTime) {
     if (!this.lastTime) this.lastTime = currentTime;
     
     const deltaTime = currentTime - this.lastTime;

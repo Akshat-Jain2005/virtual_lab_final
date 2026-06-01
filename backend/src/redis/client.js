@@ -1,6 +1,3 @@
-/**
- * redis/client.js - Redis client singleton with retry and health management
- */
 
 const Redis = require('ioredis');
 const logger = require('../utils/logger');
@@ -8,9 +5,6 @@ const config = require('../config');
 
 let redisInstance = null;
 
-/**
- * Get Redis client instance
- */
 function getRedisClient() {
   if (!redisInstance) {
     redisInstance = new Redis(config.redisUrl, {
@@ -43,9 +37,6 @@ function getRedisClient() {
   return redisInstance;
 }
 
-/**
- * Health check for Redis
- */
 async function checkHealth() {
   if (!redisInstance) return false;
   try {

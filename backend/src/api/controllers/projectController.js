@@ -1,15 +1,9 @@
-/**
- * api/controllers/projectController.js - Project Management and Versioning
- */
 
 const Project = require('../../models/Project');
 const PhysicsObject = require('../../models/PhysicsObject');
 const Constraint = require('../../models/Constraint');
 const logger = require('../../utils/logger');
 
-/**
- * Create a new project
- */
 exports.createProject = async (req, res) => {
   try {
     const project = new Project({
@@ -24,9 +18,6 @@ exports.createProject = async (req, res) => {
   }
 };
 
-/**
- * Save project version
- */
 exports.saveVersion = async (req, res) => {
   try {
     const { projectId } = req.params;
@@ -52,9 +43,6 @@ exports.saveVersion = async (req, res) => {
   }
 };
 
-/**
- * Rollback project to a specific version
- */
 exports.rollback = async (req, res) => {
   try {
     const { projectId, version } = req.params;
@@ -64,8 +52,8 @@ exports.rollback = async (req, res) => {
     if (!targetVersion) return res.status(404).json({ error: 'Version not found' });
 
     project.currentVersion = version;
-    // In a real implementation, we would also restore the PhysicsObject and Constraint states
-    // from the targetVersion.snapshot
+    
+    
     
     await project.save();
     res.json({ message: `Rolled back to version ${version}`, snapshot: targetVersion.snapshot });
@@ -74,9 +62,6 @@ exports.rollback = async (req, res) => {
   }
 };
 
-/**
- * Get all projects for current user
- */
 exports.getProjects = async (req, res) => {
   try {
     const projects = await Project.find({ ownerId: req.user.userId, isDeleted: false });
@@ -86,9 +71,6 @@ exports.getProjects = async (req, res) => {
   }
 };
 
-/**
- * Get a single project by ID (needed for loadExperiment)
- */
 exports.getProject = async (req, res) => {
   try {
     const { projectId } = req.params;
@@ -100,20 +82,12 @@ exports.getProject = async (req, res) => {
   }
 };
 
-/**
- * Simulate a saved snapshot and return analytics frames.
- *
- * Runs the Matter.js physics engine server-side for `steps` ticks
- * starting from the saved snapshot, collecting KE/PE/velocity at each
- * tick, and returns the array of frames.  The frontend can render this
- * as a deterministic replay curve instead of random noise.
- */
 exports.simulateProject = async (req, res) => {
   try {
     const { projectId } = req.params;
-    const { steps = 120, dt = 16.667 } = req.body; // default: 2 s at 60 Hz
+    const { steps = 120, dt = 16.667 } = req.body; 
 
-    // Load snapshot ─ prefer explicit body payload, then DB
+    
     let snapshot = req.body.snapshot || null;
     if (!snapshot && projectId && projectId !== 'local') {
       try {
@@ -125,7 +99,7 @@ exports.simulateProject = async (req, res) => {
               : null);
         }
       } catch (_castErr) {
-        // Invalid ObjectId — snapshot must come from request body
+        
       }
     }
 
@@ -133,13 +107,13 @@ exports.simulateProject = async (req, res) => {
       return res.status(422).json({ error: 'No valid snapshot found for simulation' });
     }
 
-    // ── Run physics using matter-js on the main thread (lightweight) ─────────
+    
     const Matter = require('matter-js');
     const { Engine, Bodies, Body, Constraint, World } = Matter;
 
     const engine = Engine.create();
 
-    // Restore gravity
+    
     if (snapshot.gravity) {
       engine.gravity.x = snapshot.gravity.x;
       engine.gravity.y = snapshot.gravity.y;
@@ -190,9 +164,9 @@ exports.simulateProject = async (req, res) => {
       World.add(engine.world, c);
     });
 
-    const CANVAS_HEIGHT = 600; // matches frontend EMAProcessor formula
+    const CANVAS_HEIGHT = 600; 
     const frames = [];
-    const clampedSteps = Math.min(Math.max(steps, 10), 600); // 10–600 steps
+    const clampedSteps = Math.min(Math.max(steps, 10), 600); 
 
     for (let i = 0; i < clampedSteps; i++) {
       Engine.update(engine, dt);

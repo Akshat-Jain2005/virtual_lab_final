@@ -1,12 +1,6 @@
-/**
- * api/controllers/analyticsController.js - Physics Data Retrieval
- */
 
 const AnalyticsFrame = require('../../models/AnalyticsFrame');
 
-/**
- * Get analytics frames for a room
- */
 exports.getRoomAnalytics = async (req, res) => {
   try {
     const { roomId } = req.params;
@@ -29,9 +23,6 @@ exports.getRoomAnalytics = async (req, res) => {
   }
 };
 
-/**
- * Get summary of experiment performance
- */
 exports.getSummary = async (req, res) => {
   try {
     const { roomId } = req.params;

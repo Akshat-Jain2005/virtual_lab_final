@@ -1,13 +1,10 @@
-/**
- * utils/metrics.js - Prometheus metrics integration
- */
 
 const prometheus = require('prom-client');
 
-// Default metrics (CPU, memory, etc.)
+
 prometheus.collectDefaultMetrics();
 
-// Custom metrics
+
 
 const websocketConnections = new prometheus.Gauge({
   name: 'websocket_connections_active',
@@ -73,7 +70,7 @@ const redisMemoryUsage = new prometheus.Gauge({
   help: 'Redis memory usage in bytes',
 });
 
-// Update metrics functions
+
 
 function updateWebsocketConnections(count) {
   websocketConnections.set(count);
@@ -121,7 +118,7 @@ function updateRedisMemoryUsage(bytes) {
   redisMemoryUsage.set(bytes);
 }
 
-// Get metrics in Prometheus format
+
 function getMetrics() {
   return prometheus.register.metrics();
 }

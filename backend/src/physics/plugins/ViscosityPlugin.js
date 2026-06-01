@@ -1,7 +1,3 @@
-/**
- * physics/plugins/ViscosityPlugin.js - Implements linear viscous damping
- * Formula: Fv = -η * v
- */
 
 const { Body } = require('matter-js');
 

@@ -1,14 +1,10 @@
-/**
- * physics/plugins/FluidDragPlugin.js - Implements air/water resistance (Drag Force)
- * Formula: Fd = -½ * ρ * v² * Cd * A
- */
 
 const { Body } = require('matter-js');
 
 class FluidDragPlugin {
   constructor(options = {}) {
-    this.density = options.density || 0.001; // Fluid density
-    this.dragCoefficient = options.dragCoefficient || 0.5; // Drag coefficient
+    this.density = options.density || 0.001; 
+    this.dragCoefficient = options.dragCoefficient || 0.5; 
   }
 
   preUpdate(engine, deltaMs) {
@@ -20,10 +16,10 @@ class FluidDragPlugin {
       
       if (speed < 0.01) return;
 
-      // Drag magnitude
+      
       const dragMagnitude = 0.5 * this.density * (speed * speed) * this.dragCoefficient;
       
-      // Drag direction (opposite to velocity)
+      
       const force = {
         x: -(velocity.x / speed) * dragMagnitude,
         y: -(velocity.y / speed) * dragMagnitude

@@ -1,12 +1,6 @@
-/**
- * api/middleware/index.js - Socket.io Middleware & Utilities
- */
 
 const jwt = require('jsonwebtoken');
 
-/**
- * Verify JWT token and attach user info to socket
- */
 function authMiddleware(socket, next) {
   try {
     const token = socket.handshake.auth.token;
@@ -15,7 +9,7 @@ function authMiddleware(socket, next) {
       return next(new Error('Authentication error: No token provided'));
     }
 
-    // Graceful developer-friendly fallback for demo/mock tokens
+    
     if (token === 'demo-token' || token.includes('demo_token') || token.includes('hackathon')) {
       socket.userId = 'usr_demo001';
       socket.userRole = 'instructor';
@@ -41,10 +35,6 @@ function authMiddleware(socket, next) {
   }
 }
 
-/**
- * Rate limit middleware using simple in-memory counter
- * In production, use Redis for distributed rate limiting
- */
 const rateLimitMap = new Map();
 
 function rateLimitMiddleware(limit = 100, windowMs = 60000) {
@@ -91,14 +81,10 @@ function httpAuthMiddleware(req, res, next) {
   }
 }
 
-/**
- * Require specific roles for an event handler
- * Usage: requireRole('instructor', 'admin')(socket, data) => { ... }
- */
 function requireRole(...allowedRoles) {
   return (handler) => {
     return function(data, callback) {
-      const socket = this; // Socket.io sets 'this' to the socket instance
+      const socket = this; 
       
       if (!allowedRoles.includes(socket.userRole)) {
         const err = `Permission denied: role ${socket.userRole} not in [${allowedRoles.join(', ')}]`;
@@ -118,9 +104,6 @@ function requireRole(...allowedRoles) {
   };
 }
 
-/**
- * Validate room membership
- */
 function validateRoomMembership(roomManager) {
   return (handler) => {
     return (socket, data, callback) => {
@@ -145,9 +128,6 @@ function validateRoomMembership(roomManager) {
   };
 }
 
-/**
- * Emit event with context logging
- */
 function emitWithContext(socket, eventName, data) {
   const context = {
     userId: socket.userId,
@@ -159,13 +139,10 @@ function emitWithContext(socket, eventName, data) {
   socket.emit(eventName, { ...data, context });
 }
 
-/**
- * Cleanup rate limit map periodically
- */
 setInterval(() => {
   const now = Date.now();
   for (const [key, record] of rateLimitMap.entries()) {
-    if (now > record.resetTime + 3600000) { // 1 hour after window ends
+    if (now > record.resetTime + 3600000) { 
       rateLimitMap.delete(key);
     }
   }

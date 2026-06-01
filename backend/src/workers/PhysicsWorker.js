@@ -1,6 +1,3 @@
-/**
- * PhysicsWorker.js - Multi-room Matter.js Physics Engine Runner
- */
 
 const { parentPort } = require('worker_threads');
 const PhysicsEngine = require('../physics/engine/PhysicsEngine');
@@ -9,14 +6,14 @@ const RollbackManager = require('../physics/engine/Rollback');
 const { encodePhysicsState } = require('../protobuf/serializer');
 const AnalyticsPipeline = require('../analytics/AnalyticsPipeline');
 
-// Physics Plugins
+
 const FluidDragPlugin = require('../physics/plugins/FluidDragPlugin');
 const ViscosityPlugin = require('../physics/plugins/ViscosityPlugin');
 const SpringDegradationPlugin = require('../physics/plugins/SpringDegradationPlugin');
 
 class PhysicsWorker {
   constructor() {
-    this.rooms = new Map(); // Map<roomId, {engine, rollback, loop, seqId, dirty}>
+    this.rooms = new Map(); 
     this.analytics = new AnalyticsPipeline();
     this.stats = {
       framesProcessed: 0,
@@ -30,7 +27,7 @@ class PhysicsWorker {
     if (!this.rooms.has(roomId)) {
       const engine = new PhysicsEngine('AIR');
       
-      // Register standard plugins
+      
       engine.registerPlugin(new FluidDragPlugin({ density: 1.225 }));
       engine.registerPlugin(new SpringDegradationPlugin());
       
@@ -54,7 +51,7 @@ class PhysicsWorker {
       room.seqId++;
       room.rollback.saveSnapshot(room.seqId, room.engine.getState());
 
-      // Broadcast state every 2 ticks or if dirty
+      
       if (room.dirty || this.stats.framesProcessed % 2 === 0) {
         this.sendState(roomId, room);
         room.dirty = false;
@@ -87,7 +84,7 @@ class PhysicsWorker {
       },
     }, [binaryState.buffer]);
 
-    // Throttle analytics processing to ~5Hz (every 6th broadcast)
+    
     if (!room.analyticsCounter) room.analyticsCounter = 0;
     room.analyticsCounter++;
     if (room.analyticsCounter % 6 === 0) {
