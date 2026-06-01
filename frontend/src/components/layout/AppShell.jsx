@@ -55,7 +55,7 @@ export default function AppShell({ children }) {
 
   const sidebarContent = (
     <div className="flex flex-col h-full">
-      {/* Logo */}
+      {}
       <div className={`flex items-center gap-3 px-4 py-5 mb-4 ${collapsed ? 'justify-center' : ''}`}>
         <div className="w-8 h-8 rounded-xl flex-shrink-0 flex items-center justify-center"
           style={{ background: 'linear-gradient(135deg, #00f5ff, #0891b2)', boxShadow: '0 0 20px rgba(0,245,255,0.4)' }}>
@@ -66,7 +66,7 @@ export default function AppShell({ children }) {
         )}
       </div>
 
-      {/* Nav */}
+      {}
       <nav className="flex-1 px-3 space-y-1">
         {NAV_ITEMS.map(item => <NavItem key={item.path} item={item} collapsed={collapsed} />)}
 
@@ -79,7 +79,7 @@ export default function AppShell({ children }) {
         )}
       </nav>
 
-      {/* User footer */}
+      {}
       <div className="px-3 pb-4 space-y-2">
         <div className={`glass rounded-xl p-3 ${collapsed ? 'flex justify-center' : 'flex items-center gap-3'}`}>
           {!collapsed && (
@@ -104,14 +104,14 @@ export default function AppShell({ children }) {
 
   return (
     <div className="flex min-h-screen bg-void">
-      {/* Desktop sidebar */}
+      {}
       <motion.aside
         animate={{ width: collapsed ? 64 : 220 }}
         transition={{ duration: 0.2, ease: 'easeInOut' }}
         className="hidden lg:flex flex-col flex-shrink-0 bg-surface border-r border-border/60 relative overflow-hidden"
       >
         {sidebarContent}
-        {/* Collapse toggle */}
+        {}
         <button
           onClick={() => setCollapsed(c => !c)}
           className="absolute top-5 -right-3 w-6 h-6 rounded-full glass border border-border flex items-center justify-center z-10 text-slate-400 hover:text-cyan-neon"
@@ -120,7 +120,7 @@ export default function AppShell({ children }) {
         </button>
       </motion.aside>
 
-      {/* Mobile header */}
+      {}
       <div className="lg:hidden fixed top-0 left-0 right-0 z-50 glass border-b border-border/60 px-4 py-3 flex items-center justify-between">
         <div className="flex items-center gap-2">
           <Zap className="w-4 h-4 text-cyan-neon" />
@@ -131,7 +131,7 @@ export default function AppShell({ children }) {
         </button>
       </div>
 
-      {/* Mobile drawer */}
+      {}
       {mobileOpen && (
         <motion.div
           className="lg:hidden fixed inset-0 z-40 bg-void/80 backdrop-blur-sm"
@@ -148,7 +148,7 @@ export default function AppShell({ children }) {
         </motion.div>
       )}
 
-      {/* Main */}
+      {}
       <main className="flex-1 overflow-auto lg:pt-0 pt-14 bg-void">
         <div className="absolute inset-0 bg-hero-mesh pointer-events-none" />
         <div className="relative z-10">

@@ -6,7 +6,7 @@ import {
 } from 'lucide-react'
 import { toast } from 'sonner'
 
-// Mock peer data
+
 const MOCK_PEERS = [
   { id: '1', username: 'Alex Kim',      color: '#00f5ff', isOnline: true,  role: 'owner' },
   { id: '2', username: 'Sarah Chen',    color: '#bf00ff', isOnline: true,  role: 'editor' },
@@ -53,7 +53,7 @@ export default function CollabSidebar({ isLocked, onToggleLock, socketReady }) {
 
     const onMessage = (msg) => {
       setChatMessages(prev => {
-        // Prevent duplicates if we generated the ID locally, though here backend generates it
+        
         if (prev.find(m => m.id === msg.id)) return prev
         return [...prev, msg]
       })
@@ -76,7 +76,7 @@ export default function CollabSidebar({ isLocked, onToggleLock, socketReady }) {
         color: '#00f5ff'
       })
     } else {
-      // Fallback if disconnected or in Demo Mode
+      
       setChatMessages(prev => [...prev, {
         id: `m${Date.now()}`,
         userId: 'me',
@@ -175,7 +175,7 @@ export default function CollabSidebar({ isLocked, onToggleLock, socketReady }) {
                 ))}
               </div>
 
-              {/* Share button */}
+              {}
               <motion.button
                 onClick={handleShare}
                 whileTap={{ scale: 0.96 }}
@@ -188,7 +188,7 @@ export default function CollabSidebar({ isLocked, onToggleLock, socketReady }) {
               </motion.button>
             </div>
 
-            {/* ── Chat ── */}
+            {}
             <div className="flex flex-col flex-1 min-h-0 p-4">
               <h3 className="font-display text-[10px] font-semibold text-slate-400 uppercase tracking-widest flex items-center gap-1.5 mb-3">
                 <MessageSquare className="w-3 h-3" />
@@ -215,7 +215,7 @@ export default function CollabSidebar({ isLocked, onToggleLock, socketReady }) {
                 <div ref={chatEndRef} />
               </div>
 
-              {/* Input */}
+              {}
               <div className="flex gap-2 mt-3">
                 <input
                   type="text"

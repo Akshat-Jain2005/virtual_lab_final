@@ -28,7 +28,7 @@ import useAuthStore from '../stores/useAuthStore'
 import { MOCK_ROOMS } from '../services/api'
 import LibraryPage from './LibraryPage'
 
-// ── Shape configs ─────────────────────────────────────────────────────────────
+
 const SPAWN_CONFIGS = {
   rectangle: {
     type: 'rectangle',
@@ -47,7 +47,7 @@ const SPAWN_CONFIGS = {
   },
 }
 
-// ── Status Bar ────────────────────────────────────────────────────────────────
+
 function StatusBar({ roomId, bodyCount, isConnected, mousePos }) {
   return (
     <div
@@ -73,7 +73,7 @@ function StatusBar({ roomId, bodyCount, isConnected, mousePos }) {
   )
 }
 
-// ── RoomPage ──────────────────────────────────────────────────────────────────
+
 export default function RoomPage() {
   const { id: roomId } = useParams()
   const navigate = useNavigate()
@@ -86,12 +86,12 @@ export default function RoomPage() {
   const [isLocked, setIsLocked] = useState(false)
   const [socketReady, setSocketReady] = useState(false)
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 })
-  // Tracks when the physics engine is mounted so analytics panel gets a valid ref
+  
   const [engineObj, setEngineObj] = useState(null)
   const [showLibrary, setShowLibrary] = useState(false)
   const [isZeroG, setIsZeroG] = useState(false)
 
-  // ── Restore saved snapshot when engine first becomes ready ─────────────────
+  
   const handleEngineReady = useCallback((eng) => {
     setEngineObj(eng)
     if (!eng) return
@@ -105,7 +105,7 @@ export default function RoomPage() {
       })
       return
     }
-    // Look for a snapshot saved for this exact room id
+    
     const snapshotKey = `vlab-snapshot-${roomId}`
     const raw = localStorage.getItem(snapshotKey)
     if (raw) {
@@ -121,7 +121,7 @@ export default function RoomPage() {
     }
   }, [roomId, searchParams])
 
-  // Save Sandbox state
+  
   const [showSaveModal, setShowSaveModal] = useState(false)
   const [saveName, setSaveName] = useState('')
   const [saving, setSaving] = useState(false)
@@ -140,7 +140,7 @@ export default function RoomPage() {
     try {
       const result = await saveExperiment(engineObj, saveName.trim(), ['mechanics'], false)
 
-      // Cache raw snapshot for baseline analytics computations
+      
       try {
         const snap = serializeWorld(engineObj)
         localStorage.setItem(`vlab-snapshot-${roomId}`, JSON.stringify(snap))
@@ -148,7 +148,7 @@ export default function RoomPage() {
         console.warn('Could not cache raw snapshot:', snapErr)
       }
 
-      // Update vlab_rooms list in local storage so it reflects in the saved rooms folder
+      
       const localRooms = localStorage.getItem('vlab_rooms')
       const rooms = localRooms ? JSON.parse(localRooms) : [...MOCK_ROOMS]
       const existingIdx = rooms.findIndex(r => r.id === roomId)
@@ -198,25 +198,25 @@ export default function RoomPage() {
       }
     })
 
-    // ── Wire live physics delta → local engine reconciliation ───────────────
+    
     registerPhysicsDeltaHandler((payload) => {
       if (engineRef.current) reconcileWorldWithDelta(engineRef.current, payload)
     })
 
-    // ── Wire peer roster updates ────────────────────────────────────────────
+    
     registerRoomPeersHandler((payload) => {
-      // Could dispatch to useRoomStore here; for now just log
+      
       if (import.meta.env.DEV) console.log('[Room] peers update', payload.peers?.length)
     })
 
-    // ── Wire peer cursor positions ──────────────────────────────────────────
+    
     registerPeerCursorHandler((payload) => {
-      // LiveCursors subscribes directly — this is a secondary hook point
+      
     })
     return () => { offAll() }
   }, [roomId])
 
-  // ── Mouse coordinate tracking ───────────────────────────────────────────────
+  
   useEffect(() => {
     let lastEmit = 0
     const onMove = (e) => {
@@ -225,7 +225,7 @@ export default function RoomPage() {
       setMousePos({ x, y })
 
       const now = Date.now()
-      if (now - lastEmit > 50) { // Throttle to ~20Hz
+      if (now - lastEmit > 50) { 
         emitCursorMove(roomId, { x, y })
         lastEmit = now
       }
@@ -234,7 +234,7 @@ export default function RoomPage() {
     return () => window.removeEventListener('mousemove', onMove)
   }, [roomId])
 
-  // ── Keyboard shortcuts (still work as instant-place at center) ──────────────
+  
   useEffect(() => {
     const onKey = (e) => {
       if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return
@@ -253,9 +253,9 @@ export default function RoomPage() {
     }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
-  }, []) // eslint-disable-line react-hooks/exhaustive-deps
+  }, []) 
 
-  // ── Engine wait helper ──────────────────────────────────────────────────────
+  
   const waitForEngine = useCallback((fn) => {
     if (engineRef.current) { fn(engineRef.current); return }
     let attempts = 0
@@ -270,10 +270,10 @@ export default function RoomPage() {
     }, 100)
   }, [])
 
-  // ── Main drop-spawn handler — called with exact canvas coordinates ───────────
+  
   const handleDropSpawn = useCallback((type, clientX, clientY) => {
     waitForEngine((engine) => {
-      // clientX/Y are already canvas coordinates (canvas is full-screen)
+      
       const x = clientX
       const y = clientY
 
@@ -376,7 +376,7 @@ export default function RoomPage() {
     setSelectedBody(body)
   }, [])
 
-  // ── Gravity change ──────────────────────────────────────────────────────────
+  
   const handleGravityChange = useCallback((gy) => {
     if (engineRef.current) {
       engineRef.current.gravity.y = gy
@@ -384,7 +384,7 @@ export default function RoomPage() {
     }
   }, [])
 
-  // ── Property change ─────────────────────────────────────────────────────────
+  
   const handlePropertyChange = useCallback((key, val) => {
     const body = selectedBody
     if (!body || !window.Matter) return
@@ -493,7 +493,7 @@ export default function RoomPage() {
   return (
     <div className="fixed inset-0 bg-void overflow-hidden">
 
-      {/* Grid background */}
+      {}
       <div className="absolute inset-0 pointer-events-none" style={{
         backgroundImage: `
           linear-gradient(rgba(30,48,72,0.28) 1px, transparent 1px),
@@ -510,7 +510,7 @@ export default function RoomPage() {
         background: 'radial-gradient(ellipse at 50% 50%, transparent 35%, rgba(2,4,8,0.65) 100%)',
       }} />
 
-      {/* Physics canvas */}
+      {}
       <PhysicsCanvas
         engineRef={engineRef}
         onBodyClick={handleBodyClick}
@@ -519,7 +519,7 @@ export default function RoomPage() {
         onBodyRelease={handleBodyRelease}
       />
 
-      {/* Floating Zero-G Assembly Mode Banner */}
+      {}
       <AnimatePresence>
         {isZeroG && (
           <motion.div
@@ -553,10 +553,10 @@ export default function RoomPage() {
         )}
       </AnimatePresence>
 
-      {/* AI Chat Bubble */}
+      {}
       <AIChatBubble engineRef={engineRef} onBodyCountChange={setBodyCount} />
 
-      {/* Left utility stack (Recorder & Save) */}
+      {}
       <motion.div
         className="absolute top-[72px] left-4 z-30 flex flex-col gap-3 items-start"
         initial={{ x: -60, opacity: 0 }}
@@ -565,7 +565,7 @@ export default function RoomPage() {
       >
         <ExperimentRecorder engineRef={engineRef} />
 
-        {/* Save Sandbox button below recorder */}
+        {}
         <motion.button
           onClick={() => {
             setSaveName(roomId ? `${roomId}-saved` : '')
@@ -587,13 +587,13 @@ export default function RoomPage() {
         </motion.button>
       </motion.div>
 
-      {/* Live cursors */}
+      {}
       <LiveCursors socketEnabled={socketReady} />
 
-      {/* Body Ownership Name Tags */}
+      {}
       <BodyOwnershipOverlay engine={engineObj} socketEnabled={socketReady} />
 
-      {/* Toolbar — drag tools to canvas to place */}
+      {}
       <CanvasToolbar
         activeTool={activeTool}
         onToolChange={setActiveTool}
@@ -603,12 +603,12 @@ export default function RoomPage() {
         onBack={() => navigate('/dashboard')}
       />
 
-      {/* Collab sidebar */}
+      {}
       <CollabSidebar isLocked={isLocked} onToggleLock={() => setIsLocked(v => !v)} socketReady={socketReady} />
 
-      {/* Action buttons — top-right corner */}
+      {}
       <div className="absolute top-4 right-4 z-30 flex items-center gap-3">
-        {/* Library button */}
+        {}
         <motion.button
           onClick={() => setShowLibrary(v => !v)}
           whileTap={{ scale: 0.94 }}
@@ -625,7 +625,7 @@ export default function RoomPage() {
         </motion.button>
       </div>
 
-      {/* Library slide-in panel */}
+      {}
       <AnimatePresence>
         {showLibrary && (
           <motion.div
@@ -651,7 +651,7 @@ export default function RoomPage() {
         )}
       </AnimatePresence>
 
-      {/* Save Sandbox Modal */}
+      {}
       <AnimatePresence>
         {showSaveModal && (
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
@@ -721,7 +721,7 @@ export default function RoomPage() {
         )}
       </AnimatePresence>
 
-      {/* Properties panel */}
+      {}
       <PropertiesPanel
         selectedBody={selectedBody}
         engineRef={engineRef}
@@ -730,10 +730,10 @@ export default function RoomPage() {
         onDelete={handleDeleteBody}
       />
 
-      {/* Analytics panel */}
+      {}
       <AnalyticsPanel engine={engineObj} />
 
-      {/* Status bar */}
+      {}
       <StatusBar
         roomId={roomId}
         bodyCount={bodyCount}

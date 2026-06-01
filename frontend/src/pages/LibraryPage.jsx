@@ -1,15 +1,3 @@
-/**
- * LibraryPage.jsx
- *
- * Experiment Library — fully wired save / load / share flow:
- *   • Save: serialises current room's physics world → backend / localStorage.
- *   • Load: fetches snapshot → deserialises into the active engine.
- *   • Fork: deep-copies a public experiment.
- *   • Share: copies shareable URL to clipboard.
- *
- * Engine access: the library can be opened from inside a room (engine prop
- * passed via query-string encoded projectId) or standalone (no engine).
- */
 
 import { useState, useEffect, useCallback } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
@@ -29,7 +17,7 @@ import AppShell from '@/components/layout/AppShell'
 
 const TAGS = ['All', 'mechanics', 'oscillation', 'kinematics', 'momentum', 'fluids', 'elasticity', 'rotation']
 
-// ── Save-Experiment modal ──────────────────────────────────────────────────────
+
 function SaveModal({ engine, onClose, onSaved }) {
   const [name,     setName]     = useState('')
   const [tags,     setTags]     = useState([])
@@ -126,7 +114,7 @@ function SaveModal({ engine, onClose, onSaved }) {
   )
 }
 
-// ── Project card ──────────────────────────────────────────────────────────────
+
 function ProjectCard({ project, engine, onFork, onLoad, onDelete, forking, loading, i }) {
   const navigate = useNavigate()
 
@@ -198,7 +186,7 @@ function ProjectCard({ project, engine, onFork, onLoad, onDelete, forking, loadi
         </div>
 
         <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-          {/* Load into active engine */}
+          {}
           {engine && (
             <button onClick={handleLoad} disabled={loading === project.id}
               className="btn-ghost py-1 px-2 text-xs">
@@ -207,7 +195,7 @@ function ProjectCard({ project, engine, onFork, onLoad, onDelete, forking, loadi
                 : <><Upload className="w-3 h-3 inline" /> Load</>}
             </button>
           )}
-          {/* Fork */}
+          {}
           {!project.isLocal && (
             <button onClick={e => { e.stopPropagation(); onFork(project) }}
               disabled={forking === project.id}
@@ -215,18 +203,18 @@ function ProjectCard({ project, engine, onFork, onLoad, onDelete, forking, loadi
               {forking === project.id ? '…' : <><GitFork className="w-3 h-3 inline" /> Fork</>}
             </button>
           )}
-          {/* Share */}
+          {}
           <button onClick={handleShare} className="btn-ghost py-1 px-2 text-xs">
             <Share2 className="w-3 h-3" />
           </button>
-          {/* Delete local */}
+          {}
           {project.isLocal && (
             <button onClick={e => { e.stopPropagation(); onDelete(project) }}
               className="btn-ghost py-1 px-2 text-xs text-red-400 hover:bg-red-400/10">
               <Trash2 className="w-3 h-3" />
             </button>
           )}
-          {/* Open in room */}
+          {}
           {!project.isLocal && (
             <button className="btn-ghost py-1 px-2 text-xs"
               onClick={e => { e.stopPropagation(); navigate('/room/room-alpha-01') }}>
@@ -239,7 +227,7 @@ function ProjectCard({ project, engine, onFork, onLoad, onDelete, forking, loadi
   )
 }
 
-// ── LibraryPage ───────────────────────────────────────────────────────────────
+
 export default function LibraryPage({ engine: engineProp }) {
   const navigate      = useNavigate()
   const [searchParams] = useSearchParams()
@@ -252,10 +240,10 @@ export default function LibraryPage({ engine: engineProp }) {
   const [showSave,  setShowSave]  = useState(false)
   const [isFetching, setIsFetching] = useState(true)
 
-  // Engine is either passed as prop (when embedded in RoomPage) or null
+  
   const engine = engineProp ?? null
 
-  // ── Load projects ───────────────────────────────────────────────────────────
+  
   useEffect(() => {
     async function fetchProjects() {
       setIsFetching(true)
@@ -272,7 +260,7 @@ export default function LibraryPage({ engine: engineProp }) {
     fetchProjects()
   }, [])
 
-  // ── Filter ──────────────────────────────────────────────────────────────────
+  
   const filtered = projects.filter(p => {
     const matchSearch = p.name.toLowerCase().includes(search.toLowerCase()) ||
       (p.description || '').toLowerCase().includes(search.toLowerCase())
@@ -280,7 +268,7 @@ export default function LibraryPage({ engine: engineProp }) {
     return matchSearch && matchTag
   })
 
-  // ── Fork ────────────────────────────────────────────────────────────────────
+  
   const handleFork = useCallback(async (project) => {
     setForking(project.id)
     try {
@@ -294,7 +282,7 @@ export default function LibraryPage({ engine: engineProp }) {
     }
   }, [])
 
-  // ── Load into engine ────────────────────────────────────────────────────────
+  
   const handleLoad = useCallback(async (project) => {
     if (!engine) {
       toast('Open a room first, then load from the library', { icon: '💡' })
@@ -311,14 +299,14 @@ export default function LibraryPage({ engine: engineProp }) {
     }
   }, [engine])
 
-  // ── Delete local ────────────────────────────────────────────────────────────
+  
   const handleDelete = useCallback((project) => {
     localStorage.removeItem(project.id)
     setProjects(prev => prev.filter(p => p.id !== project.id))
     toast('Local experiment deleted', { icon: '🗑' })
   }, [])
 
-  // ── After save ──────────────────────────────────────────────────────────────
+  
   const handleSaved = useCallback((result) => {
     const newProject = {
       id:       result.id,
@@ -356,7 +344,7 @@ export default function LibraryPage({ engine: engineProp }) {
           )}
         </div>
 
-        {/* Search + filter */}
+        {}
         <div className="flex gap-3">
           <div className="relative flex-1">
             <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
@@ -369,7 +357,7 @@ export default function LibraryPage({ engine: engineProp }) {
           </button>
         </div>
 
-        {/* Tags */}
+        {}
         <div className="flex flex-wrap gap-2">
           {TAGS.map(tag => (
             <button key={tag} onClick={() => setActiveTag(tag)}
@@ -381,7 +369,7 @@ export default function LibraryPage({ engine: engineProp }) {
           ))}
         </div>
 
-        {/* Loading state */}
+        {}
         {isFetching && (
           <div className="text-center py-16">
             <FlaskConical className="w-10 h-10 text-slate-700 mx-auto mb-3 animate-pulse" />
@@ -389,7 +377,7 @@ export default function LibraryPage({ engine: engineProp }) {
           </div>
         )}
 
-        {/* Grid */}
+        {}
         {!isFetching && (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
             {filtered.map((project, i) => (
@@ -415,7 +403,7 @@ export default function LibraryPage({ engine: engineProp }) {
         )}
       </div>
 
-      {/* Save modal */}
+      {}
       <AnimatePresence>
         {showSave && engine && (
           <SaveModal engine={engine} onClose={() => setShowSave(false)} onSaved={handleSaved} />

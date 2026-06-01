@@ -1,21 +1,10 @@
-/**
- * usePhysicsAnalytics.js
- *
- * Replaces useMockAnalytics with a real hook that:
- *  1. Reads KE/PE directly from the live Matter.js engine on the frontend (60Hz via Events).
- *  2. Listens for analytics:frame events from the server and blends them in when connected.
- *  3. Tracks real FPS via requestAnimationFrame.
- *  4. Computes per-body force vectors for the vector-arrow overlay.
- *
- * Falls back gracefully to animated curves when no engine is present (demo / loading).
- */
 
 import { useState, useEffect, useRef } from 'react'
 import { getSocket } from '../services/socket'
 
-const GRAVITY = 9.81           // m/s^2 approximation
-const CANVAS_HEIGHT_M = 600    // approximate canvas height in "physics metres"
-const SCALE = 500              // visual energy scale (J display units)
+const GRAVITY = 9.81           
+const CANVAS_HEIGHT_M = 600    
+const SCALE = 500              
 const MAX_POINTS = 60
 
 function computeEnergies(engine) {
@@ -38,7 +27,7 @@ function computeEnergies(engine) {
     ke += bodyKE
     pe += bodyPE
 
-    // Net force vector: gravity + friction (simplified)
+    
     const fx = body.force?.x ?? 0
     const fy = (body.force?.y ?? 0) + m * GRAVITY * 0.001
     const speed2D = Math.sqrt(body.velocity.x ** 2 + body.velocity.y ** 2)
@@ -76,7 +65,7 @@ export default function usePhysicsAnalytics(engine) {
   const fpsRef       = useRef(60)
 
   useEffect(() => {
-    // ── FPS counter & 60Hz Vector Overlay via rAF ──────────────────────────
+    
     function rafLoop() {
       fpsFramesRef.current++
       const now = performance.now()
@@ -97,14 +86,14 @@ export default function usePhysicsAnalytics(engine) {
     }
     rafRef.current = requestAnimationFrame(rafLoop)
 
-    // ── Poll engine at 4 Hz for chart data ───────────────────────────────
+    
     const interval = setInterval(() => {
       const { ke, pe } = computeEnergies(engine)
 
-      // Only plot data when the engine has active (non-static) bodies
+      
       const hasActiveBodies = engine?.world?.bodies?.some(b => !b.isStatic) ?? false
       if (!hasActiveBodies) {
-        // Canvas is empty — show zeroes and clear chart history
+        
         setDataPoints([])
         setStats({ ke: 0, pe: 0, fps: Math.min(fpsRef.current, 60) })
         return
@@ -123,7 +112,7 @@ export default function usePhysicsAnalytics(engine) {
       setStats({ ke: displayKE, pe: displayPE, fps: Math.min(fpsRef.current, 60) })
     }, 250)
 
-    // ── Server analytics frames (when connected) ─────────────────────────
+    
     let serverUnsub = null
     const socket = getSocket()
     if (socket) {

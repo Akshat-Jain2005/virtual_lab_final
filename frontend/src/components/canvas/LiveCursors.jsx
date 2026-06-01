@@ -1,10 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 
-/**
- * Real-time Multiplayer Cursors
- * Listens for peer:cursor socket events and smoothly animates other users' cursors.
- */
 import { onPeerCursor } from '../../services/socket'
 
 function CursorSVG({ color }) {
@@ -27,10 +23,10 @@ function CursorSVG({ color }) {
 }
 
 export default function LiveCursors({ socketEnabled = false }) {
-  // { [userId]: { position: { x, y }, name, color, lastSeen } }
+  
   const [users, setUsers] = useState({})
 
-  // Socket.io listener for real users
+  
   useEffect(() => {
     if (!socketEnabled) return
     
@@ -41,7 +37,7 @@ export default function LiveCursors({ socketEnabled = false }) {
       }))
     })
 
-    // Cleanup stale cursors every second
+    
     const interval = setInterval(() => {
       const now = Date.now()
       setUsers(prev => {
@@ -79,10 +75,10 @@ export default function LiveCursors({ socketEnabled = false }) {
             }}
             style={{ top: 0, left: 0, translateX: '-4px', translateY: '-2px' }}
           >
-            {/* Cursor icon */}
+            {}
             <CursorSVG color={user.color} />
 
-            {/* Name tag */}
+            {}
             <motion.div
               className="absolute top-5 left-4 px-2 py-0.5 rounded-md text-[10px] font-semibold whitespace-nowrap"
               style={{
@@ -96,7 +92,7 @@ export default function LiveCursors({ socketEnabled = false }) {
               {user.name}
             </motion.div>
 
-            {/* Subtle glow trail */}
+            {}
             <div
               className="absolute -inset-2 rounded-full pointer-events-none"
               style={{

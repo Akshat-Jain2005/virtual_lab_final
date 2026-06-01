@@ -8,7 +8,7 @@ const api = axios.create({
   headers: { 'Content-Type': 'application/json' },
 })
 
-// Attach JWT to every request
+
 api.interceptors.request.use((config) => {
   const stored = localStorage.getItem('vlab-auth')
   if (stored) {
@@ -20,10 +20,10 @@ api.interceptors.request.use((config) => {
   return config
 })
 
-// ─── Mock helpers ───────────────────────────────────────────
+
 const delay = (ms = 400) => new Promise(r => setTimeout(r, ms))
 
-// ─── Mock Projects ──────────────────────────────────────────
+
 export const MOCK_PROJECTS = [
   {
     id: 'proj_001', name: 'Pendulum Lab',
@@ -82,7 +82,7 @@ export const MOCK_ROOMS = [
   { id: 'room-delta-04', name: "Newton's Cradle Study",    users: 0,  isLocked: false, status: 'offline', projectId: 'proj_004' },
 ]
 
-// ─── Auth API ───────────────────────────────────────────────
+
 export const authAPI = {
   login: async ({ email, password }) => {
     const res = await api.post('/api/users/login', { email, password })
@@ -102,7 +102,7 @@ export const authAPI = {
   },
 }
 
-// ─── Projects API ───────────────────────────────────────────
+
 export const projectsAPI = {
   getAll: async () => {
     try {
@@ -151,7 +151,7 @@ export const projectsAPI = {
   },
 }
 
-// ─── Analytics API ──────────────────────────────────────────
+
 export const analyticsAPI = {
   getFrames: async (roomId) => {
     try {
@@ -167,7 +167,7 @@ export const analyticsAPI = {
     } catch (err) {
       console.warn('Analytics API error, falling back to mock frames', err)
     }
-    // Fallback to beautiful mock data so graphs are never blank
+    
     return Array.from({ length: 60 }, (_, i) => ({
       t: Date.now() - (59 - i) * 1000,
       kineticEnergy: 120 + Math.sin(i * 0.3) * 40 + Math.random() * 10,

@@ -109,7 +109,7 @@ export default function PropertiesPanel({ selectedBody, engineRef, onPropertyCha
   const [isOpen, setIsOpen] = useState(true)
   const [activeGravity, setActiveGravity] = useState('Normal')
 
-  // ── FIX: sync slider values when a body is selected ──────────────────────
+  
   const [values, setValues] = useState({
     ...Object.fromEntries(PROPERTIES.map(p => [p.key, p.default])),
     isStatic: false,
@@ -128,17 +128,17 @@ export default function PropertiesPanel({ selectedBody, engineRef, onPropertyCha
 
   const handleChange = (key, val) => {
     setValues(prev => ({ ...prev, [key]: val }))
-    // ── FIX: actually apply the change to the Matter.js body ──────────────
+    
     if (onPropertyChange) onPropertyChange(key, val)
   }
 
   const handleGravity = (preset) => {
     setActiveGravity(preset.label)
-    // ── FIX: call parent which changes engine.gravity.y ───────────────────
+    
     if (onGravityChange) onGravityChange(preset.gy)
   }
 
-  // ── FIX: show live position of selected body ──────────────────────────────
+  
   const [bodyPos, setBodyPos] = useState(null)
   useEffect(() => {
     if (!selectedBody) { setBodyPos(null); return }
@@ -167,7 +167,7 @@ export default function PropertiesPanel({ selectedBody, engineRef, onPropertyCha
           backdropFilter: 'blur(20px) saturate(180%)',
         }}
       >
-        {/* Header */}
+        {}
         <button
           onClick={() => setIsOpen(v => !v)}
           className="w-full flex items-center justify-between px-4 py-3 hover:bg-white/3 transition-colors"
@@ -207,8 +207,7 @@ export default function PropertiesPanel({ selectedBody, engineRef, onPropertyCha
                     Click a body to select it
                   </p>
                 ) : (
-                  /* ── FIX: Show live coordinates of selected body ── */
-                  bodyPos && (
+                                    bodyPos && (
                     <div className="flex items-center justify-between bg-white/4 rounded-lg px-3 py-2 text-[10px] font-mono">
                       <div className="flex items-center gap-2">
                         <MapPin className="w-3.5 h-3.5 text-cyan-neon shrink-0" />
@@ -255,7 +254,7 @@ export default function PropertiesPanel({ selectedBody, engineRef, onPropertyCha
                   </button>
                 </div>
 
-                {/* Gravity quick-set — FIX: now actually changes gravity */}
+                {}
                 <div className="pt-1 border-t border-white/5 space-y-2">
                   <span className="font-display text-[10px] font-semibold text-slate-500 uppercase tracking-widest block">
                     Environment
@@ -283,7 +282,7 @@ export default function PropertiesPanel({ selectedBody, engineRef, onPropertyCha
         </AnimatePresence>
       </div>
 
-      {/* Custom slider thumb styling */}
+      {}
       <style>{`
         input[type='range']::-webkit-slider-thumb {
           -webkit-appearance: none;

@@ -5,7 +5,7 @@ import { AtSign, Lock, User, ArrowRight, Loader2, Zap } from 'lucide-react'
 import { toast } from 'sonner'
 import useAuthStore from '@/stores/useAuthStore'
 
-// ─── Animated physics orbs for the left panel ──────────────
+
 function PhysicsOrbs() {
   const orbs = [
     { size: 60,  x: '20%', y: '30%', color: '#00f5ff', delay: 0,   dur: 7 },
@@ -34,7 +34,7 @@ function PhysicsOrbs() {
           transition={{ duration: o.dur, delay: o.delay, repeat: Infinity, ease: 'easeInOut' }}
         />
       ))}
-      {/* Connection lines */}
+      {}
       <svg className="absolute inset-0 w-full h-full opacity-20">
         <motion.line x1="20%" y1="30%" x2="55%" y2="55%"
           stroke="#00f5ff" strokeWidth="0.5" strokeDasharray="4 6"
@@ -50,7 +50,7 @@ function PhysicsOrbs() {
   )
 }
 
-// ─── Form field ─────────────────────────────────────────────
+
 function Field({ icon: Icon, label, type = 'text', value, onChange, placeholder, autoFocus }) {
   return (
     <div className="space-y-1.5">
@@ -75,7 +75,7 @@ export default function AuthPage() {
   const location   = useLocation()
   const { login, register, isLoading, isAuthed } = useAuthStore()
 
-  const [mode,     setMode]     = useState('login') // 'login' | 'register'
+  const [mode,     setMode]     = useState('login') 
   const [email,    setEmail]    = useState('demo@virtuallab.io')
   const [password, setPassword] = useState('demo1234')
   const [username, setUsername] = useState('')
@@ -112,7 +112,7 @@ export default function AuthPage() {
   return (
     <div className="min-h-screen flex bg-void overflow-hidden">
 
-      {/* ── Left panel: branding + physics animation ── */}
+      {}
       <div className="hidden lg:flex flex-1 relative flex-col justify-center items-center p-16 overflow-hidden">
         <div className="absolute inset-0 bg-grid-sm opacity-40" />
         <div className="absolute inset-0 bg-glow-cyan" style={{ background: 'radial-gradient(ellipse at 40% 40%, rgba(0,245,255,0.07) 0%, transparent 60%)' }} />
@@ -153,7 +153,7 @@ export default function AuthPage() {
         </motion.div>
       </div>
 
-      {/* ── Right panel: auth form ── */}
+      {}
       <div className="flex-1 lg:max-w-md flex items-center justify-center p-8 lg:p-12 relative">
         <div className="absolute inset-0 bg-surface/50" />
 
@@ -163,13 +163,13 @@ export default function AuthPage() {
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.6, ease: 'easeOut' }}
         >
-          {/* Mobile logo */}
+          {}
           <div className="flex lg:hidden items-center gap-2 mb-8">
             <Zap className="w-5 h-5 text-cyan-neon" />
             <span className="font-display text-lg text-glow-cyan tracking-widest">VIRTUAL-LAB</span>
           </div>
 
-          {/* Mode tabs */}
+          {}
           <div className="glass rounded-2xl p-1 flex mb-8">
             {['login', 'register'].map(m => (
               <button key={m} onClick={() => setMode(m)}
@@ -218,7 +218,7 @@ export default function AuthPage() {
             </button>
           </p>
 
-          {/* Demo hint */}
+          {}
           <div className="mt-6 glass rounded-xl p-3 text-center">
             <p className="text-xs text-slate-500">
               <span className="badge badge-cyan mr-1">DEMO</span>

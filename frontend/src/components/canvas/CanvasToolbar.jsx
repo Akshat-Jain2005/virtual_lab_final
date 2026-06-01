@@ -5,7 +5,7 @@ import {
   Link2, Zap, Trash2, ChevronLeft,
 } from 'lucide-react'
 
-// Pivot joint icon (crosshair + circle)
+
 function PivotIcon() {
   return (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
@@ -19,7 +19,7 @@ function PivotIcon() {
   )
 }
 
-// Motor icon (rotating arrows)
+
 function MotorIcon() {
   return (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
@@ -32,7 +32,7 @@ function MotorIcon() {
   )
 }
 
-// Brick Wall icon
+
 function BrickWallIcon() {
   return (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
@@ -51,7 +51,7 @@ function BrickWallIcon() {
   )
 }
 
-// Pulley icon
+
 function PulleyIcon() {
   return (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
@@ -261,7 +261,7 @@ export default function CanvasToolbar({ activeTool, onToolChange, onDropSpawn, o
             </div>
           ))}
 
-          {/* Joint section separator with label */}
+          {}
           <div className="flex items-center ml-1">
             <div className="w-px h-5 bg-white/10 mr-1" />
             <span className="text-[9px] font-mono text-slate-600 uppercase tracking-widest mr-1 select-none">
@@ -275,7 +275,7 @@ export default function CanvasToolbar({ activeTool, onToolChange, onDropSpawn, o
 
           <div className="w-px h-5 bg-white/10 mx-1" />
           
-          {/* Zero-G / Empty Workspace */}
+          {}
           <motion.button
             onClick={onZeroG}
             whileTap={{ scale: 0.88 }}

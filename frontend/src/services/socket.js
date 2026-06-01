@@ -1,14 +1,3 @@
-/**
- * socket.js — Virtual Lab Socket.io Client
- *
- * Architecture: single shared socket instance, lazy-initialized on first connect.
- * All emitters include a graceful offline fallback for demo mode.
- *
- * Wired events (console-logging until real backend is ready):
- *   physics:delta   — server-authoritative world delta
- *   room:peers      — current peer list
- *   peer:cursor     — other users' cursor positions
- */
 
 import { io } from 'socket.io-client'
 
@@ -42,25 +31,25 @@ export function connectSocket(token) {
     console.log('[Socket] 🔌 Disconnected:', reason)
   })
 
-  // ── Physics: server-authoritative world delta ──────────────────────────────
-  // Payload: { roomId, seq, ts, bodies: [{ id, x, y, angle, vx, vy, va }] }
+  
+  
   socket.on('physics:delta', (payload) => {
-    // Dispatch to any registered reconcile handler (set by RoomPage)
+    
     if (typeof socket._onPhysicsDelta === 'function') {
       socket._onPhysicsDelta(payload)
     }
   })
 
-  // ── Room: peer roster update ──────────────────────────────────────────────
-  // Payload: { roomId, peers: [{ userId, username, color, cursor, isOnline }] }
+  
+  
   socket.on('room:peers', (payload) => {
     if (typeof socket._onRoomPeers === 'function') {
       socket._onRoomPeers(payload)
     }
   })
 
-  // ── Peer: cursor position stream ──────────────────────────────────────────
-  // Payload: { userId, username, color, position: { x, y } }
+  
+  
   socket.on('peer:cursor', (payload) => {
     if (typeof socket._onPeerCursor === 'function') {
       socket._onPeerCursor(payload)
@@ -84,7 +73,7 @@ export function disconnectSocket() {
 export function getSocket()    { return socket }
 export function isConnected()  { return socket?.connected ?? false }
 
-// ─── Emitters ─────────────────────────────────────────────────────────────────
+
 
 function safeEmit(event, payload, callback) {
   if (!socket?.connected) {
@@ -122,7 +111,7 @@ export function emitSimReset(roomId)                                            
 export function emitExperimentSave(roomId, name, state, seqId, callback)          { safeEmit('experiment:save',   { roomId, name, state, seqId }, callback) }
 export function emitChatMessage(roomId, text, callback)                            { safeEmit('chat:send',         { roomId, text }, callback) }
 
-// ─── Listener exports ────────────────────────────────────────────────────────
+
 
 export const onPhysicsDelta  = (cb) => socket?.on('physics:delta',        cb)
 export const onRoomPeers     = (cb) => socket?.on('room:peers',           cb)
@@ -142,8 +131,8 @@ export function offAll() {
   ].forEach(ev => socket?.off(ev))
 }
 
-// ─── Delta reconciliation registration ────────────────────────────────────────
-// Called by RoomPage to hook the delta stream into the live Matter.js engine.
+
+
 export function registerPhysicsDeltaHandler(handler) {
   if (socket) socket._onPhysicsDelta = handler
 }
@@ -154,16 +143,6 @@ export function registerPeerCursorHandler(handler) {
   if (socket) socket._onPeerCursor = handler
 }
 
-/**
- * reconcileWorldWithDelta(engine, payload)
- *
- * Applies a server physics delta to the local Matter.js world.
- * Uses a "soft reconcile" approach: we nudge bodies towards the server
- * positions rather than teleporting them, which avoids visual glitches
- * when the local simulation is slightly ahead.
- *
- * payload.bodies: Array<{ id: number, x, y, angle, vx, vy }>
- */
 export function reconcileWorldWithDelta(engine, payload) {
   if (!engine?.world || !payload?.bodies?.length) return
 
@@ -177,13 +156,13 @@ export function reconcileWorldWithDelta(engine, payload) {
     const local = all.find(b => b.id === serverBody.id)
     if (!local || local.isStatic) return
 
-    // Soft position correction — lerp 30% toward server position
+    
     const LERP = 0.3
     const tx = local.position.x + (serverBody.x - local.position.x) * LERP
     const ty = local.position.y + (serverBody.y - local.position.y) * LERP
     Body.setPosition(local, { x: tx, y: ty })
 
-    // Hard-correct velocity so energy is consistent
+    
     Body.setVelocity(local, { x: serverBody.vx ?? local.velocity.x, y: serverBody.vy ?? local.velocity.y })
   })
 }

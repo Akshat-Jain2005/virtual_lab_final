@@ -1,9 +1,3 @@
-/**
- * AnalyticsPanel.jsx
- *
- * Floating panel showing live KE/PE charts read directly from the Matter.js engine.
- * Also renders vector force arrows on bodies (via SVG overlay).
- */
 import { useState, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
@@ -15,7 +9,7 @@ import usePhysicsAnalytics from '../../hooks/usePhysicsAnalytics'
 
 const CHART_HEIGHT = 140
 
-// ── Stat badge ────────────────────────────────────────────────────────────────
+
 function StatBadge({ icon: Icon, label, value, color, unit = '' }) {
   return (
     <div
@@ -34,7 +28,7 @@ function StatBadge({ icon: Icon, label, value, color, unit = '' }) {
   )
 }
 
-// ── Tooltip ───────────────────────────────────────────────────────────────────
+
 const CustomTooltip = ({ active, payload, label }) => {
   if (!active || !payload?.length) return null
   return (
@@ -49,12 +43,12 @@ const CustomTooltip = ({ active, payload, label }) => {
   )
 }
 
-// ── Force vector SVG overlay (full-screen, pointer-events:none) ───────────────
+
 export function ForceVectorOverlay({ vectors, visible }) {
   if (!visible || !vectors?.length) return null
 
-  const ARROW_SCALE  = 18   // pixels per unit force
-  const MIN_SHOW     = 0.05 // minimum force magnitude to draw
+  const ARROW_SCALE  = 18   
+  const MIN_SHOW     = 0.05 
 
   return (
     <svg
@@ -81,7 +75,7 @@ export function ForceVectorOverlay({ vectors, visible }) {
         if (mag < MIN_SHOW) return null
 
 
-        // Velocity Vector
+        
         const vMag = Math.sqrt((v.vx||0)**2 + (v.vy||0)**2)
         const vEx = vMag > MIN_SHOW ? v.x + (v.vx / vMag) * Math.min(vMag * ARROW_SCALE, 60) : v.x
         const vEy = vMag > MIN_SHOW ? v.y + (v.vy / vMag) * Math.min(vMag * ARROW_SCALE, 60) : v.y
@@ -94,7 +88,7 @@ export function ForceVectorOverlay({ vectors, visible }) {
           />
         ) : null
 
-        // Acceleration Vector
+        
         const aMag = Math.sqrt((v.ax||0)**2 + (v.ay||0)**2)
         const aEx = aMag > MIN_SHOW ? v.x + (v.ax / aMag) * Math.min(aMag * (ARROW_SCALE/2), 60) : v.x
         const aEy = aMag > MIN_SHOW ? v.y + (v.ay / aMag) * Math.min(aMag * (ARROW_SCALE/2), 60) : v.y
@@ -111,7 +105,7 @@ export function ForceVectorOverlay({ vectors, visible }) {
           <g key={v.id}>
             {velLine}
             {accLine}
-            {/* speed label */}
+            {}
             <text
               x={v.x + 8} y={v.y - 8}
               fill="rgba(100,200,255,0.6)"
@@ -127,7 +121,7 @@ export function ForceVectorOverlay({ vectors, visible }) {
   )
 }
 
-// ── Main panel ────────────────────────────────────────────────────────────────
+
 export default function AnalyticsPanel({ engine }) {
   const [isOpen,        setIsOpen]        = useState(false)
   const [showVectors,   setShowVectors]   = useState(true)
@@ -138,7 +132,7 @@ export default function AnalyticsPanel({ engine }) {
 
   return (
     <>
-      {/* Force vector overlay — sits over the canvas */}
+      {}
       <ForceVectorOverlay vectors={forceVectors} visible={showVectors} />
 
       <motion.div
@@ -154,7 +148,7 @@ export default function AnalyticsPanel({ engine }) {
             backdropFilter: 'blur(20px) saturate(180%)',
           }}
         >
-          {/* Header */}
+          {}
           <div className="flex items-center">
             <button
               onClick={() => setIsOpen(v => !v)}
@@ -177,7 +171,7 @@ export default function AnalyticsPanel({ engine }) {
               </div>
             </button>
 
-            {/* Vector toggle */}
+            {}
             <button
               onClick={() => setShowVectors(v => !v)}
               title="Toggle force vectors"
@@ -190,7 +184,7 @@ export default function AnalyticsPanel({ engine }) {
             </button>
           </div>
 
-          {/* Stats strip */}
+          {}
           <div className="px-3 pb-3 flex gap-2">
             <StatBadge icon={Zap}      label="KE"  value={stats.ke}  color="#00f5ff" unit="J" />
             <StatBadge icon={Activity} label="PE"  value={stats.pe}  color="#bf00ff" unit="J" />
@@ -207,7 +201,7 @@ export default function AnalyticsPanel({ engine }) {
                 transition={{ duration: 0.35, ease: [0.23, 1, 0.32, 1] }}
               >
                 <div className="px-3 pb-4 border-t border-white/5 pt-4 space-y-4">
-                  {/* KE + PE area chart */}
+                  {}
                   <div>
                     <p className="text-[10px] text-slate-600 font-mono uppercase tracking-widest mb-2">
                       Kinetic &amp; Potential Energy — System Total
@@ -253,7 +247,7 @@ export default function AnalyticsPanel({ engine }) {
                     </ResponsiveContainer>
                   </div>
 
-                  {/* Total energy bar */}
+                  {}
                   <div>
                     <div className="flex justify-between text-[10px] font-mono mb-1.5">
                       <span className="text-slate-600">Total System Energy</span>
@@ -272,7 +266,7 @@ export default function AnalyticsPanel({ engine }) {
                     </div>
                   </div>
 
-                  {/* Active body count */}
+                  {}
                   <div className="flex items-center justify-between text-[10px] font-mono text-slate-600">
                     <span>Active bodies tracked</span>
                     <span className="text-slate-400">{forceVectors.length}</span>
