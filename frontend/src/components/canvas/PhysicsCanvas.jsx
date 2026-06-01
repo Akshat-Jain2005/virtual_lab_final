@@ -6,10 +6,10 @@ const {
   Mouse, MouseConstraint, Events, Composite,
 } = Matter
 
-// Expose Matter globally so PropertiesPanel can call Body.setMass etc.
+
 if (typeof window !== 'undefined') window.Matter = Matter
 
-// ── Initial world bodies ──────────────────────────────────────────────────────
+
 function createInitialBodies(width, height) {
   const wallOpts = {
     isStatic: true,
@@ -53,7 +53,7 @@ function createInitialBodies(width, height) {
   return [floor, wallLeft, wallRight, ceiling, circle, rect, poly]
 }
 
-// ── PhysicsCanvas component ───────────────────────────────────────────────────
+
 export default function PhysicsCanvas({ engineRef: externalEngineRef, onBodyClick, onEngineReady, onBodyGrab, onBodyRelease }) {
   const mountRef    = useRef(null)
   const internalRef = useRef({})
@@ -99,7 +99,7 @@ export default function PhysicsCanvas({ engineRef: externalEngineRef, onBodyClic
     Runner.run(runner, engine)
     Render.run(render)
 
-    // ── Drag and drop via MouseConstraint ────────────────────────────────────
+    
     const mouse = Mouse.create(render.canvas)
     const mouseConstraint = MouseConstraint.create(engine, {
       mouse,
@@ -116,13 +116,13 @@ export default function PhysicsCanvas({ engineRef: externalEngineRef, onBodyClic
     World.add(engine.world, mouseConstraint)
     render.mouse = mouse
 
-    // ── Zero-G Assembly Mode Rope Stabilization ──────────────────────────────
+    
     Events.on(engine, 'beforeUpdate', () => {
       const isZeroGravity = engine.gravity.y === 0 && engine.gravity.x === 0
       const ropeBodies = Composite.allBodies(engine.world).filter(b => b.label?.startsWith('rope'))
 
       if (isZeroGravity) {
-        // 1. Disable collisions entirely in Zero-G so ropes don't bend or wrap on pulley
+        
         ropeBodies.forEach(b => {
           b.collisionFilter.mask = 0
         })
@@ -132,7 +132,7 @@ export default function PhysicsCanvas({ engineRef: externalEngineRef, onBodyClic
           const ropeGroup = draggedBody.collisionFilter?.group
           if (ropeGroup) {
             const currentRope = ropeBodies.filter(b => b.collisionFilter?.group === ropeGroup)
-            // Sort by current relative y positions to preserve segment order
+            
             currentRope.sort((a, b) => a.position.y - b.position.y)
             const draggedIdx = currentRope.indexOf(draggedBody)
             const segLen = 12
@@ -152,7 +152,7 @@ export default function PhysicsCanvas({ engineRef: externalEngineRef, onBodyClic
             })
           }
         } else if (!draggedBody) {
-          // 2. Align ropes perfectly straight and freeze them relative to their root segment
+          
           const groups = {}
           ropeBodies.forEach(b => {
             const g = b.collisionFilter?.group
@@ -183,7 +183,7 @@ export default function PhysicsCanvas({ engineRef: externalEngineRef, onBodyClic
           })
         }
       } else {
-        // 3. Restore standard collision masks when gravity is active
+        
         ropeBodies.forEach(b => {
           if (b.collisionFilter.mask === 0) {
             b.collisionFilter.mask = 0xFFFFFFFF
@@ -267,12 +267,12 @@ export default function PhysicsCanvas({ engineRef: externalEngineRef, onBodyClic
       const body = e.body
       if (body && body.label !== 'boundary' && body.label !== 'floor') {
         
-        // Auto-attach logic: if either the dragged body or the target is a rope segment
+        
         const allBodies = Composite.allBodies(engine.world).filter(b => 
           b !== body && b.label !== 'boundary' && b.label !== 'floor'
         )
         
-        // Find if bounding boxes overlap
+        
         const overlaps = allBodies.filter(b => window.Matter.Bounds.overlaps(body.bounds, b.bounds))
         if (overlaps.length > 0) {
           const target = overlaps[0]
@@ -288,7 +288,7 @@ export default function PhysicsCanvas({ engineRef: externalEngineRef, onBodyClic
               snapBody.collisionFilter.group === other.collisionFilter.group
               
             if (!isSelfGroup) {
-              // Check if constraint already exists
+              
               const existing = Composite.allConstraints(engine.world).find(c => 
                 (c.bodyA === body && c.bodyB === target) || (c.bodyA === target && c.bodyB === body)
               )
@@ -305,7 +305,7 @@ export default function PhysicsCanvas({ engineRef: externalEngineRef, onBodyClic
                     bodyA: snapBody,
                     bodyB: other,
                     pointA: { x: 0, y: 0 },
-                    // Calculate relative offset for point B
+                    
                     pointB: { 
                       x: snapBody.position.x - other.position.x, 
                       y: snapBody.position.y - other.position.y 
@@ -330,7 +330,7 @@ export default function PhysicsCanvas({ engineRef: externalEngineRef, onBodyClic
 
     internalRef.current = { engine, render, runner, mouse, mouseConstraint }
 
-    // ── KEY FIX: set engineRef synchronously so spawnBody works immediately ─
+    
     if (externalEngineRef) externalEngineRef.current = engine
     if (onEngineReady) onEngineReady(engine)
 
@@ -352,7 +352,7 @@ export default function PhysicsCanvas({ engineRef: externalEngineRef, onBodyClic
       internalRef.current = {}
       if (externalEngineRef) externalEngineRef.current = null
     }
-  }, []) // eslint-disable-line react-hooks/exhaustive-deps
+  }, []) 
 
   return (
     <div
@@ -363,7 +363,7 @@ export default function PhysicsCanvas({ engineRef: externalEngineRef, onBodyClic
   )
 }
 
-// ── spawnBody ─────────────────────────────────────────────────────────────────
+
 export function spawnBody(engine, type, x, y, options = {}) {
   if (!engine) return null
 
@@ -405,12 +405,12 @@ export function spawnBody(engine, type, x, y, options = {}) {
   return body
 }
 
-// ── spawnRope ─────────────────────────────────────────────────────────────────
+
 export function spawnRope(engine, x, y, segments = 8) {
   if (!engine) return null
 
   const segRad = 6
-  const segLen = 12 // diameter is 12 (6 * 2) so they touch perfectly!
+  const segLen = 12 
   const group  = Body.nextGroup(true)
   const bodies = []
   const constraints = []
@@ -418,7 +418,7 @@ export function spawnRope(engine, x, y, segments = 8) {
   for (let i = 0; i < segments; i++) {
     const isEnd = (i === 0 || i === segments - 1)
     const seg = Bodies.circle(x, y + i * segLen, segRad, {
-      friction: 0.8, // high friction so it grips the pulley wheel!
+      friction: 0.8, 
       frictionAir: 0.005, 
       restitution: 0.05,
       collisionFilter: { group },
@@ -432,7 +432,7 @@ export function spawnRope(engine, x, y, segments = 8) {
     bodies.push(seg)
   }
 
-  // Link segments together at their centers (highly stable distance constraints)
+  
   for (let i = 0; i < segments - 1; i++) {
     constraints.push(Constraint.create({
       bodyA: bodies[i],     pointA: { x: 0, y: 0 },
@@ -447,7 +447,7 @@ export function spawnRope(engine, x, y, segments = 8) {
   return { bodies, constraints }
 }
 
-// ── spawnSpring ───────────────────────────────────────────────────────────────
+
 export function spawnSpring(engine, x, y) {
   if (!engine) return null
 
@@ -489,13 +489,13 @@ export function spawnSpring(engine, x, y) {
   return { handleA, handleB, spring }
 }
 
-// ── clearBodies ───────────────────────────────────────────────────────────────
+
 export function clearBodies(engine) {
   if (!engine) return
   const toRemove = Composite.allBodies(engine.world).filter(
     b => b.label !== 'boundary' && b.label !== 'floor'
   )
-  // Remove motor event handlers before clearing bodies
+  
   toRemove.forEach(b => {
     if (b._motorHandler && b._motorEngine) {
       Events.off(b._motorEngine, 'beforeUpdate', b._motorHandler)
@@ -507,10 +507,10 @@ export function clearBodies(engine) {
   World.remove(engine.world, toRemove)
   World.remove(engine.world, constraintsToRemove)
 }
-// ── spawnPivot ────────────────────────────────────────────────────────────────
-// Creates two bodies connected at a pinned (pivot) joint.
-// The first body is pinned to a static anchor at (x, y).
-// The second is a freely-rotating arm below it.
+
+
+
+
 export function spawnPivot(engine, x, y) {
   if (!engine) return null
 
@@ -546,22 +546,22 @@ export function spawnPivot(engine, x, y) {
     },
   })
 
-  // Give arm a small angular nudge to start swinging
+  
   Body.setAngularVelocity(arm, 0.08)
 
   World.add(engine.world, [anchorBody, arm, pivot])
   return { anchorBody, arm, pivot }
 }
 
-// ── spawnMotor ────────────────────────────────────────────────────────────────
-// Creates a static hub + rotating disc driven by a simulated motor torque.
-// Matter.js has no built-in motor constraint, so we apply a constant
-// angular velocity on every engine update via Events.on('beforeUpdate').
+
+
+
+
 export function spawnMotor(engine, x, y, options = {}) {
   if (!engine) return null
 
   const gold = 'rgba(255,200,0,'
-  const speed = options.speed ?? 0.04   // rad / tick
+  const speed = options.speed ?? 0.04   
 
   const hub = Bodies.circle(x, y, 14, {
     isStatic: true, label: 'motor-hub',
@@ -582,10 +582,10 @@ export function spawnMotor(engine, x, y, options = {}) {
     },
   })
 
-  // Spoke decoration (static visual only – thin rectangle)
+  
   const spoke = Bodies.rectangle(x, y, 8, 80, {
     isStatic: false, label: 'motor-spoke',
-    collisionFilter: { mask: 0 }, // non-colliding
+    collisionFilter: { mask: 0 }, 
     render: {
       fillStyle:   `${gold}0.4)`,
       strokeStyle: `${gold}0.7)`,
@@ -593,7 +593,7 @@ export function spawnMotor(engine, x, y, options = {}) {
     },
   })
 
-  // Pivot constraint keeps disc + spoke centred on hub
+  
   const discConstraint = Constraint.create({
     bodyA: hub,  pointA: { x: 0, y: 0 },
     bodyB: disc, pointB: { x: 0, y: 0 },
@@ -607,14 +607,14 @@ export function spawnMotor(engine, x, y, options = {}) {
     render: { visible: false },
   })
 
-  // Drive: forcibly set angular velocity each tick before integration
+  
   const motorHandler = () => {
     Body.setAngularVelocity(disc,  speed)
     Body.setAngularVelocity(spoke, speed)
   }
   Events.on(engine, 'beforeUpdate', motorHandler)
 
-  // Store handler on the body so clearBodies can remove it
+  
   disc._motorHandler = motorHandler
   disc._motorEngine  = engine
 
@@ -622,13 +622,13 @@ export function spawnMotor(engine, x, y, options = {}) {
   return { hub, disc, spoke }
 }
 
-// ── spawnPulley ───────────────────────────────────────────────────────────────
-// Creates a grooved pulley wheel that rotates freely around a static center axis.
-// Perfect for draping ropes and cables over!
+
+
+
 export function spawnPulley(engine, x, y) {
   if (!engine) return null
 
-  // 1. Static center pivot axis
+  
   const axis = Bodies.circle(x, y, 8, {
     isStatic: true,
     label: 'pulley-axis',
@@ -639,24 +639,24 @@ export function spawnPulley(engine, x, y) {
     }
   })
 
-  // 2. Grooved pulley wheel (dynamic, high friction so ropes grip it perfectly!)
+  
   const wheel = Bodies.circle(x, y, 36, {
     friction: 0.8,
     restitution: 0.1,
     density: 0.005,
     label: 'pulley-wheel',
     render: {
-      fillStyle: 'rgba(15, 23, 42, 0.8)', // beautiful dark space center
-      strokeStyle: 'rgba(0, 245, 255, 0.75)', // glowing cyan track
-      lineWidth: 5, // thick outer groove just like a real-world pulley!
+      fillStyle: 'rgba(15, 23, 42, 0.8)', 
+      strokeStyle: 'rgba(0, 245, 255, 0.75)', 
+      lineWidth: 5, 
     }
   })
 
-  // 3. Spoke visuals inside the pulley wheel so rotation is clearly visible
+  
   const spokes = Bodies.rectangle(x, y, 6, 60, {
     isStatic: false,
     label: 'pulley-spokes',
-    collisionFilter: { mask: 0 }, // no collision, purely visual decoration
+    collisionFilter: { mask: 0 }, 
     render: {
       fillStyle: 'rgba(0, 245, 255, 0.45)',
       strokeStyle: 'rgba(0, 245, 255, 0.2)',
@@ -664,7 +664,7 @@ export function spawnPulley(engine, x, y) {
     }
   })
 
-  // 4. Constraints to pin wheel and spokes to the static axis
+  
   const wheelConstraint = Constraint.create({
     bodyA: axis, pointA: { x: 0, y: 0 },
     bodyB: wheel, pointB: { x: 0, y: 0 },

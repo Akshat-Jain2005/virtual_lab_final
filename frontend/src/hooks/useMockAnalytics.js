@@ -12,7 +12,7 @@ export default function useMockAnalytics(engine, isLive = true) {
     if (!isLive) return
 
     const interval = setInterval(() => {
-      // Calculate real kinetic and potential energy if matter-js engine exists
+      
       let calculatedKE = 0
       let calculatedPE = 0
       
@@ -20,25 +20,25 @@ export default function useMockAnalytics(engine, isLive = true) {
         const bodies = engine.world.bodies || []
         bodies.forEach(body => {
           if (body.isStatic) return
-          // KE = 0.5 * m * v^2
+          
           const mass = body.mass || 1
           const speed = body.speed || 0
-          calculatedKE += 0.5 * mass * speed * speed * 1000 // scale for visual impact
+          calculatedKE += 0.5 * mass * speed * speed * 1000 
           
-          // PE = m * g * h (approximate h using canvas height - y coordinate)
-          // Assume screen height is 800
+          
+          
           const height = Math.max(0, 800 - body.position.y)
-          calculatedPE += mass * 0.1 * height * 10 // scale for visual impact
+          calculatedPE += mass * 0.1 * height * 10 
         })
       }
 
-      // If no active moving bodies, stay at zero — don't fabricate data
+      
       if (calculatedKE === 0 && calculatedPE === 0) {
         setStats(prev => ({ ...prev, fps: Math.min(60, Math.max(45, currentFps)) }))
         return
       }
 
-      // Calculate smooth FPS
+      
       const now = Date.now()
       frameCountRef.current++
       let currentFps = 60
@@ -48,7 +48,7 @@ export default function useMockAnalytics(engine, isLive = true) {
         lastTimeRef.current = now
       }
 
-      // Update values
+      
       const nextT = dataPoints.length ? dataPoints[dataPoints.length - 1].t + 1 : 0
       const newPt = {
         t: nextT,
@@ -58,7 +58,7 @@ export default function useMockAnalytics(engine, isLive = true) {
 
       setDataPoints(prev => {
         const next = [...prev, newPt]
-        if (next.length > 50) next.shift() // Cap list for performance
+        if (next.length > 50) next.shift() 
         return next
       })
 
@@ -68,7 +68,7 @@ export default function useMockAnalytics(engine, isLive = true) {
         fps: Math.min(60, Math.max(45, currentFps))
       })
 
-    }, 250) // Update 4 times a second for fluid charts
+    }, 250) 
 
     return () => clearInterval(interval)
   }, [engine, isLive, dataPoints.length])

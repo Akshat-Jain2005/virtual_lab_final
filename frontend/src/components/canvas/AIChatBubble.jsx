@@ -1,33 +1,3 @@
-/**
- * AIChatBubble.jsx
- *
- * AI Experiment Assistant — a floating chat bubble powered by the Claude API.
- * Students type natural language like "set up a pendulum collision" and the
- * assistant responds with a description AND calls spawnScene() to auto-spawn
- * the correct Matter.js bodies with the right physics properties.
- *
- * HOW IT WORKS
- * ─────────────
- * 1. User message → sent to Claude (claude-sonnet-4-20250514) with a system
- *    prompt that asks it to reply in JSON with { message, actions[] }.
- * 2. Each action maps to a spawn function already exported from PhysicsCanvas:
- *    spawnBody | spawnRope | spawnSpring | spawnPivot | spawnMotor | clearBodies
- *    + the special "pendulumCollision" and "newtonCradle" multi-body helpers
- *    defined right here.
- * 3. We execute the actions against the live engineRef, then show the text
- *    response in the chat.
- *
- * USAGE in RoomPage.jsx
- * ──────────────────────
- *   import AIChatBubble from '../components/canvas/AIChatBubble'
- *   // inside the JSX (after PhysicsCanvas):
- *   <AIChatBubble engineRef={engineRef} onBodyCountChange={setBodyCount} />
- *
- * ENV
- * ───
- *  No extra env var needed — uses the same Anthropic API proxy that
- *  is already configured in the project (fetch to /api/anthropic or direct).
- */
 
 import { useState, useRef, useEffect, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
@@ -41,12 +11,8 @@ import {
 
 const { Bodies, Body, Constraint, World, Composite } = Matter
 
-// ── Multi-body scene helpers ──────────────────────────────────────────────────
 
-/**
- * Newton's Cradle: 5 suspended balls.
- * Balls hang from a static bar via constraints; first ball is pulled back.
- */
+
 function spawnNewtonCradle(engine, cx, cy) {
   const n = 5
   const r = 24
@@ -74,15 +40,12 @@ function spawnNewtonCradle(engine, cx, cy) {
       render: { strokeStyle: 'rgba(0,245,255,0.4)', lineWidth: 1.5 },
     }))
   }
-  // Pull first ball back
+  
   Body.setPosition(balls[0], { x: balls[0].position.x - 100, y: balls[0].position.y - 90 })
   World.add(engine.world, [bar, ...balls, ...strings])
   return balls.length + 1
 }
 
-/**
- * Pendulum Collision: two pendulums on the same bar, aimed at each other.
- */
 function spawnPendulumCollision(engine, cx, cy) {
   const barY = cy
   const armLen = 160
@@ -105,15 +68,12 @@ function spawnPendulumCollision(engine, cx, cy) {
     })
     return { ball, string }
   }
-  const left  = makeSwinger(-90,  1)   // pulled right → swings left
-  const right = makeSwinger( 90, -1)   // pulled left  → swings right
+  const left  = makeSwinger(-90,  1)   
+  const right = makeSwinger( 90, -1)   
   World.add(engine.world, [bar, left.ball, left.string, right.ball, right.string])
   return 5
 }
 
-/**
- * Inclined Plane: static ramp + a rolling ball.
- */
 function spawnInclinedPlane(engine, cx, cy) {
   const ramp = Bodies.rectangle(cx, cy + 80, 320, 18, {
     isStatic: true, angle: -Math.PI / 8, label: 'ramp',
@@ -128,9 +88,6 @@ function spawnInclinedPlane(engine, cx, cy) {
   return 2
 }
 
-/**
- * Projectile Motion: a ball launched at ~45°.
- */
 function spawnProjectileMotion(engine, cx, cy) {
   const ball = Bodies.circle(cx - 200, cy + 80, 22, {
     restitution: 0.55, friction: 0.05, frictionAir: 0.003,
@@ -142,7 +99,7 @@ function spawnProjectileMotion(engine, cx, cy) {
   return 1
 }
 
-// ── Action executor ──────────────────────────────────────────────────────────
+
 
 const CX = () => window.innerWidth  / 2
 const CY = () => window.innerHeight / 2
@@ -182,7 +139,7 @@ function executeActions(engine, actions) {
   return count
 }
 
-// ── Claude API call ───────────────────────────────────────────────────────────
+
 
 const SYSTEM_PROMPT = `You are an AI physics lab assistant for a browser-based Matter.js virtual lab.
 
@@ -213,8 +170,8 @@ async function askClaude(messages) {
   const lastMessage = messages[messages.length - 1].content.toLowerCase()
 
   if (!apiKey) {
-    // ── Local Mock Fallback for Demo ──────────────────────────────────────────
-    await new Promise(r => setTimeout(r, 800)) // simulate network delay
+    
+    await new Promise(r => setTimeout(r, 800)) 
 
     if (lastMessage.includes('newton')) {
       return { message: "I've set up Newton's Cradle for you!", actions: [{ type: "clear" }, { type: "newtonCradle" }] }
@@ -238,7 +195,7 @@ async function askClaude(messages) {
     }
   }
 
-  // ── Real API Call ───────────────────────────────────────────────────────────
+  
   const res = await fetch('https://api.anthropic.com/v1/messages', {
     method: 'POST',
     headers: { 
@@ -335,7 +292,7 @@ export default function AIChatBubble({ engineRef, onBodyCountChange }) {
 
   return (
     <>
-      {/* Bubble toggle button */}
+      {}
       <motion.button
         onClick={() => setIsOpen(v => !v)}
         whileTap={{ scale: 0.9 }}
@@ -363,7 +320,7 @@ export default function AIChatBubble({ engineRef, onBodyCountChange }) {
         }
       </motion.button>
 
-      {/* Panel */}
+      {}
       <AnimatePresence>
         {isOpen && (
           <motion.div
@@ -381,7 +338,7 @@ export default function AIChatBubble({ engineRef, onBodyCountChange }) {
               boxShadow: '0 16px 48px rgba(0,0,0,0.7), 0 0 0 1px rgba(0,245,255,0.05)',
             }}
           >
-            {/* Header */}
+            {}
             <div className="flex items-center gap-2 px-3 py-2.5 border-b border-white/5">
               <div className="w-6 h-6 rounded-lg flex items-center justify-center"
                 style={{ background: 'linear-gradient(135deg, rgba(0,245,255,0.3), rgba(191,0,255,0.2))' }}>
@@ -394,7 +351,7 @@ export default function AIChatBubble({ engineRef, onBodyCountChange }) {
               </span>
             </div>
 
-            {/* Messages */}
+            {}
             <div className="flex-1 overflow-y-auto px-3 py-2 space-y-2 scrollbar-thin">
               {messages.map((msg, i) => (
                 <div key={i} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
@@ -421,7 +378,7 @@ export default function AIChatBubble({ engineRef, onBodyCountChange }) {
               <div ref={bottomRef} />
             </div>
 
-            {/* Suggestion pills */}
+            {}
             {messages.length <= 1 && (
               <div className="px-3 pb-1 flex flex-wrap gap-1">
                 {SUGGESTIONS.map(s => (
@@ -436,7 +393,7 @@ export default function AIChatBubble({ engineRef, onBodyCountChange }) {
               </div>
             )}
 
-            {/* Input */}
+            {}
             <div className="px-3 pb-3 pt-2 border-t border-white/5 flex items-center gap-2">
               <input
                 ref={inputRef}

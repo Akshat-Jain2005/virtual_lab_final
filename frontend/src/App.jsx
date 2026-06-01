@@ -21,12 +21,12 @@ import {
 export default function App() {
   const { hydrateAuth } = useAuthStore()
 
-  // Rehydrate auth from localStorage on mount
+  
   useEffect(() => { hydrateAuth() }, [])
 
   return (
     <BrowserRouter>
-      {/* Sonner toast portal */}
+      {}
       <Toaster
         position="bottom-right"
         theme="dark"
@@ -38,13 +38,13 @@ export default function App() {
       />
 
       <Routes>
-        {/* ── Public ── */}
+        {}
         <Route path="/auth" element={<AuthPage />} />
 
-        {/* ── Root redirect ── */}
+        {}
         <Route path="/" element={<Navigate to="/dashboard" replace />} />
 
-        {/* ── Private ── */}
+        {}
         <Route path="/dashboard" element={
           <PrivateRoute><DashboardPage /></PrivateRoute>
         } />
@@ -65,7 +65,7 @@ export default function App() {
           <PrivateRoute><LibraryDetailPage /></PrivateRoute>
         } />
 
-        {/* ── Room routes ── */}
+        {}
         <Route path="/room/:id" element={
           <RoomRoute><RoomPage /></RoomRoute>
         } />
@@ -74,12 +74,12 @@ export default function App() {
           <RoomRoute><AnalyticsPage /></RoomRoute>
         } />
 
-        {/* ── Admin ── */}
+        {}
         <Route path="/admin/metrics" element={
           <AdminRoute><AdminMetricsPage /></AdminRoute>
         } />
 
-        {/* ── 404 ── */}
+        {}
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </BrowserRouter>

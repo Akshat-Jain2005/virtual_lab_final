@@ -29,7 +29,7 @@ export function spawnNewtonCradle(engine, cx, cy) {
       render: { strokeStyle: 'rgba(0,245,255,0.4)', lineWidth: 1.5 },
     }))
   }
-  // Pull first ball back
+  
   Body.setPosition(balls[0], { x: balls[0].position.x - 120, y: balls[0].position.y - 120 })
   World.add(engine.world, [bar, ...balls, ...strings])
   return balls.length + 1
@@ -60,7 +60,7 @@ export function spawnPendulum(engine, cx, cy) {
 export function spawnInclinedPlane(engine, cx, cy) {
   const w = 400
   const h = 20
-  const angle = Math.PI / 6 // 30 degrees
+  const angle = Math.PI / 6 
   const plane = Bodies.rectangle(cx, cy + 100, w, h, {
     isStatic: true, label: 'inclined-plane',
     angle: angle,
@@ -68,7 +68,7 @@ export function spawnInclinedPlane(engine, cx, cy) {
     render: { fillStyle: 'rgba(57,255,20,0.12)', strokeStyle: 'rgba(57,255,20,0.6)', lineWidth: 1.5 },
   })
   
-  // Calculate start position for circle
+  
   const startX = cx - (w / 2 - 50) * Math.cos(angle)
   const startY = cy + 100 - (w / 2 - 50) * Math.sin(angle) - 30
   
@@ -78,7 +78,7 @@ export function spawnInclinedPlane(engine, cx, cy) {
     render: { fillStyle: 'rgba(191,0,255,0.2)', strokeStyle: 'rgba(191,0,255,0.85)', lineWidth: 2 },
   })
   
-  // Block below the ramp to collide with
+  
   const targetBlock = Bodies.rectangle(cx + 300, window.innerHeight - 60, 80, 60, {
     restitution: 0.9, friction: 0.1,
     label: 'rectangle',
@@ -101,7 +101,7 @@ export function spawnProjectileMotion(engine, cx, cy) {
     render: { fillStyle: 'rgba(255,120,60,0.2)', strokeStyle: 'rgba(255,120,60,0.85)', lineWidth: 2 },
   })
   
-  // Give it an initial velocity (projectile motion)
+  
   Body.setVelocity(projectile, { x: 15, y: -18 })
   
   World.add(engine.world, [ground, projectile])

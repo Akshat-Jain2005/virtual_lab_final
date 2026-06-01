@@ -1,31 +1,3 @@
-/**
- * ExperimentRecorder.jsx
- *
- * Experiment Recording & Replay — records a physics simulation as a JSON
- * timeline, then replays it frame-by-frame with a scrubbing timeline.
- *
- * HOW IT WORKS
- * ─────────────
- * Recording:
- *   Every ~16 ms (≈ 60 fps) we snapshot every non-static body's
- *   { id, x, y, angle, vx, vy } from the live engine.
- *   Snapshots are stored in recordingRef (no React re-render overhead).
- *   Stop → trim to the last 10 s cap → save to state.
- *
- * Replay:
- *   We apply each snapshot to the engine via Body.setPosition / setVelocity
- *   / setAngle, then advance through the timeline via setInterval.
- *   A scrub slider maps 0‥1 → frame index.
- *
- * USAGE in RoomPage.jsx
- * ──────────────────────
- *   import ExperimentRecorder from '../components/canvas/ExperimentRecorder'
- *   // in JSX:
- *   <ExperimentRecorder engineRef={engineRef} />
- *
- * No external deps beyond what the project already has (matter-js, framer-motion,
- * lucide-react, sonner).
- */
 
 import { useState, useRef, useCallback, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
@@ -35,10 +7,10 @@ import Matter from 'matter-js'
 
 const { Composite, Body } = Matter
 
-const MAX_DURATION_MS = 10_000   // 10 s cap
-const FRAME_INTERVAL_MS = 16     // ~60 fps capture
+const MAX_DURATION_MS = 10_000   
+const FRAME_INTERVAL_MS = 16     
 
-// ── Capture a single frame ────────────────────────────────────────────────────
+
 function captureFrame(engine) {
   const bodies = Composite.allBodies(engine.world)
   return bodies
@@ -53,7 +25,7 @@ function captureFrame(engine) {
     }))
 }
 
-// ── Apply a frame to the engine ───────────────────────────────────────────────
+
 function applyFrame(engine, frame) {
   if (!frame?.length) return
   const all = Composite.allBodies(engine.world)
@@ -66,7 +38,7 @@ function applyFrame(engine, frame) {
   })
 }
 
-// ── Format ms → m:ss.t ───────────────────────────────────────────────────────
+
 function fmtMs(ms) {
   const s = ms / 1000
   const m = Math.floor(s / 60)
@@ -74,20 +46,20 @@ function fmtMs(ms) {
   return m > 0 ? `${m}:${rem}` : `${rem}s`
 }
 
-// ── Component ─────────────────────────────────────────────────────────────────
+
 export default function ExperimentRecorder({ engineRef }) {
-  // 'idle' | 'recording' | 'stopped' | 'playing' | 'paused'
+  
   const [status, setStatus]   = useState('idle')
-  const [frames, setFrames]   = useState([])       // saved recording
-  const [playIdx, setPlayIdx] = useState(0)         // current replay frame
-  const [scrub,   setScrub]   = useState(0)         // 0..1
+  const [frames, setFrames]   = useState([])       
+  const [playIdx, setPlayIdx] = useState(0)         
+  const [scrub,   setScrub]   = useState(0)         
 
   const captureTimerRef = useRef(null)
   const playTimerRef    = useRef(null)
-  const recordingRef    = useRef([])                // live buffer (no re-renders)
+  const recordingRef    = useRef([])                
   const recordStartRef  = useRef(0)
 
-  // ── Recording ──────────────────────────────────────────────────────────────
+  
   const startRecording = useCallback(() => {
     if (!engineRef.current) { toast.error('Engine not ready'); return }
     recordingRef.current = []
@@ -117,7 +89,7 @@ export default function ExperimentRecorder({ engineRef }) {
     toast.success(`Recorded ${saved.length} frames (${fmtMs(dur)})`)
   }, [])
 
-  // ── Playback ───────────────────────────────────────────────────────────────
+  
   const startPlay = useCallback((fromIdx = 0) => {
     if (!frames.length || !engineRef.current) return
     let idx = fromIdx
@@ -165,7 +137,7 @@ export default function ExperimentRecorder({ engineRef }) {
     toast('Recording discarded', { icon: '🗑', duration: 1000 })
   }, [])
 
-  // Cleanup on unmount
+  
   useEffect(() => () => {
     clearInterval(captureTimerRef.current)
     clearInterval(playTimerRef.current)
@@ -186,7 +158,7 @@ export default function ExperimentRecorder({ engineRef }) {
           minWidth: 220,
         }}
       >
-        {/* Header row */}
+        {}
         <div className="flex items-center gap-2 px-3 py-2 border-b border-white/5">
           <div className="flex items-center gap-1.5">
             <AnimatePresence mode="wait">
@@ -214,11 +186,10 @@ export default function ExperimentRecorder({ engineRef }) {
           )}
         </div>
 
-        {/* Controls */}
+        {}
         <div className="flex items-center gap-1 px-2 py-2">
           {status === 'idle' || status === 'stopped' ? (
-            /* Record button */
-            <motion.button
+                        <motion.button
               onClick={startRecording}
               whileTap={{ scale: 0.88 }}
               title="Start Recording"
@@ -227,8 +198,7 @@ export default function ExperimentRecorder({ engineRef }) {
               <Circle className="w-4 h-4" strokeWidth={2.5} />
             </motion.button>
           ) : status === 'recording' ? (
-            /* Stop button */
-            <motion.button
+                        <motion.button
               onClick={stopRecording}
               whileTap={{ scale: 0.88 }}
               title="Stop Recording"
@@ -238,10 +208,10 @@ export default function ExperimentRecorder({ engineRef }) {
             </motion.button>
           ) : null}
 
-          {/* Playback controls — only when there's a recording */}
+          {}
           {hasRecording && status !== 'recording' && (
             <>
-              {/* Rewind */}
+              {}
               <motion.button
                 onClick={() => { pausePlay(); setPlayIdx(0); setScrub(0); if (engineRef.current && frames[0]) applyFrame(engineRef.current, frames[0].bodies) }}
                 whileTap={{ scale: 0.88 }}
@@ -251,7 +221,7 @@ export default function ExperimentRecorder({ engineRef }) {
                 <SkipBack className="w-3.5 h-3.5" />
               </motion.button>
 
-              {/* Play / Pause */}
+              {}
               {status === 'playing' ? (
                 <motion.button
                   onClick={pausePlay}
@@ -272,7 +242,7 @@ export default function ExperimentRecorder({ engineRef }) {
                 </motion.button>
               )}
 
-              {/* Discard */}
+              {}
               <motion.button
                 onClick={handleDiscard}
                 whileTap={{ scale: 0.88 }}
@@ -285,14 +255,14 @@ export default function ExperimentRecorder({ engineRef }) {
           )}
         </div>
 
-        {/* Scrub timeline — only when stopped/paused/playing */}
+        {}
         {hasRecording && status !== 'recording' && (
           <div className="px-3 pb-3 space-y-1">
-            {/* Custom range slider */}
+            {}
             <div className="relative h-4 flex items-center">
-              {/* Track */}
+              {}
               <div className="absolute inset-x-0 h-1 rounded-full" style={{ background: 'rgba(255,255,255,0.08)' }} />
-              {/* Filled portion */}
+              {}
               <div
                 className="absolute left-0 h-1 rounded-full"
                 style={{
@@ -308,7 +278,7 @@ export default function ExperimentRecorder({ engineRef }) {
                 className="absolute inset-0 w-full opacity-0 cursor-pointer h-4"
                 style={{ zIndex: 2 }}
               />
-              {/* Thumb indicator */}
+              {}
               <div
                 className="absolute w-3 h-3 rounded-full pointer-events-none"
                 style={{

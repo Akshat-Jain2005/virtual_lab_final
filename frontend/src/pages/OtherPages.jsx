@@ -1,4 +1,4 @@
-// src/pages/ProfilePage.jsx
+
 import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { User, Mail, Key, Save, Loader2 } from 'lucide-react'
@@ -70,7 +70,7 @@ export function ProfilePage() {
   )
 }
 
-// ─── Admin Metrics ──────────────────────────────────────────
+
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts'
 import { Activity, Server, Cpu, Database } from 'lucide-react'
 
@@ -135,7 +135,7 @@ export function AdminMetricsPage() {
   )
 }
 
-// ─── Library Detail ─────────────────────────────────────────
+
 import { useParams, useNavigate as useNav } from 'react-router-dom'
 import { GitFork, Star, ArrowLeft, Play } from 'lucide-react'
 import { MOCK_PROJECTS, projectsAPI as pApi } from '@/services/api'
@@ -182,7 +182,7 @@ export function LibraryDetailPage() {
   )
 }
 
-// ─── 404 Not Found ──────────────────────────────────────────
+
 export function NotFoundPage() {
   const navigate = useNav()
   return (

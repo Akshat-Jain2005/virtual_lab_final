@@ -91,22 +91,22 @@ export default function AnalyticsPage() {
   useEffect(() => {
     const token = user?.token || 'demo-token'
 
-    // Initialize/Reset frames to snapshot baseline whenever room changes
+    
     const snapTelemetry = calculateSnapshotTelemetry(roomId)
     setFrames(Array.from({ length: 60 }, (_, i) => generateEmptyFrame(i, snapTelemetry)))
     lastFrameTimeRef.current = Date.now()
 
-    // 1. Lazy connect shared socket
+    
     const socket = connectSocket(token)
 
-    // 2. Join the collaborative room namespace
+    
     emitRoomJoin(roomId, 0, (res) => {
       if (res?.success || res?.offline) {
         setIsLive(true)
       }
     })
 
-    // 3. Listen to live analytics:frame updates broadcasted by backend AnalyticsWorker
+    
     const handleAnalyticsFrame = (frame) => {
       if (!frame || !frame.aggregateData) return
       
@@ -135,12 +135,12 @@ export default function AnalyticsPage() {
 
     socket.on('analytics:frame', handleAnalyticsFrame)
 
-    // 4. Fallback rolling wiggler ticker (ticking every 1000ms)
-    // Ensures graphs are constantly wiggling and generating active live data points in real time
-    // even if the physics loop is quiet/paused or client is temporarily waiting for active updates!
+    
+    
+    
     const interval = setInterval(() => {
       const timeSinceLastFrame = Date.now() - lastFrameTimeRef.current
-      if (timeSinceLastFrame < 1200) return // Skip if socket is actively updating at ~5Hz
+      if (timeSinceLastFrame < 1200) return 
       
       setFrames(prev => {
         const lastFrame = prev[prev.length - 1] || {
@@ -155,7 +155,7 @@ export default function AnalyticsPage() {
         const nextT = lastFrame.t + 1
         const wiggle = () => (Math.random() - 0.5) * 1.5
         
-        // Generate smooth micro-wiggles to keep charts rolling beautifully in live mode
+        
         const kineticEnergy = Math.max(0, lastFrame.kineticEnergy + (lastFrame.kineticEnergy > 0 ? wiggle() * 1.2 : (Math.random() > 0.8 ? 5 : 0)))
         const potentialEnergy = Math.max(0, lastFrame.potentialEnergy + (lastFrame.potentialEnergy > 0 ? wiggle() * 1.2 : (Math.random() > 0.8 ? 8 : 0)))
         const velocityX = lastFrame.velocityX + (Math.random() - 0.5) * 0.08
@@ -210,7 +210,7 @@ export default function AnalyticsPage() {
     return local ? JSON.parse(local) : MOCK_ROOMS
   })
 
-  // Ensure current room is present in dropdown for reference
+  
   const roomsDropdownList = savedRooms.some(r => r.id === roomId)
     ? savedRooms
     : [{ id: roomId, name: `Current Sandbox` }, ...savedRooms]
@@ -289,7 +289,7 @@ export default function AnalyticsPage() {
           ))}
         </div>
 
-        {/* Combined chart */}
+        {}
         <motion.div className="card-dark" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }}>
           <h3 className="font-display text-xs font-semibold text-slate-300 uppercase tracking-wider mb-4">
             Combined Velocity Components

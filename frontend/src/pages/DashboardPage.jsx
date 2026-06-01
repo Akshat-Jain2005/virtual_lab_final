@@ -155,10 +155,10 @@ export default function DashboardPage() {
       return toast.error('Please fill in both fields', { icon: '⚠️' })
     }
     
-    // We'll use the code as the room ID for easy joining
+    
     const roomId = newRoomCode.trim().toLowerCase().replace(/\s+/g, '-')
     
-    // Save to local storage so it persists on dashboard
+    
     const newRoom = {
       id: roomId,
       name: newRoomName,
@@ -170,7 +170,7 @@ export default function DashboardPage() {
     setSavedRooms(updatedRooms)
     localStorage.setItem('vlab_rooms', JSON.stringify(updatedRooms))
 
-    // Save as a local experiment so it appears in the Library
+    
     const libKey = `vlab-experiment-${Date.now()}`
     const experimentSnapshot = {
       name: newRoomName,
@@ -198,7 +198,7 @@ export default function DashboardPage() {
     <AppShell>
       <div className="p-8 space-y-8 max-w-7xl mx-auto">
 
-        {/* Header */}
+        {}
         <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}>
           <p className="text-slate-500 text-sm mb-0.5">{greeting},</p>
           <h1 className="font-display text-2xl font-bold text-white">
@@ -206,15 +206,15 @@ export default function DashboardPage() {
           </h1>
         </motion.div>
 
-        {/* Stats bento row */}
+        {}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
           {STATS.map((s, i) => <StatCard key={s.label} {...s} delay={i * 0.08} />)}
         </div>
 
-        {/* Main bento grid */}
+        {}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
-          {/* Rooms column */}
+          {}
           <div className="lg:col-span-1 space-y-4">
             <div className="flex items-center justify-between">
               <h2 className="font-display text-sm font-semibold text-slate-300 uppercase tracking-widest flex items-center gap-2">
@@ -234,7 +234,7 @@ export default function DashboardPage() {
             )}
           </div>
 
-          {/* Recent Experiments */}
+          {}
           <div className="lg:col-span-2 space-y-4">
             <div className="flex items-center justify-between">
               <h2 className="font-display text-sm font-semibold text-slate-300 uppercase tracking-widest">
@@ -253,7 +253,7 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        {/* Quick actions */}
+        {}
         <motion.div className="glass rounded-2xl p-5 flex flex-wrap gap-3"
           initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }}>
           <span className="text-xs text-slate-500 self-center mr-2 font-semibold uppercase tracking-widest">Quick access</span>
@@ -270,7 +270,7 @@ export default function DashboardPage() {
         </motion.div>
       </div>
 
-      {/* Create Room Modal */}
+      {}
       <AnimatePresence>
         {isModalOpen && (
           <motion.div
@@ -288,7 +288,7 @@ export default function DashboardPage() {
                 boxShadow: '0 25px 50px -12px rgba(0,0,0,0.5), 0 0 0 1px rgba(0,245,255,0.1)'
               }}
             >
-              {/* Header */}
+              {}
               <div className="flex items-center justify-between p-5 border-b border-white/5">
                 <div className="flex items-center gap-2.5">
                   <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: 'rgba(0,245,255,0.1)' }}>
@@ -304,7 +304,7 @@ export default function DashboardPage() {
                 </button>
               </div>
 
-              {/* Form */}
+              {}
               <form onSubmit={handleCreateRoomSubmit} className="p-5 space-y-5">
                 <div className="space-y-1.5">
                   <label className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Room Name</label>

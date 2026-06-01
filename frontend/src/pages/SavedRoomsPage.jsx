@@ -69,7 +69,7 @@ export default function SavedRoomsPage() {
                 <h3 className="font-semibold text-slate-100 text-sm truncate">{room.name}</h3>
               </div>
 
-              {/* Snapshot badge */}
+              {}
               {hasSnapshot(room.id) && (
                 <div className="flex items-center gap-1 mb-2">
                   <Database className="w-3 h-3 text-emerald-400" />

@@ -6,11 +6,11 @@ import Matter from 'matter-js'
 const { Composite } = Matter
 
 export default function BodyOwnershipOverlay({ engine, socketEnabled }) {
-  // { [bodyId]: { userId, username, color } }
+  
   const [ownership, setOwnership] = useState({})
   const [positions, setPositions] = useState({})
 
-  // Listen to socket events for grabbed bodies
+  
   useEffect(() => {
     if (!socketEnabled) return
 
@@ -25,16 +25,16 @@ export default function BodyOwnershipOverlay({ engine, socketEnabled }) {
       })
     }
 
-    // Register event listeners
-    // Our socket.js already sets up these emitters correctly
+    
+    
     onPeerGrabbed(handleGrabbed)
     onPeerReleased(handleReleased)
     
-    // We do not return cleanup because socket.js offAll() manages global cleanup, 
-    // or we can safely just let the state update.
+    
+    
   }, [socketEnabled])
 
-  // Track body positions at 60Hz
+  
   useEffect(() => {
     if (!engine) return
     let raf
@@ -71,7 +71,7 @@ export default function BodyOwnershipOverlay({ engine, socketEnabled }) {
               exit={{ opacity: 0, scale: 0.8, y: -10 }}
               transition={{ type: 'spring', stiffness: 250, damping: 25 }}
               className="absolute pointer-events-none"
-              style={{ translateX: '-50%', translateY: '-200%' }} // Display above the body
+              style={{ translateX: '-50%', translateY: '-200%' }} 
             >
               <div
                 className="px-2 py-1 rounded-full text-[10px] font-semibold whitespace-nowrap shadow-lg flex items-center gap-1.5"

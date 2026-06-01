@@ -1,7 +1,7 @@
 import { create } from 'zustand'
 import { subscribeWithSelector } from 'zustand/middleware'
 
-// ─── Mock bodies for demo canvas ──────────────────────────
+
 const MOCK_BODIES = [
   {
     id: 'body_001', type: 'rectangle',
@@ -40,42 +40,42 @@ const MOCK_CHAT = [
   { id: 'msg_002', userId: 'usr_demo001', username: 'dr_maxwell', text: 'Great! Check the restitution coefficients first.', ts: Date.now() - 30000 },
 ]
 
-// ─── Room Store ─────────────────────────────────────────────
+
 const useRoomStore = create(
   subscribeWithSelector((set, get) => ({
-    // ── Connection
+    
     roomId:       null,
     isConnected:  false,
     isSimulating: false,
     simSpeed:     1.0,
     gravity:      { x: 0, y: 9.81 },
 
-    // ── Entities
+    
     bodies:      [],
     constraints: [],
     peers:       [],
     chat:        [],
 
-    // ── Selection & Tool
+    
     selectedBodyId: null,
-    activeTool:     'select',  // select | rectangle | circle | polygon | rope | spring | pivot | motor
-    activeMaterial: 'default', // default | rubber | wood | metal | ice
+    activeTool:     'select',  
+    activeMaterial: 'default', 
 
-    // ── Sequence (anti-replay)
+    
     seqCounter: 0,
 
-    // ── History (undo/redo)
+    
     history:     [],
     historyIdx:  -1,
 
-    // ── Zoom / Pan
+    
     zoom: 1,
     pan:  { x: 0, y: 0 },
 
-    // ── Room lock
+    
     isLocked: false,
 
-    // ───────────── Actions ─────────────────────────────────
+    
 
     joinRoom: (roomId) => {
       set({
@@ -95,7 +95,7 @@ const useRoomStore = create(
       })
     },
 
-    // Bodies
+    
     addBody: (body) => {
       set(state => ({
         bodies: [...state.bodies, { ...body, id: `body_${Date.now()}` }],
@@ -118,7 +118,7 @@ const useRoomStore = create(
 
     selectBody: (id) => set({ selectedBodyId: id }),
 
-    // Simulation controls
+    
     play:  () => set({ isSimulating: true }),
     pause: () => set({ isSimulating: false }),
     reset: () => set({ isSimulating: false, bodies: MOCK_BODIES }),
@@ -126,15 +126,15 @@ const useRoomStore = create(
     setGravity: (gravity) => set({ gravity }),
     setSimSpeed: (simSpeed) => set({ simSpeed }),
 
-    // Tools
+    
     setActiveTool:     (activeTool) =>     set({ activeTool }),
     setActiveMaterial: (activeMaterial) => set({ activeMaterial }),
 
-    // Zoom / pan
+    
     setZoom: (zoom) => set({ zoom: Math.min(Math.max(zoom, 0.2), 4) }),
     setPan:  (pan)  => set({ pan }),
 
-    // Peers
+    
     updatePeerCursor: (peerId, position) => {
       set(state => ({
         peers: state.peers.map(p => p.id === peerId ? { ...p, cursor: position } : p),
@@ -151,16 +151,16 @@ const useRoomStore = create(
       set(state => ({ peers: state.peers.filter(p => p.id !== peerId) }))
     },
 
-    // Chat
+    
     sendMessage: (text, user) => {
       const msg = { id: `msg_${Date.now()}`, userId: user.id, username: user.username, text, ts: Date.now() }
       set(state => ({ chat: [...state.chat, msg] }))
     },
 
-    // Room lock
+    
     toggleLock: () => set(state => ({ isLocked: !state.isLocked })),
 
-    // Physics delta from server (60Hz)
+    
     applyPhysicsDelta: (delta) => {
       set(state => ({
         bodies: state.bodies.map(b => {
@@ -170,7 +170,7 @@ const useRoomStore = create(
       }))
     },
 
-    // Next sequence ID
+    
     nextSeq: () => {
       const seq = get().seqCounter
       set(state => ({ seqCounter: state.seqCounter + 1 }))
