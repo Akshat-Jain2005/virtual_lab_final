@@ -1,29 +1,46 @@
-# Virtual Lab
+<div align="center">
 
-Built for the Even Semester Projects (2026), Coding Club, IIT Guwahati.
+# ⚗️ Virtual Lab
 
-##  Live Demo
+### Collaborative 2D Physics Sandbox for University-Level Learning
+
+![Node.js](https://img.shields.io/badge/Node.js-18%2B-339933?style=flat-square&logo=nodedotjs&logoColor=white)
+![React](https://img.shields.io/badge/React-18-61DAFB?style=flat-square&logo=react&logoColor=black)
+![MongoDB](https://img.shields.io/badge/MongoDB-Atlas-47A248?style=flat-square&logo=mongodb&logoColor=white)
+![Socket.io](https://img.shields.io/badge/Socket.io-Realtime-010101?style=flat-square&logo=socketdotio&logoColor=white)
+![Claude](https://img.shields.io/badge/Claude-AI--Powered-D97706?style=flat-square&logo=anthropic&logoColor=white)
+![Status](https://img.shields.io/badge/Status-Active-22c55e?style=flat-square)
+
+</div>
+
+---
+
+<div align="center">
 
 | Service | URL |
 |---|---|
 | **Frontend** | https://frontend-rbag.onrender.com |
 | **Backend API** | https://virtual-lab-backend-clg8.onrender.com |
 
->  Both services are hosted on Render's free tier. The backend may take **~50 seconds** to wake up on the first request after a period of inactivity.
+> ⚠️ Both services are hosted on Render's free tier. The backend may take **~50 seconds** to wake up on the first request after a period of inactivity.
+
+</div>
 
 ---
 
-## Overview
+## 📖 Overview
 
-Teaching complex physics and engineering concepts online is often limited to static videos and non-interactive text, failing to build intuition for dynamic physical systems. Virtual Lab addresses this by providing a "Digital Twin" environment: a collaborative 2D physics sandbox designed for university-level learning.
+Teaching complex physics and engineering concepts online is often limited to static videos and non-interactive text, failing to build intuition for dynamic physical systems. **Virtual Lab** addresses this by providing a **"Digital Twin"** environment — a collaborative 2D physics sandbox designed for university-level learning.
 
 The platform allows multiple users to build machines, test structural integrity, and observe real-time forces in a shared, high-fidelity workspace, effectively bridging the gap between theoretical equations and physical reality through hands-on experimentation.
 
+> Built for the **Even Semester Projects (2026)**, Coding Club, IIT Guwahati.
+
 ---
 
-## Key Features
+## ✨ Key Features
 
-### AI Experiment Assistant (Claude-Powered)
+### 🤖 AI Experiment Assistant (Claude-Powered)
 
 A floating chat bubble powered by the Anthropic Claude API (`claude-sonnet-4-20250514`). Students type natural-language prompts like *"set up a pendulum collision"* or *"build a Newton's cradle"* and the assistant:
 
@@ -32,7 +49,7 @@ A floating chat bubble powered by the Anthropic Claude API (`claude-sonnet-4-202
 - Returns structured JSON `{ message, actions[] }` so every action is mapped to a precise Matter.js operation.
 - Supports complex multi-body presets including **Newton's Cradle** (5 suspended balls with constraints) and **Pendulum Collision** setups out of the box.
 
-###  Experiment Recorder & Replay
+### 🎥 Experiment Recorder & Replay
 
 A full recording and replay system for physics simulations:
 
@@ -42,22 +59,22 @@ A full recording and replay system for physics simulations:
 - **Scrub** — A slider maps 0–1 across the full frame index so users can jump to any moment in the recording.
 - **Playback Controls** — Play, Pause, Skip to Start, and Delete recording, displayed in an animated floating panel.
 
-### Real-Time Analytics & Graphing
+### 📊 Real-Time Analytics & Graphing
 
 A floating analytics panel reads live data straight from the Matter.js engine and renders it as interactive charts:
 
 - **Kinetic Energy (KE) Chart** — Area chart (via Recharts) showing KE over the last N ticks in real time.
 - **Potential Energy (PE) Chart** — Complementary area chart tracking PE, letting students observe energy conservation visually.
 - **Stat Badges** — Instant readouts for total KE, PE, body count, and simulation FPS.
-- **Force Vector Overlay** — A full-screen SVG layer (pointer-events: none) that draws directional arrows on each body scaled to force magnitude; toggled independently of the chart panel.
+- **Force Vector Overlay** — A full-screen SVG layer (`pointer-events: none`) that draws directional arrows on each body scaled to force magnitude; toggled independently of the chart panel.
 - **EMA & Kalman Smoothing** — Backend `EMAProcessor` and `KalmanFilter` smooth noisy sensor streams before they reach the frontend analytics pipeline.
 - **Prometheus Metrics** — `prom-client` exposes a `/metrics` endpoint for Grafana dashboards included in `backend/monitoring/`.
 
-### Interactive Physics Canvas
+### 🔧 Interactive Physics Canvas
 
 A web-based workspace for building, running, and interacting with 2D physics scenes:
 
-- Drag-and-drop spawn of **rectangles**, **circles**, and **polygons** (hexagons and custom sided shapes).
+- Drag-and-drop spawn of **rectangles**, **circles**, and **polygons** (hexagons and custom-sided shapes).
 - Constraint tools: **Rope**, **Spring**, **Pivot joint**, **Motor** (continuous rotation), and **Pulley**.
 - **Static Wall** placement for boundaries and fixtures.
 - Click-to-select with a **Properties Panel** for editing mass, restitution, friction, and angular velocity on any body.
@@ -65,7 +82,7 @@ A web-based workspace for building, running, and interacting with 2D physics sce
 - **Live Cursors** — real-time cursor positions of every collaborator rendered on the canvas.
 - Gravity toggle, global reset, and per-body delete.
 
-###  Multi-User Collaboration
+### 👥 Multi-User Collaboration
 
 - **Room Engine** — Each simulation runs in a named room; users join via a shareable room ID.
 - **WebSocket Sync** — Physics deltas are broadcast at high frequency via Socket.io so every collaborator sees the same world state.
@@ -74,7 +91,7 @@ A web-based workspace for building, running, and interacting with 2D physics sce
 - **Collab Sidebar** — Shows live peer list (online/offline indicators, roles), in-room chat, and a share link.
 - **Rollback Worker** — Detects and corrects state divergence between clients using a sequence tracker and rollback snapshots.
 
-###  Experiment Library & Templates
+### 📚 Experiment Library & Templates
 
 - **Gallery view** — Browse, search, filter, and preview all saved physics scenarios.
 - **Save / Load** — Serialize the full Matter.js world (bodies + constraints + metadata) to JSON and restore it later.
@@ -82,14 +99,14 @@ A web-based workspace for building, running, and interacting with 2D physics sce
 - **Preset Templates** — Built-in starters (inclined plane, spring oscillator, projectile motion, etc.) accessible from `templates.js`.
 - **Classroom Assignments** — Instructors can push a template to an entire room for guided lab sessions.
 
-###  Auth & Permissions
+### 🔐 Auth & Permissions
 
 - JWT-based authentication (`jsonwebtoken` + `bcryptjs`).
 - Role system: **owner**, **editor**, **viewer** enforced on the backend via `permissions.js`.
 - Audit log (`AuditLog` model + `AuditLogWriter`) for every state-mutating action in a room.
 - Rate-limiting, CORS, and request validation middleware (`joi`).
 
-### Worker & Queue System
+### ⚙️ Worker & Queue System
 
 - **Physics Worker** — Runs the Matter.js engine in a separate thread via `WorkerPool` to keep the main event loop free.
 - **Analytics Worker** — Processes and aggregates frame data asynchronously.
@@ -98,29 +115,36 @@ A web-based workspace for building, running, and interacting with 2D physics sce
 
 ---
 
-## Technology Stack
+## 🛠️ Technology Stack
 
 ### Frontend
 
-- **Core**: React 18, Vite
-- **Physics & Visualization**: Matter.js, Recharts (area/line charts)
-- **Styling & UI**: Tailwind CSS, Framer Motion, Lucide React, Sonner (toasts)
-- **State Management**: Zustand
-- **Networking**: Socket.io-client, Axios
+| Technology | Purpose |
+|---|---|
+| React 18 + Vite | Core UI framework and build tool |
+| Matter.js | 2D physics engine |
+| Recharts | Area/line charts for KE/PE analytics |
+| Tailwind CSS | Styling |
+| Framer Motion | Animations |
+| Zustand | State management |
+| Socket.io-client | Real-time WebSocket communication |
+| Axios | HTTP API calls |
 
 ### Backend
 
-- **Core**: Node.js, Express.js
-- **Database**: MongoDB (via Mongoose)
-- **Real-Time Engine**: WebSockets (Socket.io)
-- **Scaling & Queues**: Redis (ioredis, @socket.io/redis-adapter), Bull
-- **Security & Auth**: JSON Web Tokens, bcryptjs, CORS, Joi validation
-- **AI Integration**: Anthropic Claude API (`claude-sonnet-4-20250514`)
-- **Monitoring**: prom-client, Prometheus, Grafana
+| Technology | Purpose |
+|---|---|
+| Node.js + Express.js | Server runtime and HTTP layer |
+| MongoDB + Mongoose | Persistent data storage |
+| Socket.io | WebSocket real-time engine |
+| Redis + Bull | Pub/sub, scaling, job queues |
+| Anthropic Claude API | AI Experiment Assistant |
+| JWT + bcryptjs | Authentication and security |
+| prom-client + Grafana | Monitoring and metrics |
 
 ---
 
-## Getting Started
+## 🚀 Getting Started
 
 ### Prerequisites
 
@@ -130,7 +154,7 @@ A web-based workspace for building, running, and interacting with 2D physics sce
 
 ---
 
-###  MongoDB Not Running? (macOS)
+### 🍎 MongoDB Not Running? (macOS)
 
 If the backend fails to connect to MongoDB, install and start it with Homebrew:
 
@@ -187,7 +211,7 @@ npm install
 
 ### Running the Application
 
-1. Make sure MongoDB and Redis are running (see MongoDB note above for macOS).
+1. Make sure MongoDB and Redis are running.
 
 2. Start the backend server:
 
@@ -209,7 +233,7 @@ The Vite dev server is available at `http://localhost:5173`.
 
 ---
 
-## Project Structure
+## 🗂️ Project Structure
 
 ```text
 virtual-lab/
@@ -301,7 +325,7 @@ virtual-lab/
 
 ---
 
-## Contributing
+## 🤝 Contributing
 
 Contributions, issues, and feature requests are welcome.
 
@@ -328,11 +352,23 @@ git push origin feature/AmazingFeature
 
 ---
 
-## Mentors & Acknowledgements
+## 🏫 Mentors & Acknowledgements
 
 - **Project Mentor**: Prajit R.
-- Developed as part of the IIT Guwahati Coding Club Even Semester Projects initiative.
+- Developed as part of the **IIT Guwahati Coding Club** Even Semester Projects initiative.
 
-## License
+---
 
-This project is licensed under the ISC License.
+## 📄 License
+
+This project is licensed under the **ISC License**.
+
+---
+
+<div align="center">
+
+Built with ❤️ at IIT Guwahati · Coding Club Even Semester Projects 2026
+
+Matter.js · React · Socket.io · MongoDB · Redis · Claude AI
+
+</div>
